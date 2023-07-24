@@ -25,6 +25,6 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-    Route::resource('appoinments', \App\Http\Controllers\AppointmentController::class);
+    Route::resource('appointments', \App\Http\Controllers\AppointmentController::class);
     Route::resource('patients', \App\Http\Controllers\PatientController::class);
 });
