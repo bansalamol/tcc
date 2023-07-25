@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAppointmentRequest;
 use App\Http\Requests\UpdateAppointmentRequest;
 use App\Models\Appointment;
+use App\Models\Patient;
+use App\Models\User;
 
 class AppointmentController extends Controller
 {
@@ -14,7 +16,7 @@ class AppointmentController extends Controller
     public function index()
     {
         $appointments = Appointment::all();
- 
+
         return view('appointments.index', compact('appointments'));
     }
 
@@ -23,7 +25,11 @@ class AppointmentController extends Controller
      */
     public function create()
     {
-        return view('appointments.create');
+        $this->authorize('manage appointments');
+        $patients = Patient::all();
+        $users = User::all();
+        $appointments = Appointment::all();
+        return view('appointments.create', compact('patients', 'users', 'appointments'));
     }
 
     /**
@@ -31,6 +37,7 @@ class AppointmentController extends Controller
      */
     public function store(StoreAppointmentRequest $request)
     {
+        $this->authorize('manage appointments');
         Appointment::create($request->validated());
         return redirect()->route('appointments.index');
     }
