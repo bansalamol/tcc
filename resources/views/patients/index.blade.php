@@ -9,13 +9,13 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                    
+
                     @can('manage patients')
                     <div class="float-right">
                     <x-link href="{{ route('patients.create') }}" class="m-4">Add new Patient</x-link>
                     </div>
                     @endcan
-                   
+
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
@@ -28,7 +28,7 @@
                                 <th scope="col" class="px-6 py-3">
                                     Age
                                 </th>
-                               
+
                                 <th scope="col" class="px-6 py-3">
                                     Phone Number
                                 </th>
@@ -51,17 +51,18 @@
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     {{ $patient->age }}
                                 </td>
-                                
+
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    @can('manage patients') 
+                                    @can('manage patients')
                                       {{ $patient->phone_number }}
                                     @else
                                     +91******
-                                    @endcan 
+                                    @endcan
                                 </td>
-                                
+
                                 @can('manage patients')
                                 <td class="px-6 py-4">
+                                    <x-link href="{{ route('patients.history', $patient) }}">History</x-link>
                                     <x-link href="{{ route('patients.edit', $patient) }}">Edit</x-link>
                                     <form method="POST" action="{{ route('patients.destroy', $patient) }}" class="inline-block">
                                         @csrf

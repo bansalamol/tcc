@@ -20,7 +20,7 @@ class AdminUserSeeder extends Seeder
         $adminRole = Role::create(['name' => 'Administrator']);
         $permission = Permission::create(['name' => 'manage patients']);
         $permission->assignRole($adminRole);
- 
+
         $adminUser = User::factory()->create([
             'email' => 'admin@admin.com',
             'password' => bcrypt('151187Asb')

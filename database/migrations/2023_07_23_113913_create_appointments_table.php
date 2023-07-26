@@ -16,8 +16,9 @@ return new class extends Migration
             $table->string('patient_code');
             $table->string('clinic');
             $table->string('appointment_type'); // Fix Appointment => Fix Appointment / Tentative Appointment / Prospective lead / Interested Lead / Non interested
+            $table->dateTime('appointment_time');
             $table->integer('lead_interest_score')->nullable();
-            $table->string('health_problem'); // enum value with same value   => map with health problems  table as well appointment id as well 
+            $table->string('health_problem'); // enum value with same value   => map with health problems  table as well appointment id as well
             $table->string('current_status'); // Visiting / Appointment postponed / Appointment canceled / Visited / Converted
             $table->string('cancellation_reason')->nullable();
             $table->text('comments')->nullable();
@@ -30,7 +31,7 @@ return new class extends Migration
             $table->dateTime('last_messaged_datetime')->nullable();
             $table->unsignedBigInteger('created_by')->nullable(); // Presales Executive ID who booked the appointment
             $table->unsignedBigInteger('updated_by')->nullable(); // Presales Executive ID who updated the appointment
-            $table->timestamps(); // created by & updated 
+            $table->timestamps(); // created by & updated
         });
     }
 

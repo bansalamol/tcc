@@ -50,22 +50,28 @@
                             @forelse ($appointments as $appointment)
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    TC-2023-100010
+                                    {{ $appointment->patient_code }}
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    Amol
+                                    {{ $appointment->patient->name }}
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    Fix Appointment.
+                                    {{ $appointment->appointment_type }}
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    2023-07-1 1:30PM
+                                    {{ date('d-M-y H:i', strtotime($appointment->appointment_time)) }}
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    Knee
+                                    @if(strlen($appointment->health_problem) > 10)
+                                    <span id="health_problem_{{ $appointment->id }}_short" >{{ substr($appointment->health_problem, 0, 10) }}...</span>
+                                    <span id="health_problem_{{ $appointment->id }}" class="hidden">{{ $appointment->health_problem }}</span>
+                                    <a href="#" class="text-blue-500 ml-1" onclick="showFullContent(event, this, 'health_problem_{{ $appointment->id }}')">more</a>
+                                    @else
+                                    <span>{{ $appointment->health_problem }}</span>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                   Active
+                                    {{ $appointment->current_status }}
                                 </td>
 
                                 @can('manage patients')
@@ -92,4 +98,14 @@
             </div>
         </div>
     </div>
+    <script>
+        function showFullContent(event, element, elementId) {
+            event.preventDefault();
+            element.innerText = (element.innerText == 'more') ? 'less' : 'more';
+            const contentElement = document.getElementById(elementId);
+            contentElement.classList.toggle('hidden');
+            const contentElementShort = document.getElementById(elementId + '_short');
+            contentElementShort.classList.toggle('hidden');
+        }
+    </script>
 </x-app-layout>

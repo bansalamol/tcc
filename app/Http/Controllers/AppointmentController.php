@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAppointmentRequest;
 use App\Http\Requests\UpdateAppointmentRequest;
 use App\Models\Appointment;
+use App\Models\HealthProblems;
+use App\Models\Patient;
+use App\Models\User;
 
 class AppointmentController extends Controller
 {
@@ -13,8 +16,7 @@ class AppointmentController extends Controller
      */
     public function index()
     {
-        $appointments = Appointment::all();
- 
+        $appointments = Appointment::with('patient')->get();
         return view('appointments.index', compact('appointments'));
     }
 
@@ -23,7 +25,11 @@ class AppointmentController extends Controller
      */
     public function create()
     {
-        return view('appointments.create');
+        $this->authorize('manage appointments');
+        $patients = Patient::all();
+        $users = User::all();
+        $appointments = Appointment::all();
+        return view('appointments.create', compact('patients', 'users', 'appointments'));
     }
 
     /**
@@ -31,7 +37,22 @@ class AppointmentController extends Controller
      */
     public function store(StoreAppointmentRequest $request)
     {
-        Appointment::create($request->validated());
+        $this->authorize('manage appointments');
+        $data = $request->validated();
+        $healthProblem = $data['health_problem'];
+        $healthProblem = ((isset($data['health_problem']) && is_array($data['health_problem']))) ? $data['health_problem'] : ['Other'];
+        $data['health_problem'] = implode(', ', $healthProblem);
+        $appointment = Appointment::create($data);
+        $healthProblemData = [];
+        foreach($healthProblem as $healthProblem) {
+            $healthProblemData[] = [
+                'appointment_id' => $appointment->id,
+                'patient_code' => $data['patient_code'],
+                'comments' => $data['comments'],
+                'health_problem' => $healthProblem,
+            ];
+        }
+        HealthProblems::insert($healthProblemData);
         return redirect()->route('appointments.index');
     }
 
@@ -48,7 +69,10 @@ class AppointmentController extends Controller
      */
     public function edit(Appointment $appointment)
     {
-        return view('appointments.edit', compact('appointment'));
+        $this->authorize('manage appointments');
+        $appointments = Appointment::all();
+        $users = User::all();
+        return view('appointments.edit', compact('appointment','appointments','users'));
     }
 
     /**
@@ -56,7 +80,23 @@ class AppointmentController extends Controller
      */
     public function update(UpdateAppointmentRequest $request, Appointment $appointment)
     {
-        $appointment->update($request->validated());
+        $this->authorize('manage appointments');
+        $data = $request->validated();
+        $healthProblem = $data['health_problem'];
+        $healthProblem = ((isset($data['health_problem']) && is_array($data['health_problem']))) ? $data['health_problem'] : ['Other'];
+        $data['health_problem'] = implode(', ', $healthProblem);
+        $appointment->update($data);
+        $healthProblemData = [];
+        foreach($healthProblem as $healthProblem) {
+            $healthProblemData[] = [
+                'appointment_id' => $appointment->id,
+                'patient_code' => $data['patient_code'],
+                'comments' => $data['comments'],
+                'health_problem' => $healthProblem,
+            ];
+        }
+        HealthProblems::where('appointment_id', $appointment->id)->delete();
+        HealthProblems::insert($healthProblemData);
         return redirect()->route('appointments.index');
     }
 
