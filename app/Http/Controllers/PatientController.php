@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
+use App\Models\Appointment;
+use App\Models\HealthProblems;
 use App\Models\Patient;
 
 class PatientController extends Controller
@@ -12,7 +14,7 @@ class PatientController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {   
+    {
         $patients = Patient::all();
         return view('patients.index', compact('patients'));
 
@@ -77,4 +79,20 @@ class PatientController extends Controller
         $patient->delete();
         return redirect()->route('patients.index');
     }
+
+    /**
+     * Show the history the specified resource.
+     */
+    public function history(int $id)
+    {
+        $patient = Patient::find($id);
+        if (empty($patient)) {
+            return redirect()->route('patients.index');
+        }
+        // $healthProblems = HealthProblems::where('patient_code', $patient->code)->get();
+        $appointments = Appointment::where('patient_code', $patient->code)->orderBy('appointment_time', 'desc')->get();
+        $this->authorize('manage patients');
+        return view('patients.history', compact('patient','appointments'));
+    }
+
 }

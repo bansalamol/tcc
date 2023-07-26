@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PatientController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,4 +28,5 @@ Route::middleware([
     })->name('dashboard');
     Route::resource('appointments', \App\Http\Controllers\AppointmentController::class);
     Route::resource('patients', \App\Http\Controllers\PatientController::class);
+    Route::get('/patients/history/{id}', [PatientController::class, 'history'])->name('patients.history');
 });

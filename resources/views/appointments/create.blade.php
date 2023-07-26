@@ -1,4 +1,6 @@
-@props(['options' => "{dateFormat:'Y-m-d H:i', enableTime:true, }"])
+@props(['callTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: 'today', maxDate: 'today'}"])
+@props(['messageTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: 'today', maxDate: 'today'}"])
+@props(['appointmentTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: 'tomorrow', minDate: 'today'}"])
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -20,11 +22,10 @@
                             <div class="col-span-1">
                                 <div class="mt-4">
                                     <x-label for="patient_code" value="{{ __('Patient Name') }}" />
-                                    <!-- <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="Enter Patient Name" /> -->
-                                    <select id="patient_code" name="patient_code" class="mt-1 block w-full border-gray-300 rounded-md">
+                                    <select onchange="updatePatientCodeView(this)" id="patient_code" name="patient_code" class="mt-1 block w-full border-gray-300 rounded-md">
                                         <option value="">Select an option</option>
                                         @foreach($patients as $patient)
-                                            <option value="{{ $patient->code }}">{{ $patient->name .' '. $patient->email .' '. $patient->phone_number }}</option>
+                                        <option value="{{ $patient->code }}">{{ $patient->name .' '. $patient->email .' '. $patient->phone_number }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -46,7 +47,7 @@
                                     <select id="assigned_to" name="assigned_to" class="mt-1 block w-full border-gray-300 rounded-md">
                                         <option value="">Select an option</option>
                                         @foreach($users as $user)
-                                            <option value="{{ $user->id }}">{{ $user->name .' '. $user->email }}</option>
+                                        <option value="{{ $user->id }}">{{ $user->name .' '. $user->email }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -55,7 +56,7 @@
                                     <select id="reference_id" name="reference_id" class="mt-1 block w-full border-gray-300 rounded-md">
                                         <option value="">Select an option</option>
                                         @foreach($appointments as $appointment)
-                                            <option value="{{ $appointment->id }}">{{ $appointment->patient_code .' '. $appointment->created_at }}</option>
+                                        <option value="{{ $appointment->id }}">{{ $appointment->patient_code .' '. $appointment->created_at }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -66,7 +67,7 @@
                                 </div>
                                 <div class="mt-4">
                                     <x-label for="last_called_datetime" value="{{__('Last Called Time')}}" />
-                                    <input id="last_called_datetime" name="last_called_datetime" x-data x-init="flatpickr($refs.input, {{ $options }} );" x-ref="input" type="text" placeholder="Select Time" data-input {{ $attributes->merge(['class' => 'block w-full disabled:bg-gray-200 p-2 border border-gray-300 rounded-md focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 sm:text-sm sm:leading-5']) }} />
+                                    <input id="last_called_datetime" name="last_called_datetime" x-data x-init="flatpickr($refs.input, {{ $callTimeOptions }} );" x-ref="input" type="text" placeholder="Select Time" data-input {{ $attributes->merge(['class' => 'block w-full disabled:bg-gray-200 p-2 border border-gray-300 rounded-md focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 sm:text-sm sm:leading-5']) }} />
                                 </div>
                             </div>
 
@@ -74,7 +75,7 @@
                             <div class="col-span-1">
                                 <div class="mt-4">
                                     <x-label for="patient_code_view" value="{{ __('Patient Code') }}" />
-                                    <x-input id="patient_code_view" class="block mt-1 w-full" type="text" name="patient_code_view" :value="old('patient_code_view')" disabled placeholder="Patient Code" />
+                                    <x-input id="patient_code_view" class="cursor-not-allowed opacity-50 block mt-1 w-full" type="text" name="patient_code_view" :value="old('patient_code_view')" placeholder="Patient Code" readonly />
                                 </div>
                                 <div class="mt-4">
                                     <x-label for="appointment_type" value="{{ __('Appointment Type') }}" />
@@ -82,13 +83,17 @@
                                     </x-select-field>
                                 </div>
                                 <div class="mt-4">
+                                    <x-label for="appointment_time" value="{{__('Appointment Time')}}" />
+                                    <input id="appointment_time" name="appointment_time" x-data x-init="flatpickr($refs.input, {{ $appointmentTimeOptions }} );" x-ref="input" type="text" placeholder="Select Time" data-input {{ $attributes->merge(['class' => 'mt-1 block w-full disabled:bg-gray-200 p-2 border border-gray-300 rounded-md focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 sm:text-sm sm:leading-5']) }} />
+                                </div>
+                                <div class="mt-4">
                                     <x-label value="{{ __('Health Problem') }}" />
                                     <div style="min-height:45px;">
                                         @foreach(config('variables.healthProblems') as $option)
-                                            <div style="width: 100px; float:left;">
-                                                <input id="chk-hp-{{ $option }}" type="checkbox" name="health_problem" value="{{ $option }}" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" />
-                                                <label for="chk-hp-{{ $option }}"> {{ $option }}</label>
-                                            </div>
+                                        <div style="width: 100px; float:left;">
+                                            <input id="chk-hp-{{ $option }}" type="checkbox" name="health_problem[]" value="{{ $option }}" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" />
+                                            <label for="chk-hp-{{ $option }}"> {{ $option }}</label>
+                                        </div>
                                         @endforeach
                                     </div>
                                 </div>
@@ -98,14 +103,14 @@
                                 </div>
                                 <div class="mt-4">
                                     <x-label for="cancelation_reason" value="{{__('Cancelation Reason')}}" />
-                                    <x-input id="cancelation_reason" class="block mt-1 w-full" type="text" name="cancelation_reason" required placeholder="Enter Cancelation Reason" />
+                                    <x-input id="cancelation_reason" class="block mt-1 w-full" type="text" name="cancelation_reason" placeholder="Enter Cancelation Reason" />
                                 </div>
                                 <div class="mt-4">
                                     <x-label for="missed_appointment_executive_id" value="{{__('Missed Appointment Executive')}}" />
                                     <select id="missed_appointment_executive_id" name="missed_appointment_executive_id" class="mt-1 block w-full border-gray-300 rounded-md">
                                         <option value="">Select an option</option>
                                         @foreach($users as $user)
-                                            <option value="{{ $user->id }}">{{ $user->name .' '. $user->email }}</option>
+                                        <option value="{{ $user->id }}">{{ $user->name .' '. $user->email }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -116,7 +121,7 @@
                                 </div>
                                 <div class="mt-4">
                                     <x-label for="last_messaged_datetime" value="{{__('Last Messaged Time')}}" />
-                                    <input id="last_messaged_datetime" name="last_messaged_datetime" x-data x-init="flatpickr($refs.input, {{ $options }} );" x-ref="input" type="text" placeholder="Select Time" data-input {{ $attributes->merge(['class' => 'block w-full disabled:bg-gray-200 p-2 border border-gray-300 rounded-md focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 sm:text-sm sm:leading-5']) }} />
+                                    <input id="last_messaged_datetime" name="last_messaged_datetime" x-data x-init="flatpickr($refs.input, {{ $messageTimeOptions }} );" x-ref="input" type="text" placeholder="Select Time" data-input {{ $attributes->merge(['class' => 'block w-full disabled:bg-gray-200 p-2 border border-gray-300 rounded-md focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 sm:text-sm sm:leading-5']) }} />
                                 </div>
                             </div>
                         </div>
@@ -130,4 +135,11 @@
             </div>
         </div>
     </div>
+    <script>
+        function updatePatientCodeView(selectElement) {
+            var selectedValue = selectElement.value;
+            document.getElementById('patient_code_view').value = selectedValue;
+        }
+    </script>
+
 </x-app-layout>

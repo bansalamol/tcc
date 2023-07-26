@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('health_problems', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('appointment_id');
-            $table->unsignedBigInteger('patient_id');
-            $table->text('health_problem'); 
+            $table->string('patient_code');
+            $table->text('health_problem');
             $table->text('comments')->nullable();
             $table->timestamps();
         });

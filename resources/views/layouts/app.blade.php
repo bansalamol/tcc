@@ -16,7 +16,7 @@
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/custom.js'])
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         <!-- Styles -->
         @livewireStyles

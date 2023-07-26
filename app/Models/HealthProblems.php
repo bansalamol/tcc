@@ -5,27 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Appointment extends Model
+class HealthProblems extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'appointment_id',
         'patient_code',
-        'clinic',
-        'appointment_type',
-        'appointment_time',
-        'lead_interest_score',
         'health_problem',
-        'current_status',
-        'cancelation_reason',
         'comments',
-        'assigned_to',
-        'reference_id',
-        'missed_appointment_executive_id',
-        'active',
-        'visited',
-        'last_called_datetime',
-        'last_messaged_datetime'
     ];
 
     protected static function boot()
@@ -50,10 +38,4 @@ class Appointment extends Model
             }
         });
     }
-
-    public function patient()
-    {
-        return $this->belongsTo(Patient::class, 'patient_code', 'code');
-    }
-
 }
