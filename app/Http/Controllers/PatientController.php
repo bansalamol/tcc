@@ -15,7 +15,16 @@ class PatientController extends Controller
      */
     public function index()
     {
-        $patients = Patient::all();
+        $user = auth()->user();
+        if ($user->hasRole(['Administrator', 'Manager'])) {
+            $patients = Patient::all();
+        } else {
+        $patientsCreatedByUser = Patient::where('created_by', $user->id)->get();
+        $assignedPatients = Appointment::where('assigned_to', $user->id)->pluck('patient_code')->all();;
+        $patientsAssignedToUser = Patient::whereIn('code', $assignedPatients)->get();
+        // Merge the two collections into a single collection
+        $patients = $patientsCreatedByUser->merge($patientsAssignedToUser);
+        }
         return view('patients.index', compact('patients'));
 
     }

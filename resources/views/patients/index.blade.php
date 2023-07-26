@@ -12,7 +12,7 @@
 
                     @can('manage patients')
                     <div class="float-right">
-                    <x-link href="{{ route('patients.create') }}" class="m-4">Add new Patient</x-link>
+                        <x-link href="{{ route('patients.create') }}" class="m-4">Add new Patient</x-link>
                     </div>
                     @endcan
 
@@ -53,20 +53,20 @@
                                 </td>
 
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    @role('Manager')
-                                        @if ($patient->created_by !== auth()->user()->id)
-                                            +91******
-                                        @else
-                                            {{ $patient->phone_number }}
-                                        @endif
-                                    @endrole
+
+                                    @if (auth()->user()->hasRole('Manager') && $patient->created_by !== auth()->user()->id)
+                                    +91******
+                                    @else
+                                    {{ $patient->phone_number }}
+                                    @endif
+
                                 </td>
 
                                 @can('manage patients')
                                 <td class="px-6 py-4">
                                     <x-link href="{{ route('patients.history', $patient) }}">History</x-link>
-                                    @role('Manager')
-                                    @if ($patient->created_by === auth()->user()->id)
+    
+                                    @if (auth()->user()->hasRole('Manager') && $patient->created_by === auth()->user()->id)
                                     <x-link href="{{ route('patients.edit', $patient) }}">Edit</x-link>
                                     <form method="POST" action="{{ route('patients.destroy', $patient) }}" class="inline-block">
                                         @csrf
@@ -74,7 +74,6 @@
                                         <x-danger-button type="submit" onclick="return confirm('Are you sure?')">Delete</x-danger-button>
                                     </form>
                                     @endif
-                                    @endrole
                                 </td>
                                 @endcan
                             </tr>
