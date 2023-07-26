@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,7 +28,8 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-    Route::resource('appointments', \App\Http\Controllers\AppointmentController::class);
-    Route::resource('patients', \App\Http\Controllers\PatientController::class);
+    Route::resource('appointments', AppointmentController::class);
+    Route::resource('patients', PatientController::class);
     Route::get('/patients/history/{id}', [PatientController::class, 'history'])->name('patients.history');
+    Route::resource('users', UserController::class);
 });

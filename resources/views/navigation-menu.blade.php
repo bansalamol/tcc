@@ -21,6 +21,9 @@
                     <x-nav-link href="{{ route('patients.index') }}" :active="request()->routeIs('patients.*')">
                         {{ __('Patients') }}
                     </x-nav-link>
+                    <x-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.*')">
+                        {{ __('Manage Users') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -153,6 +156,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('patients.index') }}" :active="request()->routeIs('patients.*')">
                 {{ __('Patients') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.*')">
+                {{ __('Manage Users') }}
             </x-responsive-nav-link>
         </div>
 
