@@ -59,13 +59,13 @@
         h4,
         h5,
         h6 {
-            font-size: inherit;
+            /*font-size: inherit;*/
             font-weight: inherit
         }
 
         a {
-            color: inherit;
-            text-decoration: inherit
+            color: red;
+            text-decoration: none;
         }
 
         b,
@@ -830,26 +830,24 @@
     </style>
 </head>
 
-<body class="antialiased">
+<body class="bg-gray-100 flex items-center justify-center h-screen">
     <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-        @if (Route::has('login'))
-        <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
-            @auth
-            <a href="{{ url('/dashboard') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Dashboard</a>
-            @else
-            <a href="{{ route('login') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Log in</a>
-            <!-- 
-            @if (Route::has('register'))
-            <a href="{{ route('register') }}" class="ml-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Register</a>
-            -->
-            @endif
-            @endauth
-        </div>
-        @endif
-
-        <div class="max-w-7xl mx-auto p-6 lg:p-8">
-            <div class="flex justify-center">
+        <div class="max-w-7xl mx-auto p-6 lg:p-8 text-center">
+            <div class="flex justify-center mb-4">
                 <img src="{{ asset('images/logo3.png') }}" width="300" alt="Logo">
+            </div>
+            <h1 class="text-6xl font-bold text-gray-800">Welcome to Techclinic !!</h1>
+
+            <!-- Login or Dashboard Link -->
+            <div class="mt-4">
+                @auth
+                <x-link href="{{ url('/dashboard') }}"
+                    class="m-4 underline text-red-500 ">Dashboard</x-link>
+                @else
+                <x-link href="{{ route('login') }}"
+                    class="m-4 underline text-red-500">Log in</x-link>
+                @endif    
+                
             </div>
         </div>
     </div>

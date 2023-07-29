@@ -31,5 +31,7 @@ Route::middleware([
     Route::resource('appointments', AppointmentController::class);
     Route::resource('patients', PatientController::class);
     Route::get('/patients/history/{id}', [PatientController::class, 'history'])->name('patients.history');
+    Route::get('/patient/search', [PatientController::class, 'search'])->name('patient.search');
+
     Route::resource('users', UserController::class);
 });
