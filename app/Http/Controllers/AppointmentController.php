@@ -16,7 +16,15 @@ class AppointmentController extends Controller
      */
     public function index()
     {
-        $appointments = Appointment::with('patient')->get();
+        $user = auth()->user();
+        $perPageRecords = 1;
+        if ($user->hasRole(['Administrator', 'Manager'])) {
+            $appointments = Appointment::with('patient')->paginate($perPageRecords);
+        } else {
+            // Appointments created by/assigned to the user
+            $appointments = $user->createdAssignedAppointments()->with('patient')->paginate($perPageRecords);
+
+        }
         return view('appointments.index', compact('appointments'));
     }
 

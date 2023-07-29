@@ -7,6 +7,8 @@ use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Appointment;
 use App\Models\HealthProblems;
 use App\Models\Patient;
+use Illuminate\Http\Request;
+
 
 class PatientController extends Controller
 {
@@ -16,17 +18,40 @@ class PatientController extends Controller
     public function index()
     {
         $user = auth()->user();
+        $perPageRecords = 1;
         if ($user->hasRole(['Administrator', 'Manager'])) {
-            $patients = Patient::all();
+            $patients = Patient::paginate($perPageRecords);
         } else {
-        $patientsCreatedByUser = Patient::where('created_by', $user->id)->get();
-        $assignedPatients = Appointment::where('assigned_to', $user->id)->pluck('patient_code')->all();;
-        $patientsAssignedToUser = Patient::whereIn('code', $assignedPatients)->get();
-        // Merge the two collections into a single collection
-        $patients = $patientsCreatedByUser->merge($patientsAssignedToUser);
+            $assignedPatients = Appointment::where('assigned_to', $user->id)->pluck('patient_code')->all();;
+            $patients = Patient::whereIn('code', $assignedPatients)->orWhere('created_by', $user->id)->paginate($perPageRecords);
         }
         return view('patients.index', compact('patients'));
+    }
 
+
+    public function search(Request $request)
+    {
+        $user = auth()->user();
+        $perPageRecords = 1;
+        $searchTerm = $request->input('q');
+        if ($user->hasRole(['Administrator', 'Manager'])) {
+            $patients = Patient::where(function ($query) use ($searchTerm) {
+                $query->where('name', 'LIKE', '%' . $searchTerm . '%')
+                    ->orWhere('code', 'LIKE', '%' . $searchTerm . '%')
+                    ->orWhere('phone_number', 'LIKE', '%' . $searchTerm . '%');
+            })->paginate($perPageRecords);
+        } else {
+            $assignedPatients = Appointment::where('assigned_to', $user->id)->pluck('patient_code')->all();;
+            $patients = Patient::whereIn('code', $assignedPatients)
+            ->orWhere('created_by', $user->id)
+            ->where(function ($query) use ($searchTerm) {
+                $query->where('name', 'LIKE', '%' . $searchTerm . '%')
+                      ->orWhere('code', 'LIKE', '%' . $searchTerm . '%')
+                      ->orWhere('phone_number', 'LIKE', '%' . $searchTerm . '%');
+            })
+            ->paginate($perPageRecords);
+        }
+        return view('patients.index', compact('patients'));
     }
 
     /**
@@ -47,7 +72,6 @@ class PatientController extends Controller
 
         Patient::create($request->validated());
         return redirect()->route('patients.index');
-
     }
 
     /**
@@ -101,7 +125,6 @@ class PatientController extends Controller
         // $healthProblems = HealthProblems::where('patient_code', $patient->code)->get();
         $appointments = Appointment::where('patient_code', $patient->code)->orderBy('appointment_time', 'desc')->get();
         $this->authorize('manage patients');
-        return view('patients.history', compact('patient','appointments'));
+        return view('patients.history', compact('patient', 'appointments'));
     }
-
 }

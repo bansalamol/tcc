@@ -13,7 +13,12 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users =  User::with('roles')->get();
+        $users = [];
+        $user = auth()->user();
+        $perPageRecords = 25;
+        if ($user->hasRole(['Administrator'])) {
+            $users =  User::with('roles')->paginate($perPageRecords);
+        }
         return view('users.index', compact('users'));
     }
 
@@ -21,7 +26,8 @@ class UserController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
+    {   
+        $this->authorize('manage users');
         $roles = Role::all();
         return view('users.create',compact('roles'));
     }
@@ -31,6 +37,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('manage users');
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
@@ -65,6 +72,7 @@ class UserController extends Controller
      */
     public function edit(Request $request, User $user)
     {
+        $this->authorize('manage users');
         $roles = Role::all();
         return view('users.edit', compact('user', 'roles'));
     }
@@ -74,6 +82,7 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        $this->authorize('manage users');
         // Validation rules for name and email
         $rules = [
             'name' => 'required',
