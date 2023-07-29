@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Patients') }}
+            {{ __('Users') }}
         </h2>
     </x-slot>
 
@@ -12,15 +12,9 @@
 
                     @can('manage patients')
                     <div class="float-right">
-                        <x-link href="{{ route('patients.create') }}" class="m-4">Add new Patient</x-link>
+                    <x-link href="{{ route('users.create') }}" class="m-4">Add new User</x-link>
                     </div>
                     @endcan
-                    <div class="m-4 flex">
-                        <form action="{{ route('patient.search') }}" method="GET">
-                                <input type="search" id="q" name="q"  placeholder="Search by name, code, or phone number" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
-                                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600" >Search</button>
-                        </form>
-                    </div>
 
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -29,17 +23,13 @@
                                     #
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Patient Code
+                                    Name
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Patient Name
+                                    Email Id
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Age
-                                </th>
-
-                                <th scope="col" class="px-6 py-3">
-                                    Phone Number
+                                    Role
                                 </th>
                                 @can('manage patients')
                                 <th scope="col" class="px-6 py-3">
@@ -49,50 +39,37 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($patients as $index => $patient)
+                            @forelse ($users as $index => $user)
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     {{ $index + 1 }}
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    {{ $patient->code }}
+                                    {{ $user->name }}
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    {{ $patient->name }}
+                                    {{ $user->email }}
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    {{ $patient->age }}
-                                </td>
-
-                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-
-                                    @if (auth()->user()->hasRole('Manager') && $patient->created_by !== auth()->user()->id)
-                                    +91******
-                                    @else
-                                    {{ $patient->phone_number }}
-                                    @endif
-
+                                @if ($user->roles->isEmpty())
+                                    Default User
+                                @else
+                                    @foreach ($user->roles as $role)
+                                            {{ $role->name }}
+                                    @endforeach
+                                @endif    
                                 </td>
 
                                 @can('manage patients')
                                 <td class="px-6 py-4">
-                                    <x-link href="{{ route('patients.history', $patient) }}">History</x-link>
-
-                                    @if (auth()->user()->hasRole('Manager') && $patient->created_by === auth()->user()->id)
-                                    <x-link href="{{ route('patients.edit', $patient) }}">Edit</x-link>
-                                    <form method="POST" action="{{ route('patients.destroy', $patient) }}" class="inline-block">
-                                        @csrf
-                                        @method('DELETE')
-                                        <x-danger-button type="submit" onclick="return confirm('Are you sure?')">Delete</x-danger-button>
-                                    </form>
-                                    @endif
+                                    <x-link href="{{ route('users.edit', $user) }}">Edit</x-link>
                                 </td>
                                 @endcan
                             </tr>
                             @empty
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <td colspan="2" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    {{ __('No patients found') }}
+                                    {{ __('No users found') }}
                                 </td>
                             </tr>
                             @endforelse
@@ -100,7 +77,7 @@
                     </table>
                     <!-- Pagination links -->
                     <div class="m-4">
-                        {{ $patients->links() }}
+                        {{ $users->links() }}
                     </div>
                 </div>
             </div>

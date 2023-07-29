@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('code');
             $table->string('name');
-            $table->integer('phone_number');
+            $table->unsignedBigInteger('phone_number');
             $table->enum('sex', ['Male', 'Female', 'Other'])->nullable();
             $table->date('birth_date')->nullable();
             $table->tinyInteger('age');
             $table->string('profession')->nullable();
-            $table->integer('alternate_phone_number')->nullable();
+            $table->unsignedBigInteger('alternate_phone_number')->nullable();
             $table->string('email')->nullable();
             $table->text('address');
             $table->boolean('do_not_contact')->default(false);
