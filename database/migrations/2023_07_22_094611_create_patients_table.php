@@ -23,7 +23,7 @@ return new class extends Migration
             $table->unsignedBigInteger('alternate_phone_number')->nullable();
             $table->string('email')->nullable();
             $table->text('address');
-            $table->boolean('do_not_contact')->default(false);
+            $table->string('do_not_contact')->default('No');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();

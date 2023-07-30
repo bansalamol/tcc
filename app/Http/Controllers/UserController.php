@@ -27,9 +27,10 @@ class UserController extends Controller
      */
     public function create()
     {   
-        $this->authorize('manage users');
+        //$this->authorize('manage users');
         $roles = Role::all();
-        return view('users.create',compact('roles'));
+        $managers = Role::where('name', 'Manager')->firstOrFail()->users;
+        return view('users.create',compact('roles','managers'));
     }
 
     /**
@@ -37,18 +38,26 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('manage users');
+        //$this->authorize('manage users');
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8',
             'role' => 'required|exists:roles,id',
+            'daily_lead_limit' => 'nullable|integer',
+            'manager_id' => 'nullable|exists:users,id',
+            'type' => 'nullable|in:Incoming calls,Incoming leads,Old leads,Missed appointment',
+            'comment' => 'nullable|string',
         ]);
 
         $user = User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
+            'daily_lead_limit' => $request->input('daily_lead_limit'),
+            'manager_id' => $request->input('manager_id'),
+            'type' => $request->input('type'),
+            'comment' => $request->input('comment'),
             // Add any other attributes you want to set during user creation
         ]);
 
@@ -72,9 +81,10 @@ class UserController extends Controller
      */
     public function edit(Request $request, User $user)
     {
-        $this->authorize('manage users');
+        //$this->authorize('manage users');
         $roles = Role::all();
-        return view('users.edit', compact('user', 'roles'));
+        $managers = Role::where('name', 'Manager')->firstOrFail()->users;
+        return view('users.edit', compact('user', 'roles', 'managers'));
     }
 
     /**
@@ -82,11 +92,15 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $this->authorize('manage users');
+        //$this->authorize('manage users');
         // Validation rules for name and email
         $rules = [
             'name' => 'required',
             'email' => 'required|email|unique:users,email,' . $user->id,
+            'daily_lead_limit' => 'nullable|integer',
+            'manager_id' => 'nullable|exists:users,id',
+            'type' => 'nullable|in:Incoming calls,Incoming leads,Old leads,Missed appointment',
+            'comment' => 'nullable|string',
             // Add any other validation rules as needed
         ];
 
@@ -103,6 +117,10 @@ class UserController extends Controller
         $data = [
             'name' => $request->input('name'),
             'email' => $request->input('email'),
+            'daily_lead_limit' => $request->input('daily_lead_limit'),
+            'manager_id' => $request->input('manager_id'),
+            'type' => $request->input('type'),
+            'comment' => $request->input('comment'),
             // Add any other attributes you want to update for the user
         ];
 

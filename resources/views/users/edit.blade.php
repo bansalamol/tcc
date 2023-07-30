@@ -13,7 +13,7 @@
                         @csrf
                         @method('PUT')
                         <!-- Two-Column Layout -->
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 gap-4">
                             <!-- First Column -->
                             <div class="col-span-1">
 
@@ -35,7 +35,31 @@
                                     <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
                                     <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" autocomplete="new-password" />
                                 </div>
+                                <div class="mt-4">
+                                    <x-label for="daily_lead_limit" value="{{ __('Daily Lead Limit') }}" />
+                                    <x-input id="daily_lead_limit" class="block mt-1 w-full" type="text" name="daily_lead_limit" :value="$user->daily_lead_limit" required autocomplete="daily_lead_limit" />
+                                </div>
 
+                                <div class="mt-4">
+                                    <x-select-field name="type" :options="config('variables.lead_type')" selected="{{$user->type}}">
+                                        Select {{ __('Lead Type') }}
+                                    </x-select-field>
+                                </div>
+
+                                <div class="mt-4">
+                                    <x-label for="manager_id" value="{{ __('Manager') }}" />
+                                    <select id="manager_id" name="manager_id" class="mt-1 block w-full border-gray-300 rounded-md" >
+                                        <option value="">Select Manager</option>
+                                        @foreach ($managers as $manager)
+                                        <option value="{{ $manager->id }}" @if($user->manager_id == $manager->id) selected @endif> {{ $manager->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="mt-4">
+                                    <x-label for="comment" value="{{__('Comment')}}" />
+                                    <x-input id="comment" class="block mt-1 w-full" type="text" name="comment" :value="$user->comment" required placeholder="Enter Comments" />
+                                </div>
 
                             </div>
 

@@ -78,7 +78,7 @@
                                 <td class="px-6 py-4">
                                     <x-link href="{{ route('patients.history', $patient) }}">History</x-link>
 
-                                    @if (auth()->user()->hasRole('Manager') && $patient->created_by === auth()->user()->id)
+                                    @if (auth()->user()->hasRole('Administrator') || $patient->created_by === auth()->user()->id)
                                     <x-link href="{{ route('patients.edit', $patient) }}">Edit</x-link>
                                     <form method="POST" action="{{ route('patients.destroy', $patient) }}" class="inline-block">
                                         @csrf

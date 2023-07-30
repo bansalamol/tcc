@@ -32,7 +32,7 @@ class StorePatientRequest extends FormRequest
         'alternate_phone_number' => 'nullable|string|max:10',
         'email' => 'nullable|email|max:255',
         'address' => 'required|string|max:255',
-        'do_not_contact' => 'nullable|boolean',
+        'do_not_contact' => 'nullable|in:Yes,No',
         ];
     }
 }

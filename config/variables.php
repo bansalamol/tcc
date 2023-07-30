@@ -36,4 +36,11 @@ return [
         'Non-Visited' => 'Non-Visited',
         'Dubplicate Visited' => 'Dubplicate Visited',
     ],
+
+    'lead_type' =>['Incoming calls'=> 'Visited', 
+        'Incoming leads' => 'Incoming leads',
+        'Old leads' => 'Old leads' , 
+        'Missed appointment' => 'Missed appointment'
+    ],
+    'sex' => ['Male' => 'Male', 'Female' => 'Female', 'Other' => 'Other'],
 ];
