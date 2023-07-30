@@ -15,7 +15,7 @@
                     <form method="POST" action="{{ route('patients.store') }}">
                         @csrf
                         <!-- Two-Column Layout -->
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 gap-4">
                             <!-- First Column -->
                             <div class="col-span-1">
                                 <div class="mt-4">
