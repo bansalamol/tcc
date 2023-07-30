@@ -30,7 +30,7 @@
                                 <x-input id="code" class="block mt-1 w-full" type="text" name="code" :value="$patient->code" autocomplete="code" readonly />
                             </div>
                             <div class="mt-4">
-                                <x-select-field name="sex" :options="['Male' => 'Male', 'Female' => 'Female', 'Other' => 'Other']" selected="{{$patient->sex}}" disabled>
+                                <x-select-field name="sex" :options="config('variables.sex')" selected="{{$patient->sex}}" disabled>
                                     Select {{ __('Sex') }}
                                 </x-select-field>
                             </div>

@@ -18,7 +18,7 @@ class PatientController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $perPageRecords = 1;
+        $perPageRecords = 10;
         if ($user->hasRole(['Administrator', 'Manager'])) {
             $patients = Patient::paginate($perPageRecords);
         } else {
@@ -32,7 +32,7 @@ class PatientController extends Controller
     public function search(Request $request)
     {
         $user = auth()->user();
-        $perPageRecords = 1;
+        $perPageRecords = 10;
         $searchTerm = $request->input('q');
         if ($user->hasRole(['Administrator', 'Manager'])) {
             $patients = Patient::where(function ($query) use ($searchTerm) {

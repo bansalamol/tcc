@@ -15,7 +15,7 @@
                     <form method="POST" action="{{ route('patients.store') }}">
                         @csrf
                         <!-- Two-Column Layout -->
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 gap-4">
                             <!-- First Column -->
                             <div class="col-span-1">
                                 <div class="mt-4">
@@ -34,7 +34,7 @@
                                 </div>
 
                                 <div class="mt-4">
-                                    <x-select-field name="sex" :options="['Male' => 'Male', 'Female' => 'Female', 'Other' => 'Other']" selected="">
+                                    <x-select-field name="sex" :options="config('variables.sex')" selected="">
                                         Select {{ __('Sex') }}
                                     </x-select-field>
                                 </div>
@@ -74,7 +74,7 @@
                                     <x-input id="address" class="block mt-1 w-full" type="text" name="address" :value="old('address')" required autofocus autocomplete="address" />
                                 </div>
                                 <div class="mt-4">
-                                    <x-select-field name="do_not_contact" :options="['1' => 'Yes', '0' => 'No']" selected="0">
+                                    <x-select-field name="do_not_contact" :options="config('variables.yesNo')" selected="No">
                                         Select {{ __('Do Not Contact') }}
                                     </x-select-field>
                                 </div>

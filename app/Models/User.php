@@ -31,6 +31,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'daily_lead_limit',
+        'manager_id',
+        'type',
+        'comment',
     ];
 
     /**

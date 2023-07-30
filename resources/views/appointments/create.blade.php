@@ -18,7 +18,7 @@
                         @csrf
 
                         <!-- Two-Column Layout -->
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 gap-4">
                             <!-- First Column -->
                             <div class="col-span-1">
                                 <div class="mt-4">
@@ -117,7 +117,7 @@
                                 </div>
                                 <div class="mt-4">
                                     <x-label for="visited" value="{{__('Visited')}}" />
-                                    <x-select-field name="visited" :options="config('variables.yesNo')" required>
+                                    <x-select-field name="visited" :options="config('variables.visited')" required>
                                     </x-select-field>
                                 </div>
                                 <div class="mt-4">

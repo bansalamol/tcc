@@ -15,7 +15,7 @@
                         @csrf
                         @method('PUT')
                         <!-- Two-Column Layout -->
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 gap-4">
                             <!-- First Column -->
                             <div class="col-span-1">
                                 <div class="mt-4">
@@ -34,7 +34,7 @@
                                 </div>
 
                                 <div class="mt-4">
-                                    <x-select-field name="sex" :options="['Male' => 'Male', 'Female' => 'Female', 'Other' => 'Other']" selected="{{$patient->sex}}">
+                                    <x-select-field name="sex" :options="config('variables.sex')" selected="{{$patient->sex}}">
                                         Select {{ __('Sex') }}
                                     </x-select-field>
                                 </div>
@@ -68,7 +68,7 @@
                                     <x-input id="address" class="block mt-1 w-full" type="text" name="address" :value="$patient->address" required autofocus autocomplete="address" />
                                 </div>
                                 <div class="mt-4">
-                                    <x-select-field name="do_not_contact" :options="[1 => 'Yes', 0 => 'No']" selected="{{$patient->do_not_contact}}">
+                                    <x-select-field name="do_not_contact" :options="config('variables.yesNo')" selected="{{$patient->do_not_contact}}">
                                         Select {{ __('Do Not Contact') }}
                                     </x-select-field>
                                 </div>
