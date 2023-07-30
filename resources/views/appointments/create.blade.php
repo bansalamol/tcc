@@ -117,7 +117,7 @@
                                 </div>
                                 <div class="mt-4">
                                     <x-label for="visited" value="{{__('Visited')}}" />
-                                    <x-select-field name="visited" :options="config('variables.yesNo')" required>
+                                    <x-select-field name="visited" :options="config('variables.visited')" required>
                                     </x-select-field>
                                 </div>
                                 <div class="mt-4">

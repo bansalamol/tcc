@@ -31,4 +31,9 @@ return [
         'No' => 'No',
         'Yes' => 'Yes',
     ],
+    'visited' => [
+        'Visited' => 'Visited',
+        'Non-Visited' => 'Non-Visited',
+        'Dubplicate Visited' => 'Dubplicate Visited',
+    ],
 ];
