@@ -35,6 +35,7 @@ class User extends Authenticatable
         'manager_id',
         'type',
         'comment',
+        'phone_number'
     ];
 
     /**
