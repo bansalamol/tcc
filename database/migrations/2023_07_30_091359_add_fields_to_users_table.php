@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('manager_id')->nullable();
             $table->enum('type', ['Incoming calls', 'Incoming leads', 'Old leads', 'Missed appointment'])->nullable();
             $table->text('comment')->nullable();
+            $table->unsignedBigInteger('phone_number')->nullable();
         });
     }
 
@@ -29,6 +30,7 @@ return new class extends Migration
             $table->dropColumn('manager_id');
             $table->dropColumn('type');
             $table->dropColumn('comment');
+            $table->dropColumn('phone_number');
         });
     }
 };

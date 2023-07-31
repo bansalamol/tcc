@@ -127,4 +127,12 @@ class PatientController extends Controller
         $this->authorize('manage patients');
         return view('patients.history', compact('patient', 'appointments'));
     }
+
+    public function searchbyphone(Request $request)
+    {
+        $phone = $request->query('phone');
+        $patients = Patient::where('phone_number', 'LIKE', "%{$phone}%")->get();
+        return response()->json($patients);
+    }
+
 }

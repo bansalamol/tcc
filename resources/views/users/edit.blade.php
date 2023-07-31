@@ -36,6 +36,10 @@
                                     <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" autocomplete="new-password" />
                                 </div>
                                 <div class="mt-4">
+                                    <x-label for="phone_number" value="{{ __('Phone Number') }}" />
+                                    <x-input id="phone_number" class="block mt-1 w-full" type="text" name="phone_number" :value="$user->phone_number" required autocomplete="phone_number" />
+                                </div>
+                                <div class="mt-4">
                                     <x-label for="daily_lead_limit" value="{{ __('Daily Lead Limit') }}" />
                                     <x-input id="daily_lead_limit" class="block mt-1 w-full" type="text" name="daily_lead_limit" :value="$user->daily_lead_limit" required autocomplete="daily_lead_limit" />
                                 </div>

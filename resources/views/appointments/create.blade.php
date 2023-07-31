@@ -1,7 +1,6 @@
-
 @props(['callTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: 'today', maxDate: 'today'}"])
 @props(['messageTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: 'today', maxDate: 'today'}"])
-@props(['appointmentTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: 'tomorrow', minDate: 'today'}"])
+@props(['appointmentTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: 'today', minDate: 'today'}"])
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -21,6 +20,7 @@
                         <div class="grid grid-cols-1 gap-4">
                             <!-- First Column -->
                             <div class="col-span-1">
+                                <!-- 
                                 <div class="mt-4">
                                     <x-label for="patient_code" value="{{ __('Patient Name') }}" />
                                     <select onchange="updatePatientCodeView(this)" id="patient_code" name="patient_code" class="mt-1 block w-full border-gray-300 rounded-md">
@@ -29,6 +29,29 @@
                                         <option value="{{ $patient->code }}">{{ $patient->name .' '. $patient->email .' '. $patient->phone_number }}</option>
                                         @endforeach
                                     </select>
+                                </div>
+                                -->
+                                <div class="mt-4">
+                                    <x-label for="phone_number" value="{{ __('Search Patient by Phone Number:') }}" />
+                                    <input id="phone_number" class="block mt-1 w-full  border-gray-300 rounded-md" x-data  type="text" name="phone_number"  required autofocus autocomplete="phone_number" x-on:input="searchPatients()"  />
+                                    <!-- Search Results Dropdown -->
+                                    <ul id="search-results"></ul>
+
+                                    <!-- "Create New Patient" Link -->
+                                    <p id="no-patient-found" style="display: none; color:red">No patient found with the given phone number.</p>
+                                    <a href="{{ route('patients.create') }}" id="create-patient-link" style="display: none;color:blue">Create New Patient</a>
+
+                                </div>
+
+
+                                <div class="mt-4">
+                                    <x-label for="patient_code" value="{{ __('Patient Code') }}" />
+                                    <x-input id="patient_code" class="cursor-not-allowed opacity-50 block mt-1 w-full" type="text" name="patient_code" :value="old('patient_code')" placeholder="Patient Code" readonly />
+                                </div>
+                                <div class="mt-4">
+                                    <x-label for="appointment_type" value="{{ __('Appointment Type') }}" />
+                                    <x-select-field name="appointment_type" :options="config('variables.appointmentTypes')" required>
+                                    </x-select-field>
                                 </div>
                                 <div class="mt-4">
                                     <x-label for="clinic" value="{{__('Clinic')}}" />
@@ -74,15 +97,7 @@
 
                             <!-- Second Column -->
                             <div class="col-span-1">
-                                <div class="mt-4">
-                                    <x-label for="patient_code_view" value="{{ __('Patient Code') }}" />
-                                    <x-input id="patient_code_view" class="cursor-not-allowed opacity-50 block mt-1 w-full" type="text" name="patient_code_view" :value="old('patient_code_view')" placeholder="Patient Code" readonly />
-                                </div>
-                                <div class="mt-4">
-                                    <x-label for="appointment_type" value="{{ __('Appointment Type') }}" />
-                                    <x-select-field name="appointment_type" :options="config('variables.appointmentTypes')" required>
-                                    </x-select-field>
-                                </div>
+
                                 <div class="mt-4">
                                     <x-label for="appointment_time" value="{{__('Appointment Time')}}" />
                                     <input id="appointment_time" name="appointment_time" x-data x-init="flatpickr($refs.input, {{ $appointmentTimeOptions }} );" x-ref="input" type="text" placeholder="Select Time" data-input {{ $attributes->merge(['class' => 'mt-1 block w-full disabled:bg-gray-200 p-2 border border-gray-300 rounded-md focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 sm:text-sm sm:leading-5']) }} />
@@ -136,11 +151,56 @@
             </div>
         </div>
     </div>
+    
     <script>
+        /*
         function updatePatientCodeView(selectElement) {
             var selectedValue = selectElement.value;
             document.getElementById('patient_code_view').value = selectedValue;
         }
-    </script>
+        */
+        function searchPatients() {
+            
+            const searchResults = document.getElementById('search-results');
+            const noPatientFound = document.getElementById('no-patient-found');
+            const createPatientLink = document.getElementById('create-patient-link');
+            const phone = document.getElementById('phone_number').value;
+            // Clear the previous search results
+            searchResults.innerHTML = '';
+            noPatientFound.style.display = 'none';
+            createPatientLink.style.display = 'none';
 
+            // Perform the search only if the phone number has exactly 10 digits
+            if (phone.length === 10) {
+                fetch(`/patient/searchbyphone?phone=${phone}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            data.forEach(patient => {
+                                const li = document.createElement('li');
+                                li.textContent = `${patient.name} (${patient.phone_number})`;
+                                li.addEventListener('click', () => selectPatient(li, patient.code));
+                                searchResults.appendChild(li);
+                            });
+                        } else {
+                            noPatientFound.style.display = 'block';
+                            createPatientLink.style.display = 'block';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching patients:', error);
+                    });
+            }
+
+        }
+
+        function selectPatient(selectedItem, patientId) {
+            document.getElementById('patient_code').value = patientId;
+            document.getElementById('phone_number').value = selectedItem;
+            document.getElementById('search-results').innerHTML = '';
+            document.getElementById('no-patient-found').style.display = 'none';
+            document.getElementById('create-patient-link').style.display = 'none';
+        }
+    </script>
+    
 </x-app-layout>

@@ -48,6 +48,7 @@ class UserController extends Controller
             'manager_id' => 'nullable|exists:users,id',
             'type' => 'nullable|in:Incoming calls,Incoming leads,Old leads,Missed appointment',
             'comment' => 'nullable|string',
+            'phone_number'=> 'required|min:10',
         ]);
 
         $user = User::create([
@@ -58,7 +59,7 @@ class UserController extends Controller
             'manager_id' => $request->input('manager_id'),
             'type' => $request->input('type'),
             'comment' => $request->input('comment'),
-            // Add any other attributes you want to set during user creation
+            'phone_number' => $request->input('phone_number'),
         ]);
 
         // Assign the role to the user
@@ -101,7 +102,7 @@ class UserController extends Controller
             'manager_id' => 'nullable|exists:users,id',
             'type' => 'nullable|in:Incoming calls,Incoming leads,Old leads,Missed appointment',
             'comment' => 'nullable|string',
-            // Add any other validation rules as needed
+            'phone_number'=> 'required|min:10',
         ];
 
         // Check if the password field is not empty
@@ -121,7 +122,7 @@ class UserController extends Controller
             'manager_id' => $request->input('manager_id'),
             'type' => $request->input('type'),
             'comment' => $request->input('comment'),
-            // Add any other attributes you want to update for the user
+            'phone_number' => $request->input('phone_number'),
         ];
 
         // Check if the password field is not empty before updating
