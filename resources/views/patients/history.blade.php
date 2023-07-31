@@ -44,13 +44,13 @@
                                         <div class="pt-8 pl-4 pr-4 pb-4 bg-gray"><strong>Appointment Date:</strong> {{ date('d-M-y H:i', strtotime($appointment->appointment_time)) }}</div>
                                         <div class="pt-4 pl-4 pr-4 pb-4 bg-gray">
                                             <strong>Health Problems:</strong>
-                                            @foreach(explode(', ', $appointment->health_problem) as $hp)
-                                            <div class="mt-2 ml-5">- {{$hp}}</div>
+                                            @foreach($appointment->healthProblems as $hp)
+                                            <div class="mt-2 ml-5">- {{$hp->health_problem}}</div>
                                             @endforeach
                                         </div>
                                         <div class="pt-4 pl-4 pr-4 pb-4 bg-gray">
                                             <strong>Comments:</strong>
-                                            <div class="mt-2 ml-5">{{$appointment->comments}}</div>
+                                            <div class="mt-2 ml-5">{{$hp->comments}}</div>
                                         </div>
                                     </div>
                                 </li>

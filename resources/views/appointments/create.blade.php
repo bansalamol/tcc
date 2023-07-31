@@ -20,7 +20,7 @@
                         <div class="grid grid-cols-1 gap-4">
                             <!-- First Column -->
                             <div class="col-span-1">
-                                <!-- 
+                                <!--
                                 <div class="mt-4">
                                     <x-label for="patient_code" value="{{ __('Patient Name') }}" />
                                     <select onchange="updatePatientCodeView(this)" id="patient_code" name="patient_code" class="mt-1 block w-full border-gray-300 rounded-md">
@@ -32,10 +32,14 @@
                                 </div>
                                 -->
                                 <div class="mt-4">
-                                    <x-label for="phone_number" value="{{ __('Search Patient by Phone Number:') }}" />
-                                    <input id="phone_number" class="block mt-1 w-full  border-gray-300 rounded-md" x-data  type="text" name="phone_number"  required autofocus autocomplete="phone_number" x-on:input="searchPatients()"  />
+                                    <x-label for="phone_number" value="{{ __('Select Patient') }}" />
+                                    <input id="phone_number" class="block mt-1 w-full  border-gray-300 rounded-md" x-data type="text" name="phone_number" required autofocus autocomplete="phone_number" x-on:input="searchPatients()" placeholder="Search Patient by Phone Number" />
                                     <!-- Search Results Dropdown -->
                                     <ul id="search-results"></ul>
+                                    <span style="float: right;">
+                                        <a class="ml-2 text-blue-500" href="sms:" target="_blank" onclick="openMessage(event);">SMS</a>
+                                        <a class="ml-2 text-blue-500" href="https://wa.me/" target="_blank" onclick="openMessage(event);">WhatsApp</a>
+                                    </span>
 
                                     <!-- "Create New Patient" Link -->
                                     <p id="no-patient-found" style="display: none; color:red">No patient found with the given phone number.</p>
@@ -106,14 +110,14 @@
                                     <x-label value="{{ __('Health Problem') }}" />
                                     <div style="min-height:45px;">
                                         @foreach(config('variables.healthProblems') as $option)
-                                        <div style="width: 100px; float:left;">
+                                        <div class="ml-5 mt-1" style="width:auto; float:left;">
                                             <input id="chk-hp-{{ $option }}" type="checkbox" name="health_problem[]" value="{{ $option }}" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" />
                                             <label for="chk-hp-{{ $option }}"> {{ $option }}</label>
                                         </div>
                                         @endforeach
                                     </div>
                                 </div>
-                                <div class="mt-4">
+                                <div class="">
                                     <x-label for="comments" value="{{__('Comments')}}" />
                                     <x-input id="comments" class="block mt-1 w-full" type="text" name="comments" required placeholder="Enter Comments" />
                                 </div>
@@ -151,7 +155,10 @@
             </div>
         </div>
     </div>
-    
+    <div style="display:none;">
+        <span id="mobile"></span>
+    </div>
+
     <script>
         /*
         function updatePatientCodeView(selectElement) {
@@ -160,7 +167,7 @@
         }
         */
         function searchPatients() {
-            
+
             const searchResults = document.getElementById('search-results');
             const noPatientFound = document.getElementById('no-patient-found');
             const createPatientLink = document.getElementById('create-patient-link');
@@ -169,6 +176,8 @@
             searchResults.innerHTML = '';
             noPatientFound.style.display = 'none';
             createPatientLink.style.display = 'none';
+            document.getElementById('mobile').textContent = "";
+
 
             // Perform the search only if the phone number has exactly 10 digits
             if (phone.length === 10) {
@@ -179,7 +188,7 @@
                             data.forEach(patient => {
                                 const li = document.createElement('li');
                                 li.textContent = `${patient.name} (${patient.phone_number})`;
-                                li.addEventListener('click', () => selectPatient(li, patient.code));
+                                li.addEventListener('click', () => selectPatient(li.textContent, patient.code, patient.phone_number));
                                 searchResults.appendChild(li);
                             });
                         } else {
@@ -194,13 +203,44 @@
 
         }
 
-        function selectPatient(selectedItem, patientId) {
+        function selectPatient(selectedItem, patientId, mobile) {
+            document.getElementById('mobile').textContent = mobile;
             document.getElementById('patient_code').value = patientId;
             document.getElementById('phone_number').value = selectedItem;
             document.getElementById('search-results').innerHTML = '';
             document.getElementById('no-patient-found').style.display = 'none';
             document.getElementById('create-patient-link').style.display = 'none';
         }
+
+        function openMessage(event) {
+            event.preventDefault();
+            const mobile = document.getElementById('mobile').textContent;
+            if (mobile.length == 0) {
+                alert('Please select the Patient!');
+            } else {
+                const linkUrl = event.target.getAttribute('href') + mobile;
+                window.open(linkUrl, '_blank');
+            }
+        }
     </script>
-    
+
+    <style>
+        #search-results li {
+            min-height: 30px;
+            border-radius: 5px;
+            padding: 5px;
+            margin: 1px;
+            background-color: #edf3f7;
+        }
+        #search-results li:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        #search-results li:nth-child(odd) {
+            background-color: #edf3f7;
+        }
+        #search-results li:hover {
+            background-color: #f5cb85;
+        }
+    </style>
+
 </x-app-layout>

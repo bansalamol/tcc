@@ -16,6 +16,12 @@
                         <x-link href="{{ route('patients.create') }}" class="m-4">Add new Patient</x-link>
                     </div>
                     @endcan
+                    <div class="m-4 flex">
+                        <form action="{{ route('appointments.index') }}" method="GET">
+                            <input type="search" id="q" name="q" value="{{$searchTerm}}" placeholder="Search by name, code, or phone number" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
+                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Search</button>
+                        </form>
+                    </div>
 
 
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -25,22 +31,52 @@
                                     #
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Patient Code
+                                    <a href="{{ route('appointments.index', [
+                                        'sortField' => 'patient_code',
+                                        'sortDirection' => $sortField === 'patient_code' && $sortDirection === 'asc' ? 'desc' : 'asc',
+                                        'q' => request()->input('q'),
+                                        ]) }}">
+                                        Patient Code
+                                    </a>
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Patient Name
+                                    <a href="{{ route('appointments.index', [
+                                        'sortField' => 'name',
+                                        'sortDirection' => $sortField === 'name' && $sortDirection === 'asc' ? 'desc' : 'asc',
+                                        'q' => request()->input('q'),
+                                        ]) }}">
+                                        Patient Name
+                                    </a>
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Appointment Type
+                                    <a href="{{ route('appointments.index', [
+                                        'sortField' => 'appointment_type',
+                                        'sortDirection' => $sortField === 'appointment_type' && $sortDirection === 'asc' ? 'desc' : 'asc',
+                                        'q' => request()->input('q'),
+                                        ]) }}">
+                                        Appointment Type
+                                    </a>
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Appointment Date
+                                    <a href="{{ route('appointments.index', [
+                                        'sortField' => 'appointment_time',
+                                        'sortDirection' => $sortField === 'appointment_time' && $sortDirection === 'asc' ? 'desc' : 'asc',
+                                        'q' => request()->input('q'),
+                                        ]) }}">
+                                        Appointment Date
+                                    </a>
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Health Problem
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Current Status
+                                    <a href="{{ route('appointments.index', [
+                                        'sortField' => 'current_status',
+                                        'sortDirection' => $sortField === 'current_status' && $sortDirection === 'asc' ? 'desc' : 'asc',
+                                        'q' => request()->input('q'),
+                                        ]) }}">
+                                        Current Status
+                                    </a>
                                 </th>
                                 @can('manage patients')
                                 <th scope="col" class="px-6 py-3">
@@ -51,12 +87,22 @@
                         </thead>
                         <tbody>
                             @forelse ($appointments as $index => $appointment)
+                            <?php
+                            $healthProblems = [];
+                            foreach ($appointment->healthProblems as $healthProblem) {
+                                $healthProblems[] = $healthProblem->health_problem;
+                            }
+                            $appointment->health_problem = implode(", ", $healthProblems);
+                            ?>
+
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     {{ $index + 1 }}
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    {{ $appointment->patient_code }}
+                                    <a class="text-blue-500" href="{{ route('patient.history', ['id' => $appointment->patient->id]) }}">
+                                        {{ $appointment->patient_code }}
+                                    </a>
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     {{ $appointment->patient->name }}
@@ -69,7 +115,7 @@
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     @if(strlen($appointment->health_problem) > 10)
-                                    <span id="health_problem_{{ $appointment->id }}_short" >{{ substr($appointment->health_problem, 0, 10) }}...</span>
+                                    <span id="health_problem_{{ $appointment->id }}_short">{{ substr($appointment->health_problem, 0, 10) }}...</span>
                                     <span id="health_problem_{{ $appointment->id }}" class="hidden">{{ $appointment->health_problem }}</span>
                                     <a href="#" class="text-blue-500 ml-1" onclick="showFullContent(event, this, 'health_problem_{{ $appointment->id }}')">more</a>
                                     @else
@@ -102,7 +148,7 @@
                     </table>
                     <!-- Pagination links -->
                     <div class="m-4">
-                        {{ $appointments->links() }}
+                        {{ $appointments->appends(['q' => request()->input('q'),'sortField' => request()->input('sortField'),'sortDirection' => request()->input('sortDirection')])->links() }}
                     </div>
                 </div>
             </div>

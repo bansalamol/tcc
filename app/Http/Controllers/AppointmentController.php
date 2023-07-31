@@ -8,24 +8,67 @@ use App\Models\Appointment;
 use App\Models\HealthProblems;
 use App\Models\Patient;
 use App\Models\User;
+use Exception;
+use Illuminate\Http\Request;
+
 
 class AppointmentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $user = auth()->user();
         $perPageRecords = 10;
-        if ($user->hasRole(['Administrator', 'Manager'])) {
-            $appointments = Appointment::with('patient')->paginate($perPageRecords);
+        $defaultLastDays = 3;
+        $user = auth()->user();
+        $searchTerm = $request->input('q');
+        $sortField = request()->input('sortField', 'id');
+        $sortDirection = request()->input('sortDirection', 'desc');
+        $dbQuery = Appointment::with('patient');
+        if ($user->hasRole(['Administrator'])) {
+        } else if ($user->hasRole(['Manager'])) {
+            $subordinateIds = User::where('manager_id', $user->id)->pluck('id')->toArray();
+            $subordinateIds[] = $user->id; // added to see records created by manager or assigned to manager
+            $dbQuery
+                ->where(function ($query) use ($user, $subordinateIds) {
+                    $query->whereIn('created_by', $subordinateIds)
+                        ->orWhereIn('assigned_to', $subordinateIds);
+                });
+        } else if ($user->hasRole(['Presales'])) {
+            $dbQuery
+                ->where(function ($query) use ($user) {
+                    $query->where('created_by', $user->id);
+                    $query->orWhere('assigned_to', $user->id);
+                });
         } else {
-            // Appointments created by/assigned to the user
-            $appointments = $user->createdAssignedAppointments()->with('patient')->paginate($perPageRecords);
-
+            throw new Exception("Role not supported");
         }
-        return view('appointments.index', compact('appointments'));
+
+        if ($user->hasRole(['Administrator', 'Manager'])) {
+            $dbQuery = Appointment::with('patient');
+        } else {
+            $dbQuery = $user->createdAssignedAppointments()->with('patient');
+        }
+
+        if (!empty($searchTerm)) {
+            $dbQuery
+                ->whereHas('patient', function ($query) use ($searchTerm) {
+                    $query->where('name', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('code', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('phone_number', 'like', '%' . $searchTerm . '%');
+                });
+        } else {
+            $dbQuery->whereDate('appointments.created_at', '>=', date("Y-m-d", strtotime("-$defaultLastDays days")));
+        }
+
+        $appointments = $dbQuery
+            ->join('patients', 'appointments.patient_code', '=', 'patients.code')
+            ->select('appointments.*', 'patients.name as patient_name')
+            ->orderBy($sortField, $sortDirection)
+            ->paginate($perPageRecords);
+
+        return view('appointments.index', compact('appointments', 'searchTerm', 'sortField', 'sortDirection'));
     }
 
     /**
@@ -50,13 +93,15 @@ class AppointmentController extends Controller
         $healthProblem = $data['health_problem'];
         $healthProblem = ((isset($data['health_problem']) && is_array($data['health_problem']))) ? $data['health_problem'] : ['Other'];
         $data['health_problem'] = implode(', ', $healthProblem);
+        $comments = $data['comments'];
+        unset($data['health_problem'], $data['comments']);
         $appointment = Appointment::create($data);
         $healthProblemData = [];
-        foreach($healthProblem as $healthProblem) {
+        foreach ($healthProblem as $healthProblem) {
             $healthProblemData[] = [
                 'appointment_id' => $appointment->id,
                 'patient_code' => $data['patient_code'],
-                'comments' => $data['comments'],
+                'comments' => $comments,
                 'health_problem' => $healthProblem,
             ];
         }
@@ -78,9 +123,16 @@ class AppointmentController extends Controller
     public function edit(Appointment $appointment)
     {
         $this->authorize('manage appointments');
+        $appointment->load('healthProblems');
+        $healthPromlemData = [];
+        foreach ($appointment->healthProblems as $healthProblem) {
+            $appointment->comments = $healthProblem->comments;
+            $healthPromlemData[] = $healthProblem->health_problem;
+        }
+        $appointment->health_problem = implode(', ', $healthPromlemData);
         $appointments = Appointment::all();
         $users = User::all();
-        return view('appointments.edit', compact('appointment','appointments','users'));
+        return view('appointments.edit', compact('appointment', 'appointments', 'users'));
     }
 
     /**
@@ -93,9 +145,8 @@ class AppointmentController extends Controller
         $healthProblem = $data['health_problem'];
         $healthProblem = ((isset($data['health_problem']) && is_array($data['health_problem']))) ? $data['health_problem'] : ['Other'];
         $data['health_problem'] = implode(', ', $healthProblem);
-        $appointment->update($data);
         $healthProblemData = [];
-        foreach($healthProblem as $healthProblem) {
+        foreach ($healthProblem as $healthProblem) {
             $healthProblemData[] = [
                 'appointment_id' => $appointment->id,
                 'patient_code' => $data['patient_code'],
@@ -103,6 +154,8 @@ class AppointmentController extends Controller
                 'health_problem' => $healthProblem,
             ];
         }
+        unset($data['health_problem'], $data['comments']);
+        $appointment->update($data);
         HealthProblems::where('appointment_id', $appointment->id)->delete();
         HealthProblems::insert($healthProblemData);
         return redirect()->route('appointments.index');
