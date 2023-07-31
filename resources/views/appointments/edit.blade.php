@@ -24,6 +24,14 @@
                                 <div class="mt-4">
                                     <x-label for="name" value="{{ __('Patient Name') }}" />
                                     <x-input id="name" class="cursor-not-allowed opacity-50 block mt-1 w-full" type="text" name="name" :value="$appointment->patient->name" placeholder="Enter Patient Name" readonly />
+                                    <span style="float: right;">
+                                        <a class="ml-2 text-blue-500" href="sms:" target="_blank" onclick="openMessage(event);">SMS</a>
+                                        <a class="ml-2 text-blue-500" href="https://wa.me/" target="_blank" onclick="openMessage(event);">WhatsApp</a>
+                                    </span>
+                                </div>
+                                <div class="mt-4">
+                                    <x-label for="patient_code" value="{{ __('Patient Code') }}" />
+                                    <x-input id="patient_code" class="cursor-not-allowed opacity-50 block mt-1 w-full" type="text" name="patient_code" :value="$appointment->patient_code" placeholder="Patient Code" readonly />
                                 </div>
                                 <div class="mt-4">
                                     <x-label for="clinic" value="{{__('Clinic')}}" />
@@ -70,10 +78,6 @@
                             <!-- Second Column -->
                             <div class="col-span-1">
                                 <div class="mt-4">
-                                    <x-label for="patient_code" value="{{ __('Patient Code') }}" />
-                                    <x-input id="patient_code" class="cursor-not-allowed opacity-50 block mt-1 w-full" type="text" name="patient_code" :value="$appointment->patient_code" placeholder="Patient Code" readonly />
-                                </div>
-                                <div class="mt-4">
                                     <x-label for="appointment_type" value="{{ __('Appointment Type') }}" />
                                     <x-select-field name="appointment_type" :selected="$appointment->appointment_type" :options="config('variables.appointmentTypes')" required>
                                     </x-select-field>
@@ -86,14 +90,14 @@
                                     <x-label value="{{ __('Health Problem') }}" />
                                     <div style="min-height:45px;">
                                         @foreach(config('variables.healthProblems') as $option)
-                                        <div style="width: 100px; float:left;">
+                                        <div class="ml-5 mt-1" style="width:auto; float:left;">
                                             <input id="chk-hp-{{ $option }}" type="checkbox" @if(in_array($option, explode(', ', $appointment->health_problem))) checked @endif name="health_problem[]" value="{{ $option }}" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" />
                                             <label for="chk-hp-{{ $option }}"> {{ $option }}</label>
                                         </div>
                                         @endforeach
                                     </div>
                                 </div>
-                                <div class="mt-4">
+                                <div class="">
                                     <x-label for="comments" value="{{__('Comments')}}" />
                                     <x-input id="comments" class="block mt-1 w-full" type="text" name="comments" :value="$appointment->comments" required placeholder="Enter Comments" />
                                 </div>
@@ -131,10 +135,20 @@
             </div>
         </div>
     </div>
+    <div style="display:none;">
+        <span id="mobile">{{$appointment->patient->phone_number}}</span>
+    </div>
+
     <script>
-        function updatePatientCodeView(selectElement) {
-            var selectedValue = selectElement.value;
-            document.getElementById('patient_code_view').value = selectedValue;
+        function openMessage(event) {
+            event.preventDefault();
+            const mobile = document.getElementById('mobile').textContent;
+            if (mobile.length == 0) {
+                alert('Please select the Patient!');
+            } else {
+                const linkUrl = event.target.getAttribute('href') + mobile;
+                window.open(linkUrl, '_blank');
+            }
         }
     </script>
 

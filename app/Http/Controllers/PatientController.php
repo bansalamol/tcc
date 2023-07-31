@@ -19,13 +19,14 @@ class PatientController extends Controller
     {
         $user = auth()->user();
         $perPageRecords = 10;
+        $searchTerm = '';
         if ($user->hasRole(['Administrator', 'Manager'])) {
             $patients = Patient::paginate($perPageRecords);
         } else {
             $assignedPatients = Appointment::where('assigned_to', $user->id)->pluck('patient_code')->all();;
             $patients = Patient::whereIn('code', $assignedPatients)->orWhere('created_by', $user->id)->paginate($perPageRecords);
         }
-        return view('patients.index', compact('patients'));
+        return view('patients.index', compact('patients','searchTerm'));
     }
 
 
@@ -51,7 +52,7 @@ class PatientController extends Controller
             })
             ->paginate($perPageRecords);
         }
-        return view('patients.index', compact('patients'));
+        return view('patients.index', compact('patients','searchTerm'));
     }
 
     /**
@@ -130,7 +131,9 @@ class PatientController extends Controller
 
     public function searchbyphone(Request $request)
     {
-        $phone = $request->query('phone');
+        // need to add a role check code & check if available in logged in users bucket
+        $this->authorize('manage appointments');
+        $phone = preg_replace('/\D/', '',$request->query('phone'));
         $patients = Patient::where('phone_number', 'LIKE', "%{$phone}%")->get();
         return response()->json($patients);
     }

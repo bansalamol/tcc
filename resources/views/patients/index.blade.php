@@ -17,7 +17,7 @@
                     @endcan
                     <div class="m-4 flex">
                         <form action="{{ route('patient.search') }}" method="GET">
-                                <input type="search" id="q" name="q"  placeholder="Search by name, code, or phone number" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
+                                <input type="search" id="q" name="q" value="{{$searchTerm}}" placeholder="Search by name, code, or phone number" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
                                 <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600" >Search</button>
                         </form>
                     </div>
@@ -76,7 +76,7 @@
 
                                 @can('manage patients')
                                 <td class="px-6 py-4">
-                                    <x-link href="{{ route('patients.history', $patient) }}">History</x-link>
+                                    <?php /* ?><x-link href="{{ route('patients.history', $patient) }}">History</x-link><?php */ ?>
 
                                     @if (auth()->user()->hasRole('Administrator') || $patient->created_by === auth()->user()->id)
                                     <x-link href="{{ route('patients.edit', $patient) }}">Edit</x-link>
@@ -100,7 +100,7 @@
                     </table>
                     <!-- Pagination links -->
                     <div class="m-4">
-                        {{ $patients->links() }}
+                        {{ $patients->appends(['q' => request()->input('q')])->links() }}
                     </div>
                 </div>
             </div>
