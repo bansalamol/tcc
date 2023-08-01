@@ -131,11 +131,13 @@ class PatientController extends Controller
 
     public function searchbyphone(Request $request)
     {
+        if ($request->ajax()) {
         // need to add a role check code & check if available in logged in users bucket
         $this->authorize('manage appointments');
         $phone = preg_replace('/\D/', '',$request->query('phone'));
         $patients = Patient::where('phone_number', 'LIKE', "%{$phone}%")->get();
         return response()->json($patients);
+        }
     }
 
 }
