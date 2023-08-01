@@ -131,13 +131,22 @@ class PatientController extends Controller
 
     public function searchbyphone(Request $request)
     {
+<<<<<<< Updated upstream
         if ($request->ajax()) {
+=======
+        $patients = ['message' => 'not authorized'];
+        if($request->ajax()){
+>>>>>>> Stashed changes
         // need to add a role check code & check if available in logged in users bucket
         $this->authorize('manage appointments');
         $phone = preg_replace('/\D/', '',$request->query('phone'));
         $patients = Patient::where('phone_number', 'LIKE', "%{$phone}%")->get();
         return response()->json($patients);
         }
+<<<<<<< Updated upstream
+=======
+        return response()->json($patients);
+>>>>>>> Stashed changes
     }
 
 }
