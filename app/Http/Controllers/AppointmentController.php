@@ -45,12 +45,6 @@ class AppointmentController extends Controller
             throw new Exception("Role not supported");
         }
 
-        if ($user->hasRole(['Administrator', 'Manager'])) {
-            $dbQuery = Appointment::with('patient');
-        } else {
-            $dbQuery = $user->createdAssignedAppointments()->with('patient');
-        }
-
         if (!empty($searchTerm)) {
             $dbQuery
                 ->whereHas('patient', function ($query) use ($searchTerm) {
