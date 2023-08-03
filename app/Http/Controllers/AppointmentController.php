@@ -20,7 +20,7 @@ class AppointmentController extends Controller
     public function index(Request $request)
     {
         $perPageRecords = 10;
-        $defaultLastDays = 30;
+        $defaultLastDays = 3;
         $user = auth()->user();
         $searchTerm = $request->input('q');
         $sortField = request()->input('sortField', 'id');
