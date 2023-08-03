@@ -20,7 +20,7 @@ class AppointmentController extends Controller
     public function index(Request $request)
     {
         $perPageRecords = 10;
-        $defaultLastDays = 3;
+        $defaultLastDays = 30;
         $user = auth()->user();
         $searchTerm = $request->input('q');
         $sortField = request()->input('sortField', 'id');
@@ -32,14 +32,14 @@ class AppointmentController extends Controller
             $subordinateIds[] = $user->id; // added to see records created by manager or assigned to manager
             $dbQuery
                 ->where(function ($query) use ($user, $subordinateIds) {
-                    $query->whereIn('created_by', $subordinateIds)
-                        ->orWhereIn('assigned_to', $subordinateIds);
+                    $query->whereIn('appointments.created_by', $subordinateIds)
+                        ->orWhereIn('appointments.assigned_to', $subordinateIds);
                 });
         } else if ($user->hasRole(['Presales'])) {
             $dbQuery
                 ->where(function ($query) use ($user) {
-                    $query->where('created_by', $user->id);
-                    $query->orWhere('assigned_to', $user->id);
+                    $query->where('appointments.created_by', $user->id);
+                    $query->orWhere('appointments.assigned_to', $user->id);
                 });
         } else {
             throw new Exception("Role not supported");
@@ -125,7 +125,14 @@ class AppointmentController extends Controller
         }
         $appointment->health_problem = implode(', ', $healthPromlemData);
         $appointments = Appointment::all();
-        $users = User::all();
+
+        $user = auth()->user();
+        if($user->id === $appointment->created_by || $user->id === $appointment->assigned_to){
+            $users = User::all();
+        }else{
+            $users = User::where('id','!=',$user->id)->get();
+        }
+        
         return view('appointments.edit', compact('appointment', 'appointments', 'users'));
     }
 
