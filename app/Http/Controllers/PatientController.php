@@ -132,10 +132,23 @@ class PatientController extends Controller
     public function searchbyphone(Request $request)
     {
         // need to add a role check code & check if available in logged in users bucket
-        $this->authorize('manage appointments');
-        $phone = preg_replace('/\D/', '',$request->query('phone'));
-        $patients = Patient::where('phone_number', 'LIKE', "%{$phone}%")->get();
-        return response()->json($patients);
+        if (auth()->check()) {
+            $this->authorize('manage appointments');
+            $user = auth()->user();
+            $phone = preg_replace('/\D/', '', $request->query('phone'));
+            $assignedPatientCodes = Appointment::where('assigned_to', $user->id)
+            ->pluck('patient_code')
+            ->toArray();
+
+            $patients = Patient::where(function ($query) use ($phone, $user, $assignedPatientCodes) {
+                $query->where('phone_number', 'LIKE', "%{$phone}%")
+                ->where('created_by', $user->id)
+                    ->orWhereIn('code', $assignedPatientCodes);
+            })->get();
+            return response()->json($patients);
+        } else {
+            return response()->json(['message' => 'User is not logged in'], 401);
+        }
     }
 
 }
