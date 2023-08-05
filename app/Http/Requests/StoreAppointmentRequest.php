@@ -31,8 +31,8 @@ class StoreAppointmentRequest extends FormRequest
             'health_problem.*' => 'required|string|max:255',
             'current_status' => 'required|string|max:255',
             'cancellation_reason' => 'nullable|string|max:255',
-            'comments' => 'required|string',
-            'assigned_to' => 'required|exists:users,id', // Assuming the 'assigned_to' field is a foreign key referencing the 'id' field in the 'users' table.
+            'comments' => 'nullable|string',
+            'assigned_to' => 'nullable|exists:users,id', // Assuming the 'assigned_to' field is a foreign key referencing the 'id' field in the 'users' table.
             'reference_id' => 'nullable|exists:appointments,id', // Assuming the 'reference_id' field is a foreign key referencing the 'id' field in the 'appointments' table.
             'missed_appointment_executive_id' => 'nullable|exists:users,id', // Assuming the 'missed_appointment_executive_id' field is a foreign key referencing the 'id' field in the 'users' table.
             'active' => 'nullable|string|max:255',
