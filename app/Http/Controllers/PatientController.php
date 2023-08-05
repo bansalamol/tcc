@@ -142,9 +142,12 @@ class PatientController extends Controller
 
             $patients = Patient::where(function ($query) use ($phone, $user, $assignedPatientCodes) {
                 $query->where('phone_number', 'LIKE', "%{$phone}%")
-                ->where('created_by', $user->id)
-                    ->orWhereIn('code', $assignedPatientCodes);
+                    ->where('created_by', $user->id);
+            })->orWhere(function ($query) use ($assignedPatientCodes, $phone) {
+                $query->whereIn('code', $assignedPatientCodes)
+                ->where('phone_number', 'LIKE', "%{$phone}%");
             })->get();
+
             return response()->json($patients);
         } else {
             return response()->json(['message' => 'User is not logged in'], 401);

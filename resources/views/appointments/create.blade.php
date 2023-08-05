@@ -20,26 +20,13 @@
                         <div class="grid grid-cols-1 gap-4">
                             <!-- First Column -->
                             <div class="col-span-1">
-                                <!--
-                                <div class="mt-4">
-                                    <x-label for="patient_code" value="{{ __('Patient Name') }}" />
-                                    <select onchange="updatePatientCodeView(this)" id="patient_code" name="patient_code" class="mt-1 block w-full border-gray-300 rounded-md">
-                                        <option value="">Select an option</option>
-                                        @foreach($patients as $patient)
-                                        <option value="{{ $patient->code }}">{{ $patient->name .' '. $patient->email .' '. $patient->phone_number }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                -->
+
                                 <div class="mt-4">
                                     <x-label for="phone_number" value="{{ __('Select Patient') }}" />
                                     <input id="phone_number" class="block mt-1 w-full  border-gray-300 rounded-md" x-data type="text" name="phone_number" required autofocus autocomplete="phone_number" x-on:input="searchPatients()" placeholder="Search Patient by Phone Number" />
                                     <!-- Search Results Dropdown -->
                                     <ul id="search-results"></ul>
-                                    <span style="float: right;">
-                                        <a class="ml-2 text-blue-500" href="sms:" target="_blank" onclick="openMessage(event);">SMS</a>
-                                        <a class="ml-2 text-blue-500" href="https://wa.me/" target="_blank" onclick="openMessage(event);">WhatsApp</a>
-                                    </span>
+
 
                                     <!-- "Create New Patient" Link -->
                                     <p id="no-patient-found" style="display: none; color:red">No patient found with the given phone number.</p>
@@ -191,6 +178,7 @@
                                 li.addEventListener('click', () => selectPatient(li.textContent, patient.code, patient.phone_number));
                                 searchResults.appendChild(li);
                             });
+                            //searchResults.appendChild()
                         } else {
                             noPatientFound.style.display = 'block';
                             createPatientLink.style.display = 'block';
@@ -212,16 +200,6 @@
             document.getElementById('create-patient-link').style.display = 'none';
         }
 
-        function openMessage(event) {
-            event.preventDefault();
-            const mobile = document.getElementById('mobile').textContent;
-            if (mobile.length == 0) {
-                alert('Please select the Patient!');
-            } else {
-                const linkUrl = event.target.getAttribute('href') + mobile;
-                window.open(linkUrl, '_blank');
-            }
-        }
     </script>
 
     <style>
