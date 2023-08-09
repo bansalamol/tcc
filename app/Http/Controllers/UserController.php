@@ -85,6 +85,7 @@ class UserController extends Controller
         //$this->authorize('manage users');
         $roles = Role::all();
         $managers = Role::where('name', 'Manager')->firstOrFail()->users;
+        
         return view('users.edit', compact('user', 'roles', 'managers'));
     }
 
@@ -124,7 +125,7 @@ class UserController extends Controller
             'comment' => $request->input('comment'),
             'phone_number' => $request->input('phone_number'),
         ];
-
+        
         // Check if the password field is not empty before updating
         if ($request->filled('password')) {
             $data['password'] = bcrypt($request->input('password'));

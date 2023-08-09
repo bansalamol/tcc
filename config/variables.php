@@ -21,12 +21,15 @@ return [
         'Other' => 'Other',
     ],
     'appointmentStatus' => [
-        'Appointment Canceled' => 'Appointment Canceled',
-        'Appointment Postponed' => 'Appointment Postponed',
-        'Converted' => 'Converted',
+        'Pending Confirmation' => 'Pending Confirmation',
+        'Confirmed' => 'Confirmed',
         'Visited' => 'Visited',
         'Visiting' => 'Visiting',
-    ],
+        'Converted' => 'Converted',
+        'Appointment Scheduled' => 'Appointment Scheduled', // New status
+        'Appointment Postponed' => 'Appointment Postponed',
+        'Appointment Canceled' => 'Appointment Canceled',
+    ],       
     'yesNo' => [
         'No' => 'No',
         'Yes' => 'Yes',
@@ -36,11 +39,12 @@ return [
         'Non-Visited' => 'Non-Visited',
         'Dubplicate Visited' => 'Dubplicate Visited',
     ],
-
-    'lead_type' =>['Incoming calls'=> 'Visited', 
+    'leadType' =>['Incoming calls'=> 'Visited', 
         'Incoming leads' => 'Incoming leads',
         'Old leads' => 'Old leads' , 
         'Missed appointment' => 'Missed appointment'
     ],
     'sex' => ['Male' => 'Male', 'Female' => 'Female', 'Other' => 'Other'],
+    'clinicList'   => ['Pune' => 'Pune', 'Thane' => 'Thane', 'Vashi'=>'Vashi'],
+    'interestScore' => ['1'=>'1', '2'=>'2', '3'=>'3', '4'=>'4', '5'=>'5']
 ];

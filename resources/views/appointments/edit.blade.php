@@ -23,28 +23,33 @@
                             <div class="col-span-1">
                                 <div class="mt-4">
                                     <x-label for="name" value="{{ __('Patient Name') }}" />
-                                    <x-input id="name" class="cursor-not-allowed opacity-50 block mt-1 w-full" type="text" name="name" :value="$appointment->patient->name" placeholder="Enter Patient Name" readonly />
-                                    <span style="float: right;">
-                                        <a class="ml-2 text-blue-500" href="sms:" target="_blank" onclick="openMessage(event);">SMS</a>
-                                        <a class="ml-2 text-blue-500" href="https://wa.me/" target="_blank" onclick="openMessage(event);">WhatsApp</a>
-                                    </span>
+                                    <x-input id="name" class="cursor-not-allowed opacity-50  bg-gray-100 block mt-1 w-full" type="text" name="name" :value="$appointment->patient->name" placeholder="Enter Patient Name" readonly />
                                 </div>
                                 <div class="mt-4">
                                     <x-label for="patient_code" value="{{ __('Patient Code') }}" />
-                                    <x-input id="patient_code" class="cursor-not-allowed opacity-50 block mt-1 w-full" type="text" name="patient_code" :value="$appointment->patient_code" placeholder="Patient Code" readonly />
+                                    <x-input id="patient_code" class="cursor-not-allowed opacity-50  bg-gray-100 block mt-1 w-full" type="text" name="patient_code" :value="$appointment->patient_code" placeholder="Patient Code" readonly />
+                                </div>
+                                <div class="mt-4">
+                                    <x-label for="appointment_type" value="{{ __('Appointment Type') }}" />
+                                    <x-select-field name="appointment_type" :selected="$appointment->appointment_type" :options="config('variables.appointmentTypes')" required>
+                                    </x-select-field>
                                 </div>
                                 <div class="mt-4">
                                     <x-label for="clinic" value="{{__('Clinic')}}" />
-                                    <x-input id="clinic" class="block mt-1 w-full" type="text" name="clinic" :value="$appointment->clinic" required placeholder="Enter Clinic" />
-                                </div>
+                                    <x-input id="clinic" class="cursor-not-allowed opacity-50  bg-gray-100 block mt-1 w-full" type="text" name="clinic" :value="$appointment->clinic" required placeholder="Enter Clinic" readonly />
+                                </div>  
                                 <div class="mt-4">
                                     <x-label for="lead_interest_score" value="{{__('Lead Interest Score')}}" />
-                                    <x-input id="lead_interest_score" class="block mt-1 w-full" type="text" name="lead_interest_score" :value="$appointment->lead_interest_score" required placeholder="Enter Lead Interest Score" />
+                                    <x-input id="lead_interest_score" class="cursor-not-allowed opacity-50  bg-gray-100 block mt-1 w-full" type="text" name="lead_interest_score" :value="$appointment->lead_interest_score" required placeholder="Enter Lead Interest Score"  readonly/>
                                 </div>
                                 <div class="mt-4">
                                     <x-label for="current_status" value="{{ __('Current Status') }}" />
                                     <x-select-field name="current_status" :selected="$appointment->current_status" :options="config('variables.appointmentStatus')" required>
                                     </x-select-field>
+                                </div>
+                                <div class="mt-4">
+                                    <x-label for="appointment_time" value="{{__('Appointment Time')}}" />
+                                    <input id="appointment_time" name="appointment_time" x-data x-init="flatpickr($refs.input, {{ $appointmentTimeOptions }} );" x-ref="input" type="text" placeholder="Select Time" data-input {{ $attributes->merge(['class' => 'mt-1 block w-full disabled:bg-gray-200 p-2 border border-gray-300 rounded-md focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 sm:text-sm sm:leading-5']) }} />
                                 </div>
                                 <div class="mt-4">
                                     <x-label for="assigned_to" value="{{__('Assigned To')}}" />
@@ -55,6 +60,7 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <!--
                                 <div class="mt-4">
                                     <x-label for="reference_id" value="{{__('Reference ID')}}" />
                                     <select id="reference_id" name="reference_id" class="mt-1 block w-full border-gray-300 rounded-md">
@@ -64,34 +70,25 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                --> 
                                 <div class="mt-4">
                                     <x-label for="active" value="{{__('Active')}}" />
                                     <x-select-field name="active" :selected="$appointment->active" :options="config('variables.yesNo')" required>
                                     </x-select-field>
                                 </div>
-                                <div class="mt-4">
-                                    <x-label for="last_called_datetime" value="{{__('Last Called Time')}}" />
-                                    <input id="last_called_datetime" name="last_called_datetime" x-data x-init="flatpickr($refs.input, {{ $callTimeOptions }} );" x-ref="input" type="text" placeholder="Select Time" data-input {{ $attributes->merge(['class' => 'block w-full disabled:bg-gray-200 p-2 border border-gray-300 rounded-md focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 sm:text-sm sm:leading-5']) }} />
-                                </div>
+                                
                             </div>
 
                             <!-- Second Column -->
                             <div class="col-span-1">
-                                <div class="mt-4">
-                                    <x-label for="appointment_type" value="{{ __('Appointment Type') }}" />
-                                    <x-select-field name="appointment_type" :selected="$appointment->appointment_type" :options="config('variables.appointmentTypes')" required>
-                                    </x-select-field>
-                                </div>
-                                <div class="mt-4">
-                                    <x-label for="appointment_time" value="{{__('Appointment Time')}}" />
-                                    <input id="appointment_time" name="appointment_time" x-data x-init="flatpickr($refs.input, {{ $appointmentTimeOptions }} );" x-ref="input" type="text" placeholder="Select Time" data-input {{ $attributes->merge(['class' => 'mt-1 block w-full disabled:bg-gray-200 p-2 border border-gray-300 rounded-md focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 sm:text-sm sm:leading-5']) }} />
-                                </div>
+                                
+                                
                                 <div class="mt-4">
                                     <x-label value="{{ __('Health Problem') }}" />
                                     <div style="min-height:45px;">
                                         @foreach(config('variables.healthProblems') as $option)
                                         <div class="ml-5 mt-1" style="width:auto; float:left;">
-                                            <input id="chk-hp-{{ $option }}" type="checkbox" @if(in_array($option, explode(', ', $appointment->health_problem))) checked @endif name="health_problem[]" value="{{ $option }}" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" />
+                                            <input id="chk-hp-{{ $option }}"  type="checkbox" @if(in_array($option, explode(', ', $appointment->health_problem))) checked @endif name="health_problem[]" value="{{ $option }}" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"  />
                                             <label for="chk-hp-{{ $option }}"> {{ $option }}</label>
                                         </div>
                                         @endforeach
@@ -121,7 +118,11 @@
                                 </div>
                                 <div class="mt-4">
                                     <x-label for="last_messaged_datetime" value="{{__('Last Messaged Time')}}" />
-                                    <input id="last_messaged_datetime" name="last_messaged_datetime" x-data x-init="flatpickr($refs.input, {{ $messageTimeOptions }} );" x-ref="input" type="text" placeholder="Select Time" data-input {{ $attributes->merge(['class' => 'block w-full disabled:bg-gray-200 p-2 border border-gray-300 rounded-md focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 sm:text-sm sm:leading-5']) }} />
+                                    <x-input id="last_messaged_datetime" class="block mt-1 w-full" type="text" name="last_messaged_datetime" value="{{now()->format('Y-m-d H:i') }}" required />
+                                </div>
+                                <div class="mt-4">
+                                    <x-label for="last_called_datetime" value="{{__('Last Called Time')}}" />
+                                    <x-input id="last_called_datetime" class="block mt-1 w-full" type="text" name="last_called_datetime" value="{{now()->format('Y-m-d H:i') }}" required />
                                 </div>
                             </div>
                         </div>

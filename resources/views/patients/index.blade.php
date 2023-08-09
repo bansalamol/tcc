@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
 
@@ -66,11 +66,11 @@
 
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
 
-                                    @if (auth()->user()->hasRole('Manager') && $patient->created_by !== auth()->user()->id)
+                                @if (auth()->user()->hasRole('Administrator') || $appointment->patient->created_by === auth()->user()->id)
+                                    {{ $patient->phone_number }} 
+                                @else
                                     +91******
-                                    @else
-                                    {{ $patient->phone_number }}
-                                    @endif
+                                @endif
 
                                 </td>
 
