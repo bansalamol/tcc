@@ -16,14 +16,14 @@
                     @endif
 
                     @can('manage patients')
-                    <div class="float-right">
+                    <div class="float-right m-3">
                         <x-link href="{{ route('appointments.create') }}" class="m-4">Book Appointment</x-link>
                         <x-link href="{{ route('patients.create') }}" class="m-4">Add new Patient</x-link>
                     </div>
                     @endcan
-                    <div class="m-4 flex items-center space-x-4">
+                    <div class="m-3 flex items-center space-x-4">
                         <form action="{{ route('appointments.index') }}" method="GET">
-                            <label for="search_filter" class="self-center">Search By:</label>
+                            <label for="search_filter" class="self-center ">Search By:</label>
                             <select name="search_filter" id="search_filter" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
                                 <option value="">Select an option</option>
                                 <option value="all" {{ $searchFilter === 'all' ? 'selected' : '' }}>All Filters</option>
