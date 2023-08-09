@@ -26,7 +26,7 @@
                             <label for="search_filter" class="self-center ">Search By:</label>
                             <select name="search_filter" id="search_filter" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
                                 <option value="">Select an option</option>
-                                <option value="all" {{ $searchFilter === 'all' ? 'selected' : '' }}>All Filters</option>
+                             <!--   <option value="all" {{ $searchFilter === 'all' ? 'selected' : '' }}>All Filters</option> -->
                                 <option value="date_range" {{ $searchFilter === 'date_range' ? 'selected' : '' }}>Date Range</option>
                                 <option value="status" {{ $searchFilter === 'status' ? 'selected' : '' }}>Current Status</option>
                                 <option value="pname" {{ $searchFilter === 'pname' ? 'selected' : '' }}>Name</option>
