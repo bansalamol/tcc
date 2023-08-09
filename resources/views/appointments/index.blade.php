@@ -6,23 +6,64 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                    @if (session('success'))
+                    <div class="bg-green-200 p-4 rounded-md m-4">
+                        {!! session('success') !!}
+                    </div>
+                    @endif
 
                     @can('manage patients')
-                    <div class="float-right">
+                    <div class="float-right m-3">
                         <x-link href="{{ route('appointments.create') }}" class="m-4">Book Appointment</x-link>
                         <x-link href="{{ route('patients.create') }}" class="m-4">Add new Patient</x-link>
                     </div>
                     @endcan
-                    <div class="m-4 flex">
+                    <div class="m-3 flex items-center space-x-4">
                         <form action="{{ route('appointments.index') }}" method="GET">
-                            <input type="search" id="q" name="q" value="{{$searchTerm}}" placeholder="Search by name, code, or phone number" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
-                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Search</button>
+                            <label for="search_filter" class="self-center ">Search By:</label>
+                            <select name="search_filter" id="search_filter" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
+                                <option value="">Select an option</option>
+                             <!--   <option value="all" {{ $searchFilter === 'all' ? 'selected' : '' }}>All Filters</option> -->
+                                <option value="date_range" {{ $searchFilter === 'date_range' ? 'selected' : '' }}>Date Range</option>
+                                <option value="status" {{ $searchFilter === 'status' ? 'selected' : '' }}>Current Status</option>
+                                <option value="pname" {{ $searchFilter === 'pname' ? 'selected' : '' }}>Name</option>
+                            </select>
+
+                            <!-- Date range input fields -->
+
+                            <div id="dateRangeFields" class="hidden space-x-2 mt-4">
+                                <label for="start_date">Start Date:</label>
+                                <input type="text" id="start_date" name="start_date" class="datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $startDate }}">
+                                <label for="end_date">End Date:</label>
+                                <input type="text" id="end_date" name="end_date" class="datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $endDate }}">
+                            </div>
+
+
+                            <!-- Status input field -->
+                            <div id="statusField" style="display: none;" class="space-x-2 mt-4">
+                                <label for="status">Current Status:</label>
+                                <select name="status" id="status" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                                    <option value="">Select an option</option>
+                                    @foreach(config('variables.appointmentStatus') as $value => $label)
+                                    <option value="{{ $value }}" {{ $value == $currentStatus ? 'selected' : '' }}>{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Name input field -->
+                            <div id="nameField" style="display: none;" class="space-x-2 mt-4">
+                                <label for="name">Patient Name:</label>
+                                <input type="text" id="pname" name="pname" value="{{ $name }}" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
+
+                            <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Search</button>
+                            <a href="{{ route('appointments.index') }}" class="mt-4 px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:bg-gray-400">Reset</a>
+
                         </form>
                     </div>
-
 
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -131,23 +172,45 @@
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     {{ $appointment->created_at }}
                                 </td>
-                                @can('manage patients')
+
                                 <td class="px-6 py-4">
-                                    <x-link href="{{ route('appointments.edit', $appointment) }}">Edit</x-link>
+                                    <div class="flex space-x-1">
+                                        @can('manage patients')
+                                        <a class="inline-flex px-1 py-1 text-blue-500" href="{{ route('appointments.edit', $appointment) }}" title="Edit">
+                                            <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" />
+                                                <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />
+                                                <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />
+                                                <line x1="16" y1="5" x2="19" y2="8" />
+                                            </svg>
+                                        </a>
+                                        @endcan
+                                        @if (auth()->user()->hasRole('Administrator') || $appointment->patient->created_by === auth()->user()->id)
 
-                                    <a class="inline-flex px-1 py-1 text-blue-500" href="sms:" target="_blank" onclick="openMessage(event);">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" style="color: #9146ff" viewBox="0 0 24 24">
-                                            <path d="M2.149 0l-1.612 4.119v16.836h5.731v3.045h3.224l3.045-3.045h4.657l6.269-6.269v-14.686h-21.314zm19.164 13.612l-3.582 3.582h-5.731l-3.045 3.045v-3.045h-4.836v-15.045h17.194v11.463zm-3.582-7.343v6.262h-2.149v-6.262h2.149zm-5.731 0v6.262h-2.149v-6.262h2.149z" fill-rule="evenodd" clip-rule="evenodd" />
-                                        </svg>
-                                    </a>
-                                    <a class="inline-flex px-1 py-1 text-blue-500" href="https://wa.me/" target="_blank" onclick="openMessage(event);">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" style="color: #128c7e" viewBox="0 0 24 24">
-                                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
-                                        </svg>
-                                    </a>
+                                        <a class="inline-flex px-1 py-1 text-blue-500" href="sms:" title="SMS" target="_blank" onclick="openMessage('sms','{{ $appointment->patient->phone_number }}');">
+                                            <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" />
+                                                <path d="M4 21v-13a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v6a3 3 0 0 1 -3 3h-9l-4 4" />
+                                                <line x1="8" y1="9" x2="16" y2="9" />
+                                                <line x1="8" y1="13" x2="14" y2="13" />
+                                            </svg>
+                                        </a>
+                                        <a class="inline-flex px-1 py-1 text-blue-500" href="https://wa.me/" title="What's App" target="_blank" onclick="openMessage('wa','{{ $appointment->patient->phone_number }}');">
+                                            <svg class="h-5 w-5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                                            </svg>
+                                        </a>
+                                        <a class="inline-flex px-1 py-1 text-blue-500" href="#" target="_blank" title="Call" onclick="openMessage('call','{{ $appointment->patient->phone_number }}'); return false;">
+                                            <svg class="h-5 w-5 text-indigo-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" />
+                                                <path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" />
+                                            </svg>
+                                        </a>
 
+                                        @endif
+                                    </div>
                                 </td>
-                                @endcan
+
                             </tr>
                             @empty
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -176,10 +239,74 @@
             contentElementShort.classList.toggle('hidden');
         }
 
-        function openMessage(mobile) {
-            event.preventDefault();
-            const linkUrl = event.target.getAttribute('href') + mobile;
-            window.open(linkUrl, '_blank');
+        function openMessage(actionType, contact) {
+            let linkUrl = '';
+
+            if (actionType === 'wa') {
+                linkUrl = 'https://wa.me/' + contact;
+            } else if (actionType === 'sms') {
+                linkUrl = 'sms:' + contact;
+            } else if (actionType === 'call') {
+                linkUrl = 'tel:' + contact;
+            }
+
+            if (linkUrl) {
+                window.open(linkUrl, '_blank');
+            }
         }
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr(".datepicker", {
+                dateFormat: "Y-m-d", // Customize the date format
+                placeholder: "YYYY-MM-DD", // Customize the placeholder
+            });
+        });
+    </script>
+    <script>
+        function updateSearchFields() {
+            const searchFilter = document.getElementById('search_filter');
+            const dateRangeFields = document.getElementById('dateRangeFields');
+            const statusField = document.getElementById('statusField');
+            const nameField = document.getElementById('nameField');
+
+            const selectedFilter = searchFilter.value;
+
+            // Show all search fields if "All Filters" is selected
+            if (selectedFilter === 'all') {
+                dateRangeFields.style.display = 'block';
+                statusField.style.display = 'block';
+                nameField.style.display = 'block';
+            } else {
+                // Hide all search fields
+                dateRangeFields.style.display = 'none';
+                statusField.style.display = 'none';
+                nameField.style.display = 'none';
+
+                // Show the selected search field
+                if (selectedFilter === 'date_range') {
+                    dateRangeFields.style.display = 'block';
+                } else if (selectedFilter === 'status') {
+                    statusField.style.display = 'block';
+                } else if (selectedFilter === 'pname') {
+                    nameField.style.display = 'block';
+                }
+            }
+        }
+
+        // Call the function on page load
+        window.addEventListener('load', updateSearchFields);
+
+        // Call the function when the search filter changes
+        const searchFilter = document.getElementById('search_filter');
+        searchFilter.addEventListener('change', updateSearchFields);
+
+        // Function to call when a specific button is clicked
+        function handleButtonClick() {
+            // Call the function to update search fields
+            updateSearchFields();
+            // Add additional actions you want to perform on the button click
+        }
+    </script>
+
 </x-app-layout>

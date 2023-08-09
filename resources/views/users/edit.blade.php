@@ -9,6 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg px-4 py-4">
+                    <x-validation-errors class="mb-4" />
                     <form method="POST" action="{{ route('users.update', $user) }}">
                         @csrf
                         @method('PUT')
@@ -45,7 +46,7 @@
                                 </div>
 
                                 <div class="mt-4">
-                                    <x-select-field name="type" :options="config('variables.lead_type')" selected="{{$user->type}}">
+                                    <x-select-field name="type" :options="config('variables.leadType')" selected="{{$user->type}}">
                                         Select {{ __('Lead Type') }}
                                     </x-select-field>
                                 </div>
@@ -55,7 +56,7 @@
                                     <select id="manager_id" name="manager_id" class="mt-1 block w-full border-gray-300 rounded-md" >
                                         <option value="">Select Manager</option>
                                         @foreach ($managers as $manager)
-                                        <option value="{{ $manager->id }}" @if($user->manager_id == $manager->id) selected @endif> {{ $manager->name }}</option>
+                                        <option value="{{ $manager->id }}" @if($user->manager_id == $manager->id) selected @endif > {{ $manager->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>

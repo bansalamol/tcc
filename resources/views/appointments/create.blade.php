@@ -1,6 +1,7 @@
 @props(['callTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: 'today', maxDate: 'today'}"])
 @props(['messageTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: 'today', maxDate: 'today'}"])
 @props(['appointmentTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: 'today', minDate: 'today'}"])
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -13,6 +14,14 @@
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg px-4 py-4">
                     <x-validation-errors class="mb-4" />
+                    @if (session('success'))
+                    <div class="bg-green-200 p-4 rounded-md mb-4">
+                        {!! session('success') !!}
+                    </div>
+                    @endif
+
+                    <!-- Your form and search results here -->
+
                     <form method="POST" action="{{ route('appointments.store') }}">
                         @csrf
 
@@ -46,26 +55,21 @@
                                 </div>
                                 <div class="mt-4">
                                     <x-label for="clinic" value="{{__('Clinic')}}" />
-                                    <x-input id="clinic" class="block mt-1 w-full" type="text" name="clinic" required placeholder="Enter Clinic" />
-                                </div>
-                                <div class="mt-4">
-                                    <x-label for="lead_interest_score" value="{{__('Lead Interest Score')}}" />
-                                    <x-input id="lead_interest_score" class="block mt-1 w-full" type="text" name="lead_interest_score" required placeholder="Enter Lead Interest Score" />
-                                </div>
-                                <div class="mt-4">
-                                    <x-label for="current_status" value="{{ __('Current Status') }}" />
-                                    <x-select-field name="current_status" :options="config('variables.appointmentStatus')" required>
+                                    <x-select-field name="clinic" :options="config('variables.clinicList')" required>
                                     </x-select-field>
                                 </div>
                                 <div class="mt-4">
-                                    <x-label for="assigned_to" value="{{__('Assigned To')}}" />
-                                    <select id="assigned_to" name="assigned_to" class="mt-1 block w-full border-gray-300 rounded-md">
-                                        <option value="">Select an option</option>
-                                        @foreach($users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name .' '. $user->email }}</option>
-                                        @endforeach
-                                    </select>
+                                    <x-label for="lead_interest_score" value="{{__('Lead Interest Score')}}" />
+                                    <x-select-field name="lead_interest_score" :options="config('variables.interestScore')" required selected="1">
+                                    </x-select-field>
                                 </div>
+                                <div class="mt-4">
+                                    <x-label for="current_status" value="{{ __('Current Status') }}" />
+                                    <x-select-field name="current_status" :options="config('variables.appointmentStatus')" required selected="Appointment Scheduled">
+                                    </x-select-field>
+                                </div>
+                                <!-- 
+
                                 <div class="mt-4">
                                     <x-label for="reference_id" value="{{__('Reference ID')}}" />
                                     <select id="reference_id" name="reference_id" class="mt-1 block w-full border-gray-300 rounded-md">
@@ -75,15 +79,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="mt-4">
-                                    <x-label for="active" value="{{__('Active')}}" />
-                                    <x-select-field name="active" :options="config('variables.yesNo')" required>
-                                    </x-select-field>
-                                </div>
-                                <div class="mt-4">
-                                    <x-label for="last_called_datetime" value="{{__('Last Called Time')}}" />
-                                    <input id="last_called_datetime" name="last_called_datetime" x-data x-init="flatpickr($refs.input, {{ $callTimeOptions }} );" x-ref="input" type="text" placeholder="Select Time" data-input {{ $attributes->merge(['class' => 'block w-full disabled:bg-gray-200 p-2 border border-gray-300 rounded-md focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 sm:text-sm sm:leading-5']) }} />
-                                </div>
+                                -->
                             </div>
 
                             <!-- Second Column -->
@@ -106,30 +102,9 @@
                                 </div>
                                 <div class="">
                                     <x-label for="comments" value="{{__('Comments')}}" />
-                                    <x-input id="comments" class="block mt-1 w-full" type="text" name="comments" required placeholder="Enter Comments" />
+                                    <x-input id="comments" class="block mt-1 w-full" type="text" name="comments" placeholder="Enter Comments" />
                                 </div>
-                                <div class="mt-4">
-                                    <x-label for="cancelation_reason" value="{{__('Cancelation Reason')}}" />
-                                    <x-input id="cancelation_reason" class="block mt-1 w-full" type="text" name="cancelation_reason" placeholder="Enter Cancelation Reason" />
-                                </div>
-                                <div class="mt-4">
-                                    <x-label for="missed_appointment_executive_id" value="{{__('Missed Appointment Executive')}}" />
-                                    <select id="missed_appointment_executive_id" name="missed_appointment_executive_id" class="mt-1 block w-full border-gray-300 rounded-md">
-                                        <option value="">Select an option</option>
-                                        @foreach($users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name .' '. $user->email }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="mt-4">
-                                    <x-label for="visited" value="{{__('Visited')}}" />
-                                    <x-select-field name="visited" :options="config('variables.visited')" required>
-                                    </x-select-field>
-                                </div>
-                                <div class="mt-4">
-                                    <x-label for="last_messaged_datetime" value="{{__('Last Messaged Time')}}" />
-                                    <input id="last_messaged_datetime" name="last_messaged_datetime" x-data x-init="flatpickr($refs.input, {{ $messageTimeOptions }} );" x-ref="input" type="text" placeholder="Select Time" data-input {{ $attributes->merge(['class' => 'block w-full disabled:bg-gray-200 p-2 border border-gray-300 rounded-md focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 sm:text-sm sm:leading-5']) }} />
-                                </div>
+
                             </div>
                         </div>
                         <!-- End Two-Column Layout -->
@@ -199,7 +174,6 @@
             document.getElementById('no-patient-found').style.display = 'none';
             document.getElementById('create-patient-link').style.display = 'none';
         }
-
     </script>
 
     <style>
@@ -210,12 +184,15 @@
             margin: 1px;
             background-color: #edf3f7;
         }
+
         #search-results li:nth-child(even) {
             background-color: #f9f9f9;
         }
+
         #search-results li:nth-child(odd) {
             background-color: #edf3f7;
         }
+
         #search-results li:hover {
             background-color: #f5cb85;
         }

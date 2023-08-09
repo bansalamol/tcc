@@ -70,9 +70,9 @@ class PatientController extends Controller
     public function store(StorePatientRequest $request)
     {
         $this->authorize('manage patients');
-
+        $data = $request->validated();
         Patient::create($request->validated());
-        return redirect()->route('patients.index');
+        return redirect()->route('appointments.create')->with('success', 'Appointment created successfully. Patient phone: ' . $data['phone_number']);
     }
 
     /**
@@ -100,7 +100,7 @@ class PatientController extends Controller
         $this->authorize('manage patients');
 
         $patient->update($request->validated());
-        return redirect()->route('patients.index');
+        return redirect()->route('appointments.index');
     }
 
     /**

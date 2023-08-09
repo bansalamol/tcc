@@ -46,7 +46,7 @@
                                 </div>
 
                                 <div class="mt-4">
-                                    <x-select-field name="type" :options="config('variables.lead_type')" >
+                                    <x-select-field name="type" :options="config('variables.leadType')" >
                                         Select {{ __('Lead Type') }}
                                     </x-select-field>
                                 </div>
