@@ -38,23 +38,21 @@ class AppointmentController extends Controller
         $dbQuery = Appointment::with('patient');
 
         if ($user->hasRole(['Administrator'])) {
-            // show all
-        } else if ($user->hasRole(['Manager'])) {
-            $subordinateIds = User::where('manager_id', $user->id)->pluck('id')->toArray();
-            $subordinateIds[] = $user->id; // added to see records created by manager or assigned to manager
-            $dbQuery
-                ->where(function ($query) use ($user, $subordinateIds) {
-                    $query->whereIn('appointments.created_by', $subordinateIds)
-                        ->orWhereIn('appointments.assigned_to', $subordinateIds);
-                });
-        } else if ($user->hasRole(['Presales'])) {
-            $dbQuery
-                ->where(function ($query) use ($user) {
-                    $query->where('appointments.created_by', $user->id);
-                    $query->orWhere('appointments.assigned_to', $user->id);
-                });
-        } else {
-            throw new Exception("Role not supported");
+                // show all
+        } else if ($user->hasRole(['Manager']) && empty($mobile)) {
+                $subordinateIds = User::where('manager_id', $user->id)->pluck('id')->toArray();
+                $subordinateIds[] = $user->id; // added to see records created by manager or assigned to manager
+                $dbQuery
+                    ->where(function ($query) use ($user, $subordinateIds) {
+                        $query->whereIn('appointments.created_by', $subordinateIds)
+                            ->orWhereIn('appointments.assigned_to', $subordinateIds);
+                    });
+        } else if ($user->hasRole(['Presales'])  && empty($mobile)) {
+                $dbQuery
+                    ->where(function ($query) use ($user) {
+                        $query->where('appointments.created_by', $user->id);
+                        $query->orWhere('appointments.assigned_to', $user->id);
+                    });
         }
 
         if ($currentStatus) {
@@ -102,13 +100,13 @@ class AppointmentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($mobile = '')
     {
         $this->authorize('manage appointments');
         $patients = Patient::all();
         $users = User::all();
         $appointments = Appointment::all();
-        return view('appointments.create', compact('patients', 'users', 'appointments'));
+        return view('appointments.create', compact('patients', 'users', 'appointments', 'mobile'));
     }
 
     /**
