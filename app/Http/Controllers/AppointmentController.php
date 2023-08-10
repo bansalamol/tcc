@@ -29,6 +29,7 @@ class AppointmentController extends Controller
         $aendDate = $request->input('aend_date');
         $currentStatus = $request->input('status');
         $mobile = $request->input('mobile');
+        $mobile = (is_numeric($mobile) && strlen($mobile) === 10) ? $mobile : '';
         $name = $request->input('pname');
         $defaultFilter = true;
 

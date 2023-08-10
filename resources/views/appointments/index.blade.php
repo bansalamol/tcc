@@ -28,15 +28,15 @@
                         <form action="{{ route('appointments.index') }}" method="GET">
                         <div class="space-x-2 mt-4">
                                 <label for="name" class="block font-medium text-sm text-gray-700 ml-2">Patient Name</label>
-                                <input type="text" id="pname" name="pname" value="{{ $name }}" class="w-custom rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Enter Patient Name">
+                                <input type="text" id="pname" name="pname" value="{{ $name }}" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Enter Patient Name">
                             </div>
                             <div class="space-x-2 mt-4">
                                 <label for="mobile" class="block font-medium text-sm text-gray-700 ml-2">Mobile</label>
-                                <input type="text" id="mobile" name="mobile" value="{{ $mobile }}" class="w-custom rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Enter Mobile">
+                                <input type="text" id="mobile" name="mobile" value="{{ $mobile }}" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Enter Mobile">
                             </div>
                             <div class="space-x-2 mt-4">
                                 <label for="status"  class="block font-medium text-sm text-gray-700 ml-2">Current Status</label>
-                                <select name="status" id="status" class="w-custom rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                                <select name="status" id="status" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="">Select an option</option>
                                     @foreach(config('variables.appointmentStatus') as $value => $label)
                                     <option value="{{ $value }}" {{ $value == $currentStatus ? 'selected' : '' }}>{{ $label }}</option>
@@ -45,13 +45,13 @@
                             </div>
                             <div class="space-x-2 mt-4">
                                 <label for="cstart_date" class="block font-medium text-sm text-gray-700 ml-2">Created Date</label>
-                                <input type="text" id="cstart_date" name="cstart_date" class="datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $cstartDate }}" placeholder="Select Start Date">
-                                <input type="text" id="cend_date" name="cend_date" class="datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $cendDate }}" placeholder="Select End Date">
+                                <input type="text" id="cstart_date" name="cstart_date" class="mt-1 datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $cstartDate }}" placeholder="Select Start Date">
+                                <input type="text" id="cend_date" name="cend_date" class="mt-1 datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $cendDate }}" placeholder="Select End Date">
                             </div>
                             <div class="space-x-2 mt-4">
                                 <label for="astart_date" class="block font-medium text-sm text-gray-700 ml-2">Appointment Date</label>
-                                <input type="text" id="astart_date" name="astart_date" class="datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $astartDate }}" placeholder="Select Start Date">
-                                <input type="text" id="aend_date" name="aend_date" class="datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $aendDate }}" placeholder="Select End Date">
+                                <input type="text" id="astart_date" name="astart_date" class="mt-1 datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $astartDate }}" placeholder="Select Start Date">
+                                <input type="text" id="aend_date" name="aend_date" class="mt-1 datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $aendDate }}" placeholder="Select End Date">
                             </div>
                             <div class="space-x-2 mt-4">
                                 <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Search</button>
