@@ -38,8 +38,9 @@ class AppointmentController extends Controller
         $dbQuery = Appointment::with('patient');
 
         if ($user->hasRole(['Administrator'])) {
-                // show all
-        } else if ($user->hasRole(['Manager']) && empty($mobile)) {
+            // show all
+        } else {
+            if ($user->hasRole(['Manager']) && empty($mobile)) {
                 $subordinateIds = User::where('manager_id', $user->id)->pluck('id')->toArray();
                 $subordinateIds[] = $user->id; // added to see records created by manager or assigned to manager
                 $dbQuery
@@ -47,12 +48,15 @@ class AppointmentController extends Controller
                         $query->whereIn('appointments.created_by', $subordinateIds)
                             ->orWhereIn('appointments.assigned_to', $subordinateIds);
                     });
-        } else if ($user->hasRole(['Presales'])  && empty($mobile)) {
-                $dbQuery
-                    ->where(function ($query) use ($user) {
-                        $query->where('appointments.created_by', $user->id);
-                        $query->orWhere('appointments.assigned_to', $user->id);
-                    });
+            } else {
+                if ($user->hasRole(['Presales']) && empty($mobile)) {
+                    $dbQuery
+                        ->where(function ($query) use ($user) {
+                            $query->where('appointments.created_by', $user->id);
+                            $query->orWhere('appointments.assigned_to', $user->id);
+                        });
+                }
+            }
         }
 
         if ($currentStatus) {
@@ -94,7 +98,21 @@ class AppointmentController extends Controller
             ->orderBy($sortField, $sortDirection)
             ->paginate($perPageRecords);
 
-        return view('appointments.index', compact('appointments', 'sortField', 'sortDirection', 'astartDate', 'aendDate', 'cstartDate', 'cendDate', 'currentStatus', 'name', 'mobile'));
+        return view(
+            'appointments.index',
+            compact(
+                'appointments',
+                'sortField',
+                'sortDirection',
+                'astartDate',
+                'aendDate',
+                'cstartDate',
+                'cendDate',
+                'currentStatus',
+                'name',
+                'mobile'
+            )
+        );
     }
 
     /**
@@ -119,7 +137,9 @@ class AppointmentController extends Controller
         $data['assigned_to'] = auth()->id();
 
         $healthProblem = $data['health_problem'];
-        $healthProblem = ((isset($data['health_problem']) && is_array($data['health_problem']))) ? $data['health_problem'] : ['Other'];
+        $healthProblem = ((isset($data['health_problem']) && is_array(
+                $data['health_problem']
+            ))) ? $data['health_problem'] : ['Other'];
         $data['health_problem'] = implode(', ', $healthProblem);
         $comments = $data['comments'];
         unset($data['health_problem'], $data['comments']);
@@ -134,7 +154,10 @@ class AppointmentController extends Controller
             ];
         }
         HealthProblems::insert($healthProblemData);
-        return redirect()->route('appointments.index')->with('success', 'Appointment created successfully. Patient Code: ' . $data['patient_code']);
+        return redirect()->route('appointments.index')->with(
+            'success',
+            'Appointment created successfully. Patient Code: ' . $data['patient_code']
+        );
     }
 
     /**
@@ -178,7 +201,9 @@ class AppointmentController extends Controller
         $this->authorize('manage appointments');
         $data = $request->validated();
         $healthProblem = $data['health_problem'];
-        $healthProblem = ((isset($data['health_problem']) && is_array($data['health_problem']))) ? $data['health_problem'] : ['Other'];
+        $healthProblem = ((isset($data['health_problem']) && is_array(
+                $data['health_problem']
+            ))) ? $data['health_problem'] : ['Other'];
         $data['health_problem'] = implode(', ', $healthProblem);
         $healthProblemData = [];
         foreach ($healthProblem as $healthProblem) {
@@ -193,7 +218,10 @@ class AppointmentController extends Controller
         $appointment->update($data);
         HealthProblems::where('appointment_id', $appointment->id)->delete();
         HealthProblems::insert($healthProblemData);
-        return redirect()->route('appointments.index')->with('success', 'Appointment updated successfully. Patient Code: ' . $data['patient_code']);
+        return redirect()->route('appointments.index')->with(
+            'success',
+            'Appointment updated successfully. Patient Code: ' . $data['patient_code']
+        );
     }
 
     /**

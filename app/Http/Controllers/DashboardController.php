@@ -18,10 +18,11 @@ class DashboardController extends Controller
             $subordinateIds[] = $user->id; // added to see records created by manager or assigned to manager
             $leadsQuery->whereIn('appointments.created_by', $subordinateIds)
                 ->orWhereIn('appointments.assigned_to', $subordinateIds);
-
-        } else if ($user->hasRole(['Presales'])) {
-            $leadsQuery->where('appointments.created_by', $user->id)
-                ->orWhere('appointments.assigned_to', $user->id);
+        } else {
+            if ($user->hasRole(['Presales'])) {
+                $leadsQuery->where('appointments.created_by', $user->id)
+                    ->orWhere('appointments.assigned_to', $user->id);
+            }
         }
         $activeLeadsCount = clone $leadsQuery;
         $convertedLeadsCount = clone $leadsQuery;
@@ -29,7 +30,10 @@ class DashboardController extends Controller
 
         $activeLeads = $activeLeadsCount->whereIn('active', ['Yes'])->count();
         $convertedLeads = $convertedLeadsCount->where('current_status', 'Converted')->count();
-        $nonConvertedLeads = $nonConvertedLeadsCount->whereNotIn('current_status', [ 'Appointment Canceled', 'Appointment Postponed', 'Visiting'])->count();
+        $nonConvertedLeads = $nonConvertedLeadsCount->whereNotIn(
+            'current_status',
+            ['Appointment Canceled', 'Appointment Postponed', 'Visiting']
+        )->count();
 
         return view('dashboard', compact('activeLeads', 'convertedLeads', 'nonConvertedLeads'));
     }

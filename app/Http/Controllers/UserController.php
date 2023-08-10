@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -16,9 +17,11 @@ class UserController extends Controller
         $users = [];
         $user = auth()->user();
         $perPageRecords = 25;
-        if ($user->hasRole(['Administrator'])) {
-            $users =  User::with('roles')->paginate($perPageRecords);
+        if (!$user->hasRole('Administrator')) {
+            return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
         }
+        $users = User::with('roles')->paginate($perPageRecords);
+
         return view('users.index', compact('users'));
     }
 
@@ -29,11 +32,11 @@ class UserController extends Controller
     {
         $user = auth()->user();
         if (!$user->hasRole('Administrator')) {
-            return response()->json(['error' => 'You do not have the required permissions.'], 403);
+            return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);return response()->json(['error' => 'You do not have the required permissions.'], 403);
         }
         $roles = Role::all();
         $managers = Role::where('name', 'Manager')->firstOrFail()->users;
-        return view('users.create',compact('roles','managers'));
+        return view('users.create', compact('roles', 'managers'));
     }
 
     /**
@@ -41,6 +44,10 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $user = auth()->user();
+        if (!$user->hasRole('Administrator')) {
+            return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);return response()->json(['error' => 'You do not have the required permissions.'], 403);
+        }
         //$this->authorize('manage users');
         $request->validate([
             'name' => 'required',
@@ -51,7 +58,7 @@ class UserController extends Controller
             'manager_id' => 'nullable|exists:users,id',
             'type' => 'nullable|in:Incoming calls,Incoming leads,Old leads,Missed appointment',
             'comment' => 'nullable|string',
-            'phone_number'=> 'required|min:10',
+            'phone_number' => 'required|min:10',
         ]);
 
         $user = User::create([
@@ -85,7 +92,10 @@ class UserController extends Controller
      */
     public function edit(Request $request, User $user)
     {
-        //$this->authorize('manage users');
+        $user = auth()->user();
+        if (!$user->hasRole('Administrator')) {
+            return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
+        }
         $roles = Role::all();
         $managers = Role::where('name', 'Manager')->firstOrFail()->users;
 
@@ -97,7 +107,10 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //$this->authorize('manage users');
+        $user = auth()->user();
+        if (!$user->hasRole('Administrator')) {
+            return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
+        }
         // Validation rules for name and email
         $rules = [
             'name' => 'required',
@@ -106,7 +119,7 @@ class UserController extends Controller
             'manager_id' => 'nullable|exists:users,id',
             'type' => 'nullable|in:Incoming calls,Incoming leads,Old leads,Missed appointment',
             'comment' => 'nullable|string',
-            'phone_number'=> 'required|min:10',
+            'phone_number' => 'required|min:10',
         ];
 
         // Check if the password field is not empty
