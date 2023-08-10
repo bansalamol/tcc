@@ -32,7 +32,7 @@
 
                                 <div class="mt-4">
                                     <x-label for="phone_number" value="{{ __('Select Patient') }}" />
-                                    <input id="phone_number" class="block mt-1 w-full  border-gray-300 rounded-md" x-data type="text" name="phone_number" required autofocus autocomplete="phone_number" x-on:input="searchPatients()" placeholder="Search Patient by Phone Number" />
+                                    <input id="phone_number" class="block mt-1 w-full  border-gray-300 rounded-md" x-data type="text" name="phone_number" value="{{ $mobile }}" required autofocus autocomplete="phone_number" x-on:input="searchPatients()" placeholder="Search Patient by Phone Number" />
                                     <!-- Search Results Dropdown -->
                                     <ul id="search-results"></ul>
 
@@ -113,6 +113,7 @@
                                 {{ __('Save Appointment') }}
                             </x-button>
                         </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -127,9 +128,9 @@
             const selectedMobile = document.getElementById('mobile').textContent;
             const enteredPhone = document.getElementById('phone_number').value;
             let slug = '';
-            if (selectedMobile.length == 10) {
+            if (selectedMobile.length === 10) {
                 slug = selectedMobile;
-            } else if (enteredPhone.length == 10) {
+            } else if (enteredPhone.length === 10) {
                 slug = enteredPhone;
             }
             event.preventDefault();
@@ -178,6 +179,7 @@
             document.getElementById('search-results').innerHTML = '';
             document.getElementById('no-patient-found').style.display = 'none';
         }
+        searchPatients();
     </script>
 
     <style>

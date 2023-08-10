@@ -24,9 +24,11 @@ class PatientController extends Controller
             $patients = Patient::paginate($perPageRecords);
         } else {
             $assignedPatients = Appointment::where('assigned_to', $user->id)->pluck('patient_code')->all();;
-            $patients = Patient::whereIn('code', $assignedPatients)->orWhere('created_by', $user->id)->paginate($perPageRecords);
+            $patients = Patient::whereIn('code', $assignedPatients)->orWhere('created_by', $user->id)->paginate(
+                $perPageRecords
+            );
         }
-        return view('patients.index', compact('patients','searchTerm'));
+        return view('patients.index', compact('patients', 'searchTerm'));
     }
 
 
@@ -44,15 +46,15 @@ class PatientController extends Controller
         } else {
             $assignedPatients = Appointment::where('assigned_to', $user->id)->pluck('patient_code')->all();;
             $patients = Patient::whereIn('code', $assignedPatients)
-            ->orWhere('created_by', $user->id)
-            ->where(function ($query) use ($searchTerm) {
-                $query->where('name', 'LIKE', '%' . $searchTerm . '%')
-                      ->orWhere('code', 'LIKE', '%' . $searchTerm . '%')
-                      ->orWhere('phone_number', 'LIKE', '%' . $searchTerm . '%');
-            })
-            ->paginate($perPageRecords);
+                ->orWhere('created_by', $user->id)
+                ->where(function ($query) use ($searchTerm) {
+                    $query->where('name', 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhere('code', 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhere('phone_number', 'LIKE', '%' . $searchTerm . '%');
+                })
+                ->paginate($perPageRecords);
         }
-        return view('patients.index', compact('patients','searchTerm'));
+        return view('patients.index', compact('patients', 'searchTerm'));
     }
 
     /**
@@ -73,7 +75,10 @@ class PatientController extends Controller
         $this->authorize('manage patients');
         $data = $request->validated();
         Patient::create($request->validated());
-        return redirect()->route('appointments.create')->with('success', 'Appointment created successfully. Patient phone: ' . $data['phone_number']);
+        return redirect()->route('appointments.create.mobile', ['mobile' => $data['phone_number']])->with(
+            'success',
+            'Patient created successfully. Patient phone: ' . $data['phone_number']
+        );
     }
 
     /**
@@ -135,19 +140,10 @@ class PatientController extends Controller
         // need to add a role check code & check if available in logged in users bucket
         if (auth()->check()) {
             $this->authorize('manage appointments');
-            $user = auth()->user();
-            $phone = preg_replace('/\D/', '', $request->query('phone'));
-            $assignedPatientCodes = Appointment::where('assigned_to', $user->id)
-            ->pluck('patient_code')
-            ->toArray();
-
-            $patients = Patient::where(function ($query) use ($phone, $user, $assignedPatientCodes) {
-                $query->where('phone_number', 'LIKE', "%{$phone}%")
-                    ->where('created_by', $user->id);
-            })->orWhere(function ($query) use ($assignedPatientCodes, $phone) {
-                $query->whereIn('code', $assignedPatientCodes)
-                ->where('phone_number', 'LIKE', "%{$phone}%");
-            })->get();
+            $phone = $request->query('phone');
+            $phone = (is_numeric($phone) && strlen($phone) === 10) ? $phone : '';
+            $phone = preg_replace('/\D/', '', $phone);
+            $patients = Patient::where('phone_number', 'LIKE', "%{$phone}%")->get();
 
             return response()->json($patients);
         } else {
