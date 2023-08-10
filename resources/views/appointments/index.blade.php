@@ -22,88 +22,79 @@
                     </div>
                     @endcan
                     <div class="m-3 flex items-center space-x-4">
+                        <button id="advanceSearchBtn" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Advance Search</button>
+                    </div>
+                    <div id="searchContainer" class="ml-4 hidden">
                         <form action="{{ route('appointments.index') }}" method="GET">
-                            <label for="search_filter" class="self-center ">Search By:</label>
-                            <select name="search_filter" id="search_filter" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
-                                <option value="">Select an option</option>
-                             <!--   <option value="all" {{ $searchFilter === 'all' ? 'selected' : '' }}>All Filters</option> -->
-                                <option value="date_range" {{ $searchFilter === 'date_range' ? 'selected' : '' }}>Date Range</option>
-                                <option value="status" {{ $searchFilter === 'status' ? 'selected' : '' }}>Current Status</option>
-                                <option value="pname" {{ $searchFilter === 'pname' ? 'selected' : '' }}>Name</option>
-                            </select>
-
-                            <!-- Date range input fields -->
-
-                            <div id="dateRangeFields" class="hidden space-x-2 mt-4">
-                                <label for="start_date">Start Date:</label>
-                                <input type="text" id="start_date" name="start_date" class="datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $startDate }}">
-                                <label for="end_date">End Date:</label>
-                                <input type="text" id="end_date" name="end_date" class="datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $endDate }}">
+                        <div class="space-x-2 mt-4">
+                                <label for="name" class="block font-medium text-sm text-gray-700 ml-2">Patient Name</label>
+                                <input type="text" id="pname" name="pname" value="{{ $name }}" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Enter Patient Name">
                             </div>
-
-
-                            <!-- Status input field -->
-                            <div id="statusField" style="display: none;" class="space-x-2 mt-4">
-                                <label for="status">Current Status:</label>
-                                <select name="status" id="status" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                            <div class="space-x-2 mt-4">
+                                <label for="mobile" class="block font-medium text-sm text-gray-700 ml-2">Mobile</label>
+                                <input type="text" id="mobile" name="mobile" value="{{ $mobile }}" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Enter Mobile">
+                            </div>
+                            <div class="space-x-2 mt-4">
+                                <label for="status"  class="block font-medium text-sm text-gray-700 ml-2">Current Status</label>
+                                <select name="status" id="status" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="">Select an option</option>
                                     @foreach(config('variables.appointmentStatus') as $value => $label)
                                     <option value="{{ $value }}" {{ $value == $currentStatus ? 'selected' : '' }}>{{ $label }}</option>
                                     @endforeach
                                 </select>
                             </div>
-
-                            <!-- Name input field -->
-                            <div id="nameField" style="display: none;" class="space-x-2 mt-4">
-                                <label for="name">Patient Name:</label>
-                                <input type="text" id="pname" name="pname" value="{{ $name }}" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                            <div class="space-x-2 mt-4">
+                                <label for="cstart_date" class="block font-medium text-sm text-gray-700 ml-2">Created Date</label>
+                                <input type="text" id="cstart_date" name="cstart_date" class="mt-1 datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $cstartDate }}" placeholder="Select Start Date">
+                                <input type="text" id="cend_date" name="cend_date" class="mt-1 datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $cendDate }}" placeholder="Select End Date">
                             </div>
-
-                            <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Search</button>
-                            <a href="{{ route('appointments.index') }}" class="mt-4 px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:bg-gray-400">Reset</a>
-
+                            <div class="space-x-2 mt-4">
+                                <label for="astart_date" class="block font-medium text-sm text-gray-700 ml-2">Appointment Date</label>
+                                <input type="text" id="astart_date" name="astart_date" class="mt-1 datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $astartDate }}" placeholder="Select Start Date">
+                                <input type="text" id="aend_date" name="aend_date" class="mt-1 datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $aendDate }}" placeholder="Select End Date">
+                            </div>
+                            <div class="space-x-2 mt-4">
+                                <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Search</button>
+                                <a href="{{ route('appointments.index') }}" class="mt-4 px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:bg-gray-400">Reset</a>
+                            </div>
                         </form>
                     </div>
 
-                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <table class="mt-4 w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-6 py-3">
                                     #
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    <a href="{{ route('appointments.index', [
+                                    <a href="{{ route('appointments.index', array_merge(request()->input(), [
                                         'sortField' => 'patient_code',
                                         'sortDirection' => $sortField === 'patient_code' && $sortDirection === 'asc' ? 'desc' : 'asc',
-                                        'q' => request()->input('q'),
-                                        ]) }}">
+                                        ])) }}">
                                         Patient Code
                                     </a>
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    <a href="{{ route('appointments.index', [
+                                    <a href="{{ route('appointments.index', array_merge(request()->input(), [
                                         'sortField' => 'name',
                                         'sortDirection' => $sortField === 'name' && $sortDirection === 'asc' ? 'desc' : 'asc',
-                                        'q' => request()->input('q'),
-                                        ]) }}">
+                                        ])) }}">
                                         Patient Name
                                     </a>
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    <a href="{{ route('appointments.index', [
+                                    <a href="{{ route('appointments.index', array_merge(request()->input(), [
                                         'sortField' => 'appointment_type',
                                         'sortDirection' => $sortField === 'appointment_type' && $sortDirection === 'asc' ? 'desc' : 'asc',
-                                        'q' => request()->input('q'),
-                                        ]) }}">
+                                        ])) }}">
                                         Appointment Type
                                     </a>
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    <a href="{{ route('appointments.index', [
+                                    <a href="{{ route('appointments.index', array_merge(request()->input(), [
                                         'sortField' => 'appointment_time',
                                         'sortDirection' => $sortField === 'appointment_time' && $sortDirection === 'asc' ? 'desc' : 'asc',
-                                        'q' => request()->input('q'),
-                                        ]) }}">
+                                        ])) }}">
                                         Appointment Date
                                     </a>
                                 </th>
@@ -111,16 +102,20 @@
                                     Health Problem
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    <a href="{{ route('appointments.index', [
+                                    <a href="{{ route('appointments.index', array_merge(request()->input(), [
                                         'sortField' => 'current_status',
                                         'sortDirection' => $sortField === 'current_status' && $sortDirection === 'asc' ? 'desc' : 'asc',
-                                        'q' => request()->input('q'),
-                                        ]) }}">
+                                        ])) }}">
                                         Current Status
                                     </a>
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Created date
+                                    <a href="{{ route('appointments.index', array_merge(request()->input(), [
+                                        'sortField' => 'created_at',
+                                        'sortDirection' => $sortField === 'created_at' && $sortDirection === 'asc' ? 'desc' : 'asc',
+                                        ])) }}">
+                                        Created date
+                                    </a>
                                 </th>
                                 @can('manage patients')
                                 <th scope="col" class="px-6 py-3">
@@ -170,7 +165,7 @@
                                     {{ $appointment->current_status }}
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    {{ $appointment->created_at }}
+                                    {{ date('d-M-y H:i', strtotime($appointment->created_at)) }}
                                 </td>
 
                                 <td class="px-6 py-4">
@@ -223,7 +218,7 @@
                     </table>
                     <!-- Pagination links -->
                     <div class="m-4">
-                        {{ $appointments->appends(['q' => request()->input('q'),'sortField' => request()->input('sortField'),'sortDirection' => request()->input('sortDirection')])->links() }}
+                        {{ $appointments->appends(request()->input())->links() }}
                     </div>
                 </div>
             </div>
@@ -265,48 +260,22 @@
     </script>
     <script>
         function updateSearchFields() {
-            const searchFilter = document.getElementById('search_filter');
-            const dateRangeFields = document.getElementById('dateRangeFields');
-            const statusField = document.getElementById('statusField');
-            const nameField = document.getElementById('nameField');
-
-            const selectedFilter = searchFilter.value;
-
-            // Show all search fields if "All Filters" is selected
-            if (selectedFilter === 'all') {
-                dateRangeFields.style.display = 'block';
-                statusField.style.display = 'block';
-                nameField.style.display = 'block';
+            const searchContainer = document.getElementById('searchContainer');
+            if (searchContainer.style.display == 'block') {
+                searchContainer.style.display = 'none';
             } else {
-                // Hide all search fields
-                dateRangeFields.style.display = 'none';
-                statusField.style.display = 'none';
-                nameField.style.display = 'none';
-
-                // Show the selected search field
-                if (selectedFilter === 'date_range') {
-                    dateRangeFields.style.display = 'block';
-                } else if (selectedFilter === 'status') {
-                    statusField.style.display = 'block';
-                } else if (selectedFilter === 'pname') {
-                    nameField.style.display = 'block';
-                }
+                searchContainer.style.display = 'block';
             }
         }
 
-        // Call the function on page load
-        window.addEventListener('load', updateSearchFields);
-
         // Call the function when the search filter changes
-        const searchFilter = document.getElementById('search_filter');
-        searchFilter.addEventListener('change', updateSearchFields);
-
-        // Function to call when a specific button is clicked
-        function handleButtonClick() {
-            // Call the function to update search fields
-            updateSearchFields();
-            // Add additional actions you want to perform on the button click
-        }
+        const searchFilter = document.getElementById('advanceSearchBtn');
+        searchFilter.addEventListener('click', updateSearchFields);
     </script>
+    <style>
+        .w-custom {
+            width: 32% !important;
+        }
+    </style>
 
 </x-app-layout>

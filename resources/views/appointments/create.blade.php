@@ -39,7 +39,7 @@
 
                                     <!-- "Create New Patient" Link -->
                                     <p id="no-patient-found" style="display: none; color:red">No patient found with the given phone number.</p>
-                                    <a href="{{ route('patients.create') }}" id="create-patient-link" style="display: none;color:blue">Create New Patient</a>
+                                    <a href="#" onclick="return createPatient(event);" id="create-patient-link" style="color:blue">Create New Patient</a>
 
                                 </div>
 
@@ -68,7 +68,7 @@
                                     <x-select-field name="current_status" :options="config('variables.appointmentStatus')" required selected="Appointment Scheduled">
                                     </x-select-field>
                                 </div>
-                                <!-- 
+                                <!--
 
                                 <div class="mt-4">
                                     <x-label for="reference_id" value="{{__('Reference ID')}}" />
@@ -122,22 +122,28 @@
     </div>
 
     <script>
-        /*
-        function updatePatientCodeView(selectElement) {
-            var selectedValue = selectElement.value;
-            document.getElementById('patient_code_view').value = selectedValue;
+        function createPatient(event) {
+            const url = "{{ route('patients.create.mobile', '') }}";
+            const selectedMobile = document.getElementById('mobile').textContent;
+            const enteredPhone = document.getElementById('phone_number').value;
+            let slug = '';
+            if (selectedMobile.length == 10) {
+                slug = selectedMobile;
+            } else if (enteredPhone.length == 10) {
+                slug = enteredPhone;
+            }
+            event.preventDefault();
+            window.location.href = url + '/' + slug;
         }
-        */
+
         function searchPatients() {
 
             const searchResults = document.getElementById('search-results');
             const noPatientFound = document.getElementById('no-patient-found');
-            const createPatientLink = document.getElementById('create-patient-link');
             const phone = document.getElementById('phone_number').value;
             // Clear the previous search results
             searchResults.innerHTML = '';
             noPatientFound.style.display = 'none';
-            createPatientLink.style.display = 'none';
             document.getElementById('mobile').textContent = "";
 
 
@@ -156,7 +162,6 @@
                             //searchResults.appendChild()
                         } else {
                             noPatientFound.style.display = 'block';
-                            createPatientLink.style.display = 'block';
                         }
                     })
                     .catch(error => {
@@ -172,7 +177,6 @@
             document.getElementById('phone_number').value = selectedItem;
             document.getElementById('search-results').innerHTML = '';
             document.getElementById('no-patient-found').style.display = 'none';
-            document.getElementById('create-patient-link').style.display = 'none';
         }
     </script>
 
@@ -183,6 +187,7 @@
             padding: 5px;
             margin: 1px;
             background-color: #edf3f7;
+            padding-left: 20px;
         }
 
         #search-results li:nth-child(even) {
