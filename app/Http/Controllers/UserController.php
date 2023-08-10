@@ -26,8 +26,11 @@ class UserController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {   
-        //$this->authorize('manage users');
+    {
+        $user = auth()->user();
+        if (!$user->hasRole('Administrator')) {
+            return response()->json(['error' => 'You do not have the required permissions.'], 403);
+        }
         $roles = Role::all();
         $managers = Role::where('name', 'Manager')->firstOrFail()->users;
         return view('users.create',compact('roles','managers'));
@@ -85,7 +88,7 @@ class UserController extends Controller
         //$this->authorize('manage users');
         $roles = Role::all();
         $managers = Role::where('name', 'Manager')->firstOrFail()->users;
-        
+
         return view('users.edit', compact('user', 'roles', 'managers'));
     }
 
@@ -125,7 +128,7 @@ class UserController extends Controller
             'comment' => $request->input('comment'),
             'phone_number' => $request->input('phone_number'),
         ];
-        
+
         // Check if the password field is not empty before updating
         if ($request->filled('password')) {
             $data['password'] = bcrypt($request->input('password'));
@@ -133,7 +136,7 @@ class UserController extends Controller
 
         // Update the user
         $user->update($data);
-        
+
         // Assign the new role to the user
         $role = Role::find($request->input('role'));
         $user->syncRoles([$role]);

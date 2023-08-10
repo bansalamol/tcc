@@ -67,7 +67,7 @@
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
 
                                 @if (auth()->user()->hasRole('Administrator') || $appointment->patient->created_by === auth()->user()->id)
-                                    {{ $patient->phone_number }} 
+                                    {{ $patient->phone_number }}
                                 @else
                                     +91******
                                 @endif
@@ -75,15 +75,19 @@
                                 </td>
 
                                 @can('manage patients')
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 flex">
                                     <?php /* ?><x-link href="{{ route('patients.history', $patient) }}">History</x-link><?php */ ?>
 
                                     @if (auth()->user()->hasRole('Administrator') || $patient->created_by === auth()->user()->id)
-                                    <x-link href="{{ route('patients.edit', $patient) }}">Edit</x-link>
+                                    <a href="{{ route('patients.edit', $patient) }}">
+                                        <svg class="h-6 w-6 text-gray-500"  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />  <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />  <line x1="16" y1="5" x2="19" y2="8" /></svg>
+                                    </a>
                                     <form method="POST" action="{{ route('patients.destroy', $patient) }}" class="inline-block">
                                         @csrf
                                         @method('DELETE')
-                                        <x-danger-button type="submit" onclick="return confirm('Are you sure?')">Delete</x-danger-button>
+                                        <a type="submit" onclick="return confirm('Are you sure?')">
+                                            <svg class="h-6 w-6 text-red-500"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />  <line x1="9" y1="9" x2="15" y2="15" />  <line x1="15" y1="9" x2="9" y2="15" /></svg>
+                                        </a>
                                     </form>
                                     @endif
                                 </td>

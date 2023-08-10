@@ -29,6 +29,7 @@ Route::middleware([
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('appointments', AppointmentController::class);
+    Route::get('/appointments/create/{mobile}', [AppointmentController::class, 'create'])->name('appointments.create.mobile');
     Route::resource('patients', PatientController::class);
     Route::get('/patients/create/{mobile}', [PatientController::class, 'create'])->name('patients.create.mobile');
     Route::get('/patient/history/{id}', [PatientController::class, 'history'])->name('patient.history');
