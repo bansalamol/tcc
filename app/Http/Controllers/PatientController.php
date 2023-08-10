@@ -58,10 +58,11 @@ class PatientController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(string $mobile = '')
     {
+        $mobile = (is_numeric($mobile) && strlen($mobile) === 10) ? $mobile : '';
         $this->authorize('manage patients');
-        return view('patients.create');
+        return view('patients.create', compact('mobile'));
     }
 
     /**

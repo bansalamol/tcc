@@ -23,11 +23,14 @@ class AppointmentController extends Controller
         $defaultLastDays = 3;
         $user = auth()->user();
 
-        $searchFilter = $request->input('search_filter');
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        $cstartDate = $request->input('cstart_date');
+        $cendDate = $request->input('cend_date');
+        $astartDate = $request->input('astart_date');
+        $aendDate = $request->input('aend_date');
         $currentStatus = $request->input('status');
+        $mobile = $request->input('mobile');
         $name = $request->input('pname');
+        $defaultFilter = true;
 
         $sortField = request()->input('sortField', 'id');
         $sortDirection = request()->input('sortDirection', 'desc');
@@ -53,21 +56,38 @@ class AppointmentController extends Controller
             throw new Exception("Role not supported");
         }
 
-        if ($searchFilter === 'date_range' && $startDate && $endDate) {
-            $startDate = date('Y-m-d 00:00:00', strtotime($startDate)); // Set the time to the beginning of the day
-            $endDate = date('Y-m-d 23:59:59', strtotime($endDate));     // Set the time to the end of the day
-            $dbQuery->whereBetween('appointments.created_at', [$startDate, $endDate]);
-        } elseif ($searchFilter === 'status' && $currentStatus) {
+        if ($currentStatus) {
             $dbQuery->where('appointments.current_status', $currentStatus);
-        } elseif ($searchFilter === 'pname' && $name) {
+            $defaultFilter = false;
+        }
+        if ($name) {
             $dbQuery->whereHas('patient', function ($query) use ($name) {
                 $query->where('patients.name', 'like', '%' . $name . '%');
             });
-        } else {
-            // Default condition if no specific filter is selected
+            $defaultFilter = false;
+        }
+        if ($mobile) {
+            $dbQuery->whereHas('patient', function ($query) use ($mobile) {
+                $query->where('patients.phone_number', 'like', '%' . $mobile . '%');
+            });
+            $defaultFilter = false;
+        }
+        if ($cstartDate && $cendDate) {
+            $cstartDate = date('Y-m-d 00:00:00', strtotime($cstartDate)); // Set the time to the beginning of the day
+            $cendDate = date('Y-m-d 23:59:59', strtotime($cendDate));     // Set the time to the end of the day
+            $dbQuery->whereBetween('appointments.created_at', [$cstartDate, $cendDate]);
+            $defaultFilter = false;
+        }
+        if ($astartDate && $aendDate) {
+            $astartDate = date('Y-m-d 00:00:00', strtotime($astartDate)); // Set the time to the beginning of the day
+            $aendDate = date('Y-m-d 23:59:59', strtotime($aendDate));     // Set the time to the end of the day
+            $dbQuery->whereBetween('appointments.appointment_time', [$astartDate, $aendDate]);
+            $defaultFilter = false;
+        }
+
+        if ($defaultFilter) {
             $dbQuery->whereDate('appointments.created_at', '>=', date("Y-m-d", strtotime("-$defaultLastDays days")));
         }
-    
 
         $appointments = $dbQuery
             ->join('patients', 'appointments.patient_code', '=', 'patients.code')
@@ -75,7 +95,7 @@ class AppointmentController extends Controller
             ->orderBy($sortField, $sortDirection)
             ->paginate($perPageRecords);
 
-        return view('appointments.index', compact('appointments','searchFilter', 'sortField', 'sortDirection', 'endDate', 'startDate', 'currentStatus','name'));
+        return view('appointments.index', compact('appointments', 'sortField', 'sortDirection', 'astartDate', 'aendDate', 'cstartDate', 'cendDate', 'currentStatus', 'name', 'mobile'));
     }
 
     /**
@@ -142,12 +162,12 @@ class AppointmentController extends Controller
         $appointments = Appointment::all();
 
         $user = auth()->user();
-        if($user->id === $appointment->created_by || $user->id === $appointment->assigned_to){
+        if ($user->id === $appointment->created_by || $user->id === $appointment->assigned_to) {
             $users = User::all();
-        }else{
-            $users = User::where('id','!=',$user->id)->get();
+        } else {
+            $users = User::where('id', '!=', $user->id)->get();
         }
-        
+
         return view('appointments.edit', compact('appointment', 'appointments', 'users'));
     }
 
