@@ -90,12 +90,12 @@
 
                                     <div class="mb-4">
                                         <h2 class="text-xl font-semibold mb-2">Manager</h2>
-                                        <p class="text-gray-600">This role can manage patients and appointments. It can create and update appointments for other users, and also create, update, and delete its own appointments.</p>
+                                        <p class="text-gray-600">This role has the ability to create both patients and appointments. Additionally, they can access and assign appointments to presales, as well as create and update their own appointments.</p>
                                     </div>
 
                                     <div class="mb-4">
                                         <h2 class="text-xl font-semibold mb-2">Presales</h2>
-                                        <p class="text-gray-600">This role can manage patients and appointments. It can create and update appointments for other users, and also create, update, and delete its own appointments.</p>
+                                        <p class="text-gray-600">This role has the ability to create patient records and book appointments. Additionally, they modify their own appointment only.</p>
                                     </div>
                                 </div>
 
