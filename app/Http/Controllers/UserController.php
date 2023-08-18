@@ -15,9 +15,9 @@ class UserController extends Controller
     public function index()
     {
         $users = [];
-        $user = auth()->user();
+        $authUser = auth()->user();
         $perPageRecords = 25;
-        if (!$user->hasRole('Administrator')) {
+        if (!$authUser->hasRole('Administrator')) {
             return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
         }
         $users = User::with('roles')->paginate($perPageRecords);
@@ -30,9 +30,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        $user = auth()->user();
-        if (!$user->hasRole('Administrator')) {
-            return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);return response()->json(['error' => 'You do not have the required permissions.'], 403);
+        $authUser = auth()->user();
+        if (!$authUser->hasRole('Administrator')) {
+            return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
         }
         $roles = Role::all();
         $managers = Role::where('name', 'Manager')->firstOrFail()->users;
@@ -44,9 +44,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $user = auth()->user();
-        if (!$user->hasRole('Administrator')) {
-            return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);return response()->json(['error' => 'You do not have the required permissions.'], 403);
+        $authUser = auth()->user();
+        if (!$authUser->hasRole('Administrator')) {
+            return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
         }
         //$this->authorize('manage users');
         $request->validate([
@@ -92,8 +92,8 @@ class UserController extends Controller
      */
     public function edit(Request $request, User $user)
     {
-        $user = auth()->user();
-        if (!$user->hasRole('Administrator')) {
+        $authUser = auth()->user();
+        if (!$authUser->hasRole('Administrator')) {
             return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
         }
         $roles = Role::all();
@@ -107,8 +107,8 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $user = auth()->user();
-        if (!$user->hasRole('Administrator')) {
+        $authUser = auth()->user();
+        if (!$authUser->hasRole('Administrator')) {
             return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
         }
         // Validation rules for name and email
