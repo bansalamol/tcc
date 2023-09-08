@@ -45,6 +45,7 @@
                                             <strong class="text-gray-700">Appointment Date:</strong>
                                             <p class="text-sm italic text-gray-600">{{ date('d-M-y H:i', strtotime($appointment->appointment_time)) }} | Created by: {{$appointment->creator->name}} | Created at: {{ date('d-M-y H:i', strtotime($appointment->created_at))}}</p>
                                         </div>
+                                        @if(!$appointment->healthProblems->isEmpty())
                                         <div class="mb-4">
                                             <strong class="text-gray-700">Health Problems:</strong>
                                             <ul class="ml-6 list-disc">
@@ -57,6 +58,8 @@
                                             <strong class="text-gray-700">Comments:</strong>
                                             <p class="ml-6 text-sm text-gray-600">{{$hp->comments}}</p>
                                         </div>
+                                        @endif
+
                                     </div>
                                 </li>
                                 @endforeach

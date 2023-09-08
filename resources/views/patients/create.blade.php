@@ -62,12 +62,12 @@
 
                                 <div class="mt-4">
                                     <x-label for="alternate_phone_number" value="{{ __('Alternate Phone Number') }}" />
-                                    <x-input id="alternate_phone_number" class="block mt-1 w-full" type="text" name="alternate_phone_number" :value="old('alternate_phone_number')" required autofocus autocomplete="alternate_phone_number" />
+                                    <x-input id="alternate_phone_number" class="block mt-1 w-full" type="text" name="alternate_phone_number" :value="old('alternate_phone_number')" autofocus autocomplete="alternate_phone_number" />
                                 </div>
 
                                 <div class="mt-4">
                                     <x-label for="email" value="{{ __('Email') }}" />
-                                    <x-input id="email" class="block mt-1 w-full" type="text" name="email" :value="old('email')" required autofocus autocomplete="email" />
+                                    <x-input id="email" class="block mt-1 w-full" type="text" name="email" :value="old('email')"  autofocus autocomplete="email" />
                                 </div>
                                 <div class="mt-4">
                                     <x-label for="address" value="{{ __('Address') }}" />

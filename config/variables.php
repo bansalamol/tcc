@@ -7,6 +7,10 @@ return [
         'Non interested' => 'Non interested',
         'Prospective lead' => 'Prospective lead',
         'Tentative Appointment' => 'Tentative Appointment',
+        'Rescheduled Appointment' => 'Rescheduled Appointment',
+        'RemoteConsultation Appointment' => 'RemoteConsultation Appointment',
+        'Followup' => 'Followup',
+        'Bad Lead' => 'Bad Lead',
     ],
     'healthProblems' => [
         'Diabetes' => 'Diabetes',
@@ -23,13 +27,15 @@ return [
     'appointmentStatus' => [
         'Pending Confirmation' => 'Pending Confirmation',
         'Confirmed' => 'Confirmed',
+        'Followup' => 'Followup',
         'Visited' => 'Visited',
         'Visiting' => 'Visiting',
         'Converted' => 'Converted',
         'Appointment Scheduled' => 'Appointment Scheduled', // New status
         'Appointment Postponed' => 'Appointment Postponed',
         'Appointment Canceled' => 'Appointment Canceled',
-    ],       
+        'Started Treatment Elsewhere' => 'Started Treatment Elsewhere',
+    ],
     'yesNo' => [
         'No' => 'No',
         'Yes' => 'Yes',
@@ -39,12 +45,37 @@ return [
         'Non-Visited' => 'Non-Visited',
         'Dubplicate Visited' => 'Dubplicate Visited',
     ],
-    'leadType' =>['Incoming calls'=> 'Visited', 
+    'leadType' => [
+        'Incoming calls' => 'Incoming Calls',
         'Incoming leads' => 'Incoming leads',
-        'Old leads' => 'Old leads' , 
+        'Old leads' => 'Old leads',
         'Missed appointment' => 'Missed appointment'
     ],
     'sex' => ['Male' => 'Male', 'Female' => 'Female', 'Other' => 'Other'],
-    'clinicList'   => ['Pune' => 'Pune', 'Thane' => 'Thane', 'Vashi'=>'Vashi'],
-    'interestScore' => ['1'=>'1', '2'=>'2', '3'=>'3', '4'=>'4', '5'=>'5']
+    'clinicList'  => [
+        'ThanePanama Knee' => 'ThanePanama Knee',
+        'ThanePaneri Knee' => 'ThanePaneri Knee',
+        'Vashi Knee' => 'Vashi knee',
+        'Mulund Knee' => 'Mulund Knee',
+        'GrantRoad Knee' => 'GrantRoad Knee',
+        'Dadar Knee' => 'Dadar Knee',
+        'Ghatkopar Knee' => 'Ghatkopar Knee',
+        'Andheri Knee' => 'Andheri Knee',
+        'Goregaon Knee' => 'Goregaon Knee',
+        'BorivaliSVP Knee' => 'BorivaliSVP Knee',
+        'BorivaliStation Knee' => 'BorivaliStation Knee',
+        'MiraRoad Knee' => 'MiraRoad Knee',
+        'Manpada Knee' => 'Manpada Knee',
+        'Badlapur Knee' => 'Badlapur Knee',
+        'KalyanSahjanand Knee' => 'KalyanSahjanand Knee',
+        'KalyanRambaug Knee' => 'KalyanRambaug Knee',
+        'Dombivali Knee' => 'Dombivali Knee',
+        'PimpleSaudagar Knee' => 'PimpleSaudagar Knee',
+        'PuneKarvenagar Knee' => 'PuneKarvenagar Knee',
+        'PuneStaraRoad Knee' => 'PuneStaraRoad Knee',
+        'PuneKalyaniNagar Knee' => 'PuneKalyaniNagar Knee',
+        'PuneHadapsar Knee' => 'PuneHadapsar Knee',
+        'Nigadi Knee' => 'Nigadi Knee'
+    ],
+    'interestScore' => ['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5']
 ];
