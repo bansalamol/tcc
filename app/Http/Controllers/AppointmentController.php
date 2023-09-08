@@ -19,8 +19,8 @@ class AppointmentController extends Controller
      */
     public function index(Request $request)
     {
-        $perPageRecords = 10;
-        $defaultLastDays = 3;
+        $perPageRecords = 25;
+        $defaultLastDays = 180;
         $user = auth()->user();
 
         $cstartDate = $request->input('cstart_date');

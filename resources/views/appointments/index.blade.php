@@ -180,8 +180,8 @@
                                             </svg>
                                         </a>
                                         @endcan
-                                        @if (auth()->user()->hasRole('Administrator') || $appointment->patient->created_by === auth()->user()->id)
-
+                                        
+                                        @if (auth()->user()->hasRole('Administrator') || $appointment->patient->created_by === auth()->user()->id || $appointment->assigned_to === auth()->user()->id)
                                         <a class="inline-flex px-1 py-1 text-blue-500" href="sms:" title="SMS" target="_blank" onclick="openMessage('sms','{{ $appointment->patient->phone_number }}');">
                                             <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                 <path stroke="none" d="M0 0h24v24H0z" />
