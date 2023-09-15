@@ -28,7 +28,8 @@ class Appointment extends Model
         'active',
         'visited',
         'last_called_datetime',
-        'last_messaged_datetime'
+        'last_messaged_datetime',
+        'lead_source'
     ];
 
     protected static function boot()
@@ -70,6 +71,11 @@ class Appointment extends Model
     public function healthProblems()
     {
         return $this->hasMany(HealthProblems::class, 'appointment_id');
+    }
+
+    public function assigned(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
     }
 
 }

@@ -59,6 +59,11 @@
                                     </x-select-field>
                                 </div>
                                 <div class="mt-4">
+                                    <x-label for="lead_source" value="{{__('Lead Source')}}" />
+                                    <x-select-field name="lead_source" :options="config('variables.leadType')" required >
+                                    </x-select-field>
+                                </div>
+                                <div class="mt-4">
                                     <x-label for="lead_interest_score" value="{{__('Lead Interest Score')}}" />
                                     <x-select-field name="lead_interest_score" :options="config('variables.interestScore')" required selected="1">
                                     </x-select-field>

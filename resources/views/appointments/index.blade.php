@@ -26,13 +26,23 @@
                     </div>
                     <div id="searchContainer" class="ml-4 hidden">
                         <form action="{{ route('appointments.index') }}" method="GET">
-                        <div class="space-x-2 mt-4">
+                            <div class="space-x-2 mt-4">
                                 <label for="name" class="block font-medium text-sm text-gray-700 ml-2">Patient Name</label>
                                 <input type="text" id="pname" name="pname" value="{{ $name }}" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Enter Patient Name">
                             </div>
                             <div class="space-x-2 mt-4">
                                 <label for="mobile" class="block font-medium text-sm text-gray-700 ml-2">Mobile</label>
                                 <input type="text" id="mobile" name="mobile" value="{{ $mobile }}" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Enter Mobile">
+                            </div>
+                            <div class="space-x-2 mt-4">
+                                <label for="appointment_type" class="block font-medium text-sm text-gray-700 ml-2">Appointment Type</label>
+                                <select name="appointment_type" id="appointment_type" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                                    <option value="">Select an option</option>
+                                    @foreach(config('variables.appointmentTypes') as $value => $label)
+                                    <option value="{{ $value }}" {{ $value == $appointmentType ? 'selected' : '' }}>{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                                
                             </div>
                             <div class="space-x-2 mt-4">
                                 <label for="status"  class="block font-medium text-sm text-gray-700 ml-2">Current Status</label>
@@ -98,6 +108,7 @@
                                         Appointment Date
                                     </a>
                                 </th>
+                                
                                 <th scope="col" class="px-6 py-3">
                                     Health Problem
                                 </th>
@@ -117,6 +128,31 @@
                                         Created date
                                     </a>
                                 </th>
+                                <th scope="col" class="px-6 py-3">
+                                    <a href="{{ route('appointments.index', array_merge(request()->input(), [
+                                        'sortField' => 'assigned_to',
+                                        'sortDirection' => $sortField === 'assigned_to' && $sortDirection === 'asc' ? 'desc' : 'asc',
+                                        ])) }}">
+                                        Assigned To
+                                    </a>
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    <a href="{{ route('appointments.index', array_merge(request()->input(), [
+                                        'sortField' => 'created_by',
+                                        'sortDirection' => $sortField === 'created_by' && $sortDirection === 'asc' ? 'desc' : 'asc',
+                                        ])) }}">
+                                        Created By
+                                    </a>
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    <a href="{{ route('appointments.index', array_merge(request()->input(), [
+                                        'sortField' => 'last_called_datetime',
+                                        'sortDirection' => $sortField === 'last_called_datetime' && $sortDirection === 'asc' ? 'desc' : 'asc',
+                                        ])) }}">
+                                        Last Called Date Time
+                                    </a>
+                                </th>
+                                
                                 @can('manage patients')
                                 <th scope="col" class="px-6 py-3">
                                     Action
@@ -152,6 +188,7 @@
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     {{ date('d-M-y H:i', strtotime($appointment->appointment_time)) }}
                                 </td>
+                               
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     @if(strlen($appointment->health_problem) > 10)
                                     <span id="health_problem_{{ $appointment->id }}_short">{{ substr($appointment->health_problem, 0, 5) }}...</span>
@@ -166,6 +203,15 @@
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     {{ date('d-M-y H:i', strtotime($appointment->created_at)) }}
+                                </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                                    {{ $appointment->assigned->name }}
+                                </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                                    {{ $appointment->creator->name }}
+                                </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                                    {{ $appointment->last_called_datetime }}
                                 </td>
 
                                 <td class="px-6 py-4">
