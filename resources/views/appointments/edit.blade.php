@@ -39,6 +39,11 @@
                                     <x-input id="clinic" class="cursor-not-allowed opacity-50  bg-gray-100 block mt-1 w-full" type="text" name="clinic" :value="$appointment->clinic" required placeholder="Enter Clinic" readonly />
                                 </div>  
                                 <div class="mt-4">
+                                    <x-label for="lead_source" value="{{__('Lead Source')}}" />
+                                    <x-select-field name="lead_source" :selected="$appointment->lead_source"  :options="config('variables.leadType')" required >
+                                    </x-select-field>
+                                </div>
+                                <div class="mt-4">
                                     <x-label for="lead_interest_score" value="{{__('Lead Interest Score')}}" />
                                     <x-input id="lead_interest_score" class="cursor-not-allowed opacity-50  bg-gray-100 block mt-1 w-full" type="text" name="lead_interest_score" :value="$appointment->lead_interest_score" required placeholder="Enter Lead Interest Score"  readonly/>
                                 </div>

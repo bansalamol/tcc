@@ -29,6 +29,7 @@ class AppointmentController extends Controller
         $aendDate = $request->input('aend_date');
         $currentStatus = $request->input('status');
         $mobile = $request->input('mobile');
+        $appointmentType = $request->input('appointment_type');
         $mobile = (is_numeric($mobile) && strlen($mobile) === 10) ? $mobile : '';
         $name = $request->input('pname');
         $defaultFilter = true;
@@ -63,6 +64,12 @@ class AppointmentController extends Controller
             $dbQuery->where('appointments.current_status', $currentStatus);
             $defaultFilter = false;
         }
+
+        if ($appointmentType) {
+            $dbQuery->where('appointments.appointment_type', $appointmentType);
+            $defaultFilter = false;
+        }
+
         if ($name) {
             $dbQuery->whereHas('patient', function ($query) use ($name) {
                 $query->where('patients.name', 'like', '%' . $name . '%');
@@ -110,7 +117,8 @@ class AppointmentController extends Controller
                 'cendDate',
                 'currentStatus',
                 'name',
-                'mobile'
+                'mobile',
+                'appointmentType'
             )
         );
     }
@@ -123,7 +131,7 @@ class AppointmentController extends Controller
         $this->authorize('manage appointments');
         $patients = Patient::all();
         $users = User::all();
-        $appointments = Appointment::all();
+        $appointments = [];
         return view('appointments.create', compact('patients', 'users', 'appointments', 'mobile'));
     }
 
@@ -181,7 +189,7 @@ class AppointmentController extends Controller
             $healthPromlemData[] = $healthProblem->health_problem;
         }
         $appointment->health_problem = implode(', ', $healthPromlemData);
-        $appointments = Appointment::all();
+        $appointments = [];
 
         $user = auth()->user();
         if ($user->id === $appointment->created_by || $user->id === $appointment->assigned_to) {

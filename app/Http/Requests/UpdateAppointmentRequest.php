@@ -39,6 +39,7 @@ class UpdateAppointmentRequest extends FormRequest
             'visited' => 'nullable|string|max:255',
             'last_called_datetime' => 'nullable|date', // Assuming the 'last_called_datetime' field is a datetime field.
             'last_messaged_datetime' => 'nullable|date', // Assuming the 'last_messaged_datetime' field is a datetime field.
+            'lead_source' => 'nullable|string|max:30'
         ];
     }
 }

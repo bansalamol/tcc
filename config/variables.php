@@ -49,7 +49,9 @@ return [
         'Incoming calls' => 'Incoming Calls',
         'Incoming leads' => 'Incoming leads',
         'Old leads' => 'Old leads',
-        'Missed appointment' => 'Missed appointment'
+        'Website leads' => 'Website leads',
+        'Missed appointment' => 'Missed appointment',
+        'Referral' => 'Referral',
     ],
     'sex' => ['Male' => 'Male', 'Female' => 'Female', 'Other' => 'Other'],
     'clinicList'  => [
@@ -75,7 +77,9 @@ return [
         'PuneStaraRoad Knee' => 'PuneStaraRoad Knee',
         'PuneKalyaniNagar Knee' => 'PuneKalyaniNagar Knee',
         'PuneHadapsar Knee' => 'PuneHadapsar Knee',
-        'Nigadi Knee' => 'Nigadi Knee'
+        'Nigadi Knee' => 'Nigadi Knee',
+        'Remote Consultation' => 'Remote Consultation',
+        'No Clinic' => 'No Clinic',
     ],
     'interestScore' => ['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5']
 ];
