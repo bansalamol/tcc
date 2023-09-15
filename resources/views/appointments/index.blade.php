@@ -54,6 +54,24 @@
                                 </select>
                             </div>
                             <div class="space-x-2 mt-4">
+                                <label for="status"  class="block font-medium text-sm text-gray-700 ml-2">Assigned To</label>
+                                <select id="assigned_to" name="assigned_to" class="mt-1 block w-full border-gray-300 rounded-md">
+                                        <option value="">Select an option</option>
+                                        @foreach($users as $user)
+                                        <option value="{{ $user->id }}"  @if($user->id == $assignedTo) selected @endif >{{ $user->name  }}</option>
+                                        @endforeach
+                                </select>
+                            </div>
+                            <div class="space-x-2 mt-4">
+                                <label for="status"  class="block font-medium text-sm text-gray-700 ml-2">Created By</label>
+                                <select id="created_by" name="created_by" class="mt-1 block w-full border-gray-300 rounded-md">
+                                        <option value="">Select an option</option>
+                                        @foreach($users as $user)
+                                        <option value="{{ $user->id }}"  @if($user->id == $createdBy) selected @endif >{{ $user->name }}</option>
+                                        @endforeach
+                                </select>
+                            </div>
+                            <div class="space-x-2 mt-4">
                                 <label for="cstart_date" class="block font-medium text-sm text-gray-700 ml-2">Created Date</label>
                                 <input type="text" id="cstart_date" name="cstart_date" class="mt-1 datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $cstartDate }}" placeholder="Select Start Date">
                                 <input type="text" id="cend_date" name="cend_date" class="mt-1 datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $cendDate }}" placeholder="Select End Date">

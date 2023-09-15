@@ -30,6 +30,8 @@ class AppointmentController extends Controller
         $currentStatus = $request->input('status');
         $mobile = $request->input('mobile');
         $appointmentType = $request->input('appointment_type');
+        $assignedTo = $request->input('assigned_to');
+        $createdBy = $request->input('created_by');
         $mobile = (is_numeric($mobile) && strlen($mobile) === 10) ? $mobile : '';
         $name = $request->input('pname');
         $defaultFilter = true;
@@ -70,6 +72,16 @@ class AppointmentController extends Controller
             $defaultFilter = false;
         }
 
+        if ($assignedTo) {
+            $dbQuery->where('appointments.assigned_to', $assignedTo);
+            $defaultFilter = false;
+        }
+
+        if ($createdBy) {
+            $dbQuery->where('appointments.created_by', $createdBy);
+            $defaultFilter = false;
+        }
+
         if ($name) {
             $dbQuery->whereHas('patient', function ($query) use ($name) {
                 $query->where('patients.name', 'like', '%' . $name . '%');
@@ -105,6 +117,8 @@ class AppointmentController extends Controller
             ->orderBy($sortField, $sortDirection)
             ->paginate($perPageRecords);
 
+        $users = User::all();
+
         return view(
             'appointments.index',
             compact(
@@ -118,7 +132,10 @@ class AppointmentController extends Controller
                 'currentStatus',
                 'name',
                 'mobile',
-                'appointmentType'
+                'appointmentType',
+                'users',
+                'assignedTo',
+                'createdBy'
             )
         );
     }
