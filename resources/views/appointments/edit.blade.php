@@ -1,6 +1,8 @@
-@props(['callTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: '$appointment->last_called_datetime', maxDate: 'today'}"])
-@props(['messageTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: '$appointment->last_messaged_datetime', maxDate: 'today'}"])
-@props(['appointmentTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: '$appointment->appointment_time', minDate: 'today'}"])
+@props(['callTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: '{{$appointment->last_called_datetime}}', maxDate: 'today'}"])
+@props(['messageTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: '{{$appointment->last_messaged_datetime}}', maxDate: 'today'}"])
+@props(['appointmentTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: '{{$appointment->appointment_time}}', minDate: 'today'}"])
+@props(['vistedDate' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: '{{$appointment->visited_date}}', minDate: '" . now()->subDays(7)->format('Y-m-d') . "',  maxDate: 'today'}"])
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -110,6 +112,10 @@
                                     <x-label for="visited" value="{{__('Visited')}}" />
                                     <x-select-field name="visited" :selected="$appointment->visited" :options="config('variables.visited')" required>
                                     </x-select-field>
+                                </div>
+                                <div class="mt-4">
+                                    <x-label for="visited_Date" value="{{__('Visited Date')}}" />
+                                    <input id="visited_date" name="visited_date" x-data x-init="flatpickr($refs.input, {{ $vistedDate }} );" x-ref="input" type="text" placeholder="Select Time" data-input {{ $attributes->merge(['class' => 'mt-1 block w-full disabled:bg-gray-200 p-2 border border-gray-300 rounded-md focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 sm:text-sm sm:leading-5']) }} />
                                 </div>
                                 <div class="mt-4">
                                     <x-label for="last_messaged_datetime" value="{{__('Last Messaged Time')}}" />

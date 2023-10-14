@@ -22,7 +22,7 @@
 
                     <!-- Your form and search results here -->
 
-                    <form method="POST" action="{{ route('appointments.store') }}">
+                    <form method="POST" id="appointment_create" action="{{ route('appointments.store') }}">
                         @csrf
 
                         <!-- Two-Column Layout -->
@@ -103,7 +103,7 @@
                         </div>
                         <!-- End Two-Column Layout -->
                         <div class="flex mt-4">
-                            <x-button>
+                            <x-button :id="'createAptSbtm'">
                                 {{ __('Save Appointment') }}
                             </x-button>
                         </div>
@@ -175,6 +175,7 @@
         }
         searchPatients();
     </script>
+    
 
     <style>
         #search-results li {

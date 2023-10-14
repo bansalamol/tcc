@@ -29,7 +29,8 @@ class Appointment extends Model
         'visited',
         'last_called_datetime',
         'last_messaged_datetime',
-        'lead_source'
+        'lead_source',
+        'visited_date'
     ];
 
     protected static function boot()
