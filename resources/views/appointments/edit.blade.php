@@ -37,7 +37,7 @@
                                 <div class="mt-4">
                                     <x-label for="clinic" value="{{__('Clinic')}}" />
                                     <x-input id="clinic" class="cursor-not-allowed opacity-50  bg-gray-100 block mt-1 w-full" type="text" name="clinic" :value="$appointment->clinic" required placeholder="Enter Clinic" readonly />
-                                </div>  
+                                </div>
                                 <div class="mt-4">
                                     <x-label for="lead_source" value="{{__('Lead Source')}}" />
                                     <x-select-field name="lead_source" :selected="$appointment->lead_source"  :options="config('variables.leadType')" required >
@@ -65,29 +65,19 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <!--
-                                <div class="mt-4">
-                                    <x-label for="reference_id" value="{{__('Reference ID')}}" />
-                                    <select id="reference_id" name="reference_id" class="mt-1 block w-full border-gray-300 rounded-md">
-                                        <option value="">Select an option</option>
-                                        @foreach($appointments as $app)
-                                        <option value="{{ $app->id }}"  @if($appointment->reference_id == $app->id) selected @endif>{{ $app->patient_code .' '. $app->created_at }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                --> 
+
                                 <div class="mt-4">
                                     <x-label for="active" value="{{__('Active')}}" />
                                     <x-select-field name="active" :selected="$appointment->active" :options="config('variables.yesNo')" required>
                                     </x-select-field>
                                 </div>
-                                
+
                             </div>
 
                             <!-- Second Column -->
                             <div class="col-span-1">
-                                
-                                
+
+
                                 <div class="mt-4">
                                     <x-label value="{{ __('Health Problem') }}" />
                                     <div style="min-height:45px;">

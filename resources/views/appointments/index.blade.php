@@ -35,6 +35,15 @@
                                 <input type="text" id="mobile" name="mobile" value="{{ $mobile }}" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Enter Mobile">
                             </div>
                             <div class="space-x-2 mt-4">
+                                <label for="clinic" class="block font-medium text-sm text-gray-700 ml-2">Clinic</label>
+                                <select name="clinic" id="clinic" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                                    <option value="">Select an option</option>
+                                    @foreach(config('variables.clinicList') as $value => $label)
+                                        <option value="{{ $value }}" {{ $value == $clinic ? 'selected' : '' }}>{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="space-x-2 mt-4">
                                 <label for="appointment_type" class="block font-medium text-sm text-gray-700 ml-2">Appointment Type</label>
                                 <select name="appointment_type" id="appointment_type" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="">Select an option</option>
@@ -42,7 +51,7 @@
                                     <option value="{{ $value }}" {{ $value == $appointmentType ? 'selected' : '' }}>{{ $label }}</option>
                                     @endforeach
                                 </select>
-                                
+
                             </div>
                             <div class="space-x-2 mt-4">
                                 <label for="status"  class="block font-medium text-sm text-gray-700 ml-2">Current Status</label>
@@ -126,7 +135,9 @@
                                         Appointment Date
                                     </a>
                                 </th>
-                                
+                                <th scope="col" class="px-6 py-3">
+                                    Clinic
+                                </th>
                                 <th scope="col" class="px-6 py-3">
                                     Health Problem
                                 </th>
@@ -170,7 +181,7 @@
                                         Last Called Date Time
                                     </a>
                                 </th>
-                                
+
                                 @can('manage patients')
                                 <th scope="col" class="px-6 py-3">
                                     Action
@@ -206,7 +217,10 @@
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     {{ date('d-M-y H:i', strtotime($appointment->appointment_time)) }}
                                 </td>
-                               
+
+                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                                    {{ $appointment->clinic }}
+                                </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     @if(strlen($appointment->health_problem) > 10)
                                     <span id="health_problem_{{ $appointment->id }}_short">{{ substr($appointment->health_problem, 0, 5) }}...</span>
@@ -223,10 +237,18 @@
                                     {{ date('d-M-y H:i', strtotime($appointment->created_at)) }}
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    {{ $appointment->assigned->name }}
+                                    @if(empty($appointment->assigned->name))
+                                        unknown
+                                    @else
+                                        {{ $appointment->assigned->name }}
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    {{ $appointment->creator->name }}
+                                    @if(empty($appointment->creator->name))
+                                        unknown
+                                    @else
+                                        {{ $appointment->creator->name }}
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     {{ $appointment->last_called_datetime }}
@@ -244,7 +266,7 @@
                                             </svg>
                                         </a>
                                         @endcan
-                                        
+
                                         @if (auth()->user()->hasRole('Administrator') || $appointment->patient->created_by === auth()->user()->id || $appointment->assigned_to === auth()->user()->id)
                                         <a class="inline-flex px-1 py-1 text-blue-500" href="sms:" title="SMS" target="_blank" onclick="openMessage('sms','{{ $appointment->patient->phone_number }}');">
                                             <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">

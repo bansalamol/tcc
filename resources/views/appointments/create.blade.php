@@ -73,18 +73,7 @@
                                     <x-select-field name="current_status" :options="config('variables.appointmentStatus')" required selected="Appointment Scheduled">
                                     </x-select-field>
                                 </div>
-                                <!--
 
-                                <div class="mt-4">
-                                    <x-label for="reference_id" value="{{__('Reference ID')}}" />
-                                    <select id="reference_id" name="reference_id" class="mt-1 block w-full border-gray-300 rounded-md">
-                                        <option value="">Select an option</option>
-                                        @foreach($appointments as $appointment)
-                                        <option value="{{ $appointment->id }}">{{ $appointment->patient_code .' '. $appointment->created_at }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                -->
                             </div>
 
                             <!-- Second Column -->

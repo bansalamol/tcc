@@ -29,6 +29,7 @@ class AppointmentController extends Controller
         $aendDate = $request->input('aend_date');
         $currentStatus = $request->input('status');
         $mobile = $request->input('mobile');
+        $clinic = $request->input('clinic');
         $appointmentType = $request->input('appointment_type');
         $assignedTo = $request->input('assigned_to');
         $createdBy = $request->input('created_by');
@@ -94,6 +95,12 @@ class AppointmentController extends Controller
             });
             $defaultFilter = false;
         }
+
+        if ($clinic) {
+            $dbQuery->where('appointments.clinic', $clinic);
+            $defaultFilter = false;
+        }
+
         if ($cstartDate && $cendDate) {
             $cstartDate = date('Y-m-d 00:00:00', strtotime($cstartDate)); // Set the time to the beginning of the day
             $cendDate = date('Y-m-d 23:59:59', strtotime($cendDate));     // Set the time to the end of the day
@@ -135,7 +142,8 @@ class AppointmentController extends Controller
                 'appointmentType',
                 'users',
                 'assignedTo',
-                'createdBy'
+                'createdBy',
+                'clinic'
             )
         );
     }
@@ -146,10 +154,10 @@ class AppointmentController extends Controller
     public function create($mobile = '')
     {
         $this->authorize('manage appointments');
-        $patients = Patient::all();
+
         $users = User::all();
         $appointments = [];
-        return view('appointments.create', compact('patients', 'users', 'appointments', 'mobile'));
+        return view('appointments.create', compact( 'users', 'mobile'));
     }
 
     /**
@@ -206,7 +214,7 @@ class AppointmentController extends Controller
             $healthPromlemData[] = $healthProblem->health_problem;
         }
         $appointment->health_problem = implode(', ', $healthPromlemData);
-        $appointments = [];
+
 
         $user = auth()->user();
         if ($user->id === $appointment->created_by || $user->id === $appointment->assigned_to) {
@@ -215,7 +223,7 @@ class AppointmentController extends Controller
             $users = User::where('id', '!=', $user->id)->get();
         }
 
-        return view('appointments.edit', compact('appointment', 'appointments', 'users'));
+        return view('appointments.edit', compact('appointment',  'users'));
     }
 
     /**
