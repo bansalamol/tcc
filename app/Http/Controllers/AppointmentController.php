@@ -10,6 +10,7 @@ use App\Models\Patient;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use App\Models\ActivityLog;
 
 
 class AppointmentController extends Controller
@@ -265,4 +266,41 @@ class AppointmentController extends Controller
         $appointment->delete();
         return redirect()->route('appointments.index');
     }
+
+    public function addActivityLog(Request $request)
+    {
+
+        if (auth()->check()) {
+        $this->authorize('manage appointments');
+        $user = auth()->user();
+
+        $validatedData = $request->validate([
+            'appointment_id' => 'required',
+            'activity_type' => 'required',
+        ]);
+
+        $description   = "Action: ".strtoupper($validatedData['activity_type']).", Taken By: ".$user->name;
+        // Create a new activity log
+        $activityLog = new ActivityLog([
+            'appointment_id' => $validatedData['appointment_id'],
+            'activity_type' => $validatedData['activity_type'],
+            'activity_description' => $description
+        ]);
+
+        $appointment = Appointment::find($validatedData['appointment_id']);
+        if ($appointment && $validatedData['activity_type'] == 'call') {
+            $appointment->last_called_datetime = now(); // Update with the current timestamp or other value.
+            $appointment->save();
+        }else{
+            $appointment->last_messaged_datetime = now(); // Update with the current timestamp or other value.
+            $appointment->save();
+        }
+            // Save the activity log
+        $activityLog->save();
+            return response()->json(['message' => 'Activity log added successfully']);
+        } else {
+            return response()->json(['message' => 'User is not logged in'], 401);
+        }
+    }
+
 }

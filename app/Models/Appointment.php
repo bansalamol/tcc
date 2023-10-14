@@ -78,4 +78,9 @@ class Appointment extends Model
         return $this->belongsTo(User::class, 'assigned_to');
     }
 
+    public  function activity()
+    {
+        return $this->hasMany(ActivityLog::class, 'appointment_id');
+    }
+
 }

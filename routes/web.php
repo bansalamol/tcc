@@ -36,4 +36,8 @@ Route::middleware([
     Route::get('/patient/search', [PatientController::class, 'search'])->name('patient.search');
     Route::get('/patient/searchbyphone', [PatientController::class, 'searchbyphone'])->name('patient.searchbyphone');
     Route::resource('users', UserController::class);
+    Route::post('/appointments/addactivitylog', [AppointmentController::class,'addActivityLog'])->name('appointments.addactivitylog');
+
 });
+
+

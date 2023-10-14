@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
+use App\Models\ActivityLog;
 use App\Models\Appointment;
 use App\Models\HealthProblems;
 use App\Models\Patient;
@@ -129,7 +130,6 @@ class PatientController extends Controller
         if (empty($patient)) {
             return redirect()->route('patients.index');
         }
-        // $healthProblems = HealthProblems::where('patient_code', $patient->code)->get();
         $appointments = Appointment::where('patient_code', $patient->code)->orderBy('appointment_time', 'desc')->get();
         $this->authorize('manage patients');
         return view('patients.history', compact('patient', 'appointments'));
