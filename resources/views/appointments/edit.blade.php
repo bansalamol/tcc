@@ -1,6 +1,8 @@
-@props(['callTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: '$appointment->last_called_datetime', maxDate: 'today'}"])
-@props(['messageTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: '$appointment->last_messaged_datetime', maxDate: 'today'}"])
-@props(['appointmentTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: '$appointment->appointment_time', minDate: 'today'}"])
+@props(['callTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: '{{$appointment->last_called_datetime}}', maxDate: 'today'}"])
+@props(['messageTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: '{{$appointment->last_messaged_datetime}}', maxDate: 'today'}"])
+@props(['appointmentTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: '{{$appointment->appointment_time}}', minDate: 'today'}"])
+@props(['vistedDate' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: '{{$appointment->visited_date}}', minDate: '" . now()->subDays(7)->format('Y-m-d') . "',  maxDate: 'today'}"])
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -37,7 +39,7 @@
                                 <div class="mt-4">
                                     <x-label for="clinic" value="{{__('Clinic')}}" />
                                     <x-input id="clinic" class="cursor-not-allowed opacity-50  bg-gray-100 block mt-1 w-full" type="text" name="clinic" :value="$appointment->clinic" required placeholder="Enter Clinic" readonly />
-                                </div>  
+                                </div>
                                 <div class="mt-4">
                                     <x-label for="lead_source" value="{{__('Lead Source')}}" />
                                     <x-select-field name="lead_source" :selected="$appointment->lead_source"  :options="config('variables.leadType')" required >
@@ -65,29 +67,19 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <!--
-                                <div class="mt-4">
-                                    <x-label for="reference_id" value="{{__('Reference ID')}}" />
-                                    <select id="reference_id" name="reference_id" class="mt-1 block w-full border-gray-300 rounded-md">
-                                        <option value="">Select an option</option>
-                                        @foreach($appointments as $app)
-                                        <option value="{{ $app->id }}"  @if($appointment->reference_id == $app->id) selected @endif>{{ $app->patient_code .' '. $app->created_at }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                --> 
+
                                 <div class="mt-4">
                                     <x-label for="active" value="{{__('Active')}}" />
                                     <x-select-field name="active" :selected="$appointment->active" :options="config('variables.yesNo')" required>
                                     </x-select-field>
                                 </div>
-                                
+
                             </div>
 
                             <!-- Second Column -->
                             <div class="col-span-1">
-                                
-                                
+
+
                                 <div class="mt-4">
                                     <x-label value="{{ __('Health Problem') }}" />
                                     <div style="min-height:45px;">
@@ -120,6 +112,10 @@
                                     <x-label for="visited" value="{{__('Visited')}}" />
                                     <x-select-field name="visited" :selected="$appointment->visited" :options="config('variables.visited')" required>
                                     </x-select-field>
+                                </div>
+                                <div class="mt-4">
+                                    <x-label for="visited_Date" value="{{__('Visited Date')}}" />
+                                    <input id="visited_date" name="visited_date" x-data x-init="flatpickr($refs.input, {{ $vistedDate }} );" x-ref="input" type="text" placeholder="Select Time" data-input {{ $attributes->merge(['class' => 'mt-1 block w-full disabled:bg-gray-200 p-2 border border-gray-300 rounded-md focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 sm:text-sm sm:leading-5']) }} />
                                 </div>
                                 <div class="mt-4">
                                     <x-label for="last_messaged_datetime" value="{{__('Last Messaged Time')}}" />

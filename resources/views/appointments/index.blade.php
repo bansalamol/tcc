@@ -35,6 +35,15 @@
                                 <input type="text" id="mobile" name="mobile" value="{{ $mobile }}" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Enter Mobile">
                             </div>
                             <div class="space-x-2 mt-4">
+                                <label for="clinic" class="block font-medium text-sm text-gray-700 ml-2">Clinic</label>
+                                <select name="clinic" id="clinic" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                                    <option value="">Select an option</option>
+                                    @foreach(config('variables.clinicList') as $value => $label)
+                                        <option value="{{ $value }}" {{ $value == $clinic ? 'selected' : '' }}>{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="space-x-2 mt-4">
                                 <label for="appointment_type" class="block font-medium text-sm text-gray-700 ml-2">Appointment Type</label>
                                 <select name="appointment_type" id="appointment_type" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="">Select an option</option>
@@ -42,7 +51,7 @@
                                     <option value="{{ $value }}" {{ $value == $appointmentType ? 'selected' : '' }}>{{ $label }}</option>
                                     @endforeach
                                 </select>
-                                
+
                             </div>
                             <div class="space-x-2 mt-4">
                                 <label for="status"  class="block font-medium text-sm text-gray-700 ml-2">Current Status</label>
@@ -126,7 +135,9 @@
                                         Appointment Date
                                     </a>
                                 </th>
-                                
+                                <th scope="col" class="px-6 py-3">
+                                    Clinic
+                                </th>
                                 <th scope="col" class="px-6 py-3">
                                     Health Problem
                                 </th>
@@ -167,10 +178,10 @@
                                         'sortField' => 'last_called_datetime',
                                         'sortDirection' => $sortField === 'last_called_datetime' && $sortDirection === 'asc' ? 'desc' : 'asc',
                                         ])) }}">
-                                        Last Called Date Time
+                                        Last Action
                                     </a>
                                 </th>
-                                
+
                                 @can('manage patients')
                                 <th scope="col" class="px-6 py-3">
                                     Action
@@ -206,7 +217,10 @@
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     {{ date('d-M-y H:i', strtotime($appointment->appointment_time)) }}
                                 </td>
-                               
+
+                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                                    {{ $appointment->clinic }}
+                                </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     @if(strlen($appointment->health_problem) > 10)
                                     <span id="health_problem_{{ $appointment->id }}_short">{{ substr($appointment->health_problem, 0, 5) }}...</span>
@@ -223,13 +237,22 @@
                                     {{ date('d-M-y H:i', strtotime($appointment->created_at)) }}
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    {{ $appointment->assigned->name }}
+                                    @if(empty($appointment->assigned->name))
+                                        unknown
+                                    @else
+                                        {{ $appointment->assigned->name }}
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    {{ $appointment->creator->name }}
+                                    @if(empty($appointment->creator->name))
+                                        unknown
+                                    @else
+                                        {{ $appointment->creator->name }}
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    {{ $appointment->last_called_datetime }}
+                                    C:<span id="call_{{$appointment->id}}" >{{ $appointment->last_called_datetime ?? ' -- ' }} </span><br>
+                                    M:<span id="sms_{{$appointment->id}}">{{ $appointment->last_messaged_datetime ?? ' -- ' }} </span>
                                 </td>
 
                                 <td class="px-6 py-4">
@@ -244,9 +267,9 @@
                                             </svg>
                                         </a>
                                         @endcan
-                                        
+
                                         @if (auth()->user()->hasRole('Administrator') || $appointment->patient->created_by === auth()->user()->id || $appointment->assigned_to === auth()->user()->id)
-                                        <a class="inline-flex px-1 py-1 text-blue-500" href="sms:" title="SMS" target="_blank" onclick="openMessage('sms','{{ $appointment->patient->phone_number }}');">
+                                        <a class="inline-flex px-1 py-1 text-blue-500" href="sms:" title="SMS" target="_blank" onclick="openMessage('sms','{{ $appointment->patient->phone_number }}','{{ $appointment->id }}');">
                                             <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                 <path stroke="none" d="M0 0h24v24H0z" />
                                                 <path d="M4 21v-13a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v6a3 3 0 0 1 -3 3h-9l-4 4" />
@@ -254,12 +277,12 @@
                                                 <line x1="8" y1="13" x2="14" y2="13" />
                                             </svg>
                                         </a>
-                                        <a class="inline-flex px-1 py-1 text-blue-500" href="https://wa.me/" title="What's App" target="_blank" onclick="openMessage('wa','{{ $appointment->patient->phone_number }}');">
+                                        <a class="inline-flex px-1 py-1 text-blue-500" href="https://wa.me/" title="What's App" target="_blank" onclick="openMessage('wa','{{ $appointment->patient->phone_number }}','{{ $appointment->id }}');">
                                             <svg class="h-5 w-5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
                                             </svg>
                                         </a>
-                                        <a class="inline-flex px-1 py-1 text-blue-500" href="#" target="_blank" title="Call" onclick="openMessage('call','{{ $appointment->patient->phone_number }}'); return false;">
+                                        <a class="inline-flex px-1 py-1 text-blue-500" href="#" target="_blank" title="Call" onclick="openMessage('call','{{ $appointment->patient->phone_number }}','{{ $appointment->id }}'); return false;">
                                             <svg class="h-5 w-5 text-indigo-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                 <path stroke="none" d="M0 0h24v24H0z" />
                                                 <path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" />
@@ -298,7 +321,7 @@
             contentElementShort.classList.toggle('hidden');
         }
 
-        function openMessage(actionType, contact) {
+        function openMessage(actionType, contact, apntId) {
             let linkUrl = '';
 
             if (actionType === 'wa') {
@@ -309,9 +332,64 @@
                 linkUrl = 'tel:' + contact;
             }
 
-            if (linkUrl) {
-                window.open(linkUrl, '_blank');
+            if(apntId){
+                addActivityLog(apntId,actionType);
+                const element = document.getElementById(actionType + '_' + apntId);
+                const currentDateTime = getCurrentDateTime();
+
+                if (element) {
+                    element.textContent = '';
+                    element.textContent = element.textContent + ' ' + currentDateTime;
+                }
             }
+
+            if (linkUrl) {
+               window.open(linkUrl, '_blank');
+            }
+        }
+        function getCurrentDateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const day = now.getDate().toString().padStart(2, '0');
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+
+
+        function addActivityLog(apntId, activityType){
+
+            const activity = {
+                appointment_id: apntId,
+                activity_type: activityType
+            };
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            // Send a POST request to log the activity
+            fetch('/appointments/addactivitylog', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                     accept: 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+
+                },
+                body: JSON.stringify(activity),
+            })
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+            console.log('Activity log added successfully:', data.message);
+            // You can also perform additional actions or handle the response as needed
+        })
+        .catch(error => {
+            console.error('Error adding activity log:', error);
+        });
+
         }
     </script>
     <script>

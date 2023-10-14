@@ -45,6 +45,19 @@
                                             <strong class="text-gray-700">Appointment Date:</strong>
                                             <p class="text-sm italic text-gray-600">{{ date('d-M-y H:i', strtotime($appointment->appointment_time)) }} | Created by: {{$appointment->creator->name}} | Created at: {{ date('d-M-y H:i', strtotime($appointment->created_at))}}</p>
                                         </div>
+                                        <div class="mb-4">
+                                            <strong class="text-gray-700">Activity Log:</strong>
+                                            <ul class="ml-6 list-disc">
+
+                                                @if(!$appointment->activity->isEmpty())
+                                                    @foreach($appointment->activity as $log)
+                                                        <li class="text-sm text-gray-600">{{date('d-M-y H:i', strtotime($log->created_at))}} | {{ $log->activity_description }} </li>
+                                                    @endforeach
+                                                @else
+                                                    <li class="text-sm text-gray-600"> No action taken on Appointment</li>
+                                                @endif
+                                            </ul>
+                                        </div>
                                         @if(!$appointment->healthProblems->isEmpty())
                                         <div class="mb-4">
                                             <strong class="text-gray-700">Health Problems:</strong>

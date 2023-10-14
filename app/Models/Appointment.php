@@ -29,7 +29,8 @@ class Appointment extends Model
         'visited',
         'last_called_datetime',
         'last_messaged_datetime',
-        'lead_source'
+        'lead_source',
+        'visited_date'
     ];
 
     protected static function boot()
@@ -76,6 +77,11 @@ class Appointment extends Model
     public function assigned(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    public  function activity()
+    {
+        return $this->hasMany(ActivityLog::class, 'appointment_id');
     }
 
 }

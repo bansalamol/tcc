@@ -10,6 +10,7 @@ use App\Models\Patient;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use App\Models\ActivityLog;
 
 
 class AppointmentController extends Controller
@@ -29,6 +30,7 @@ class AppointmentController extends Controller
         $aendDate = $request->input('aend_date');
         $currentStatus = $request->input('status');
         $mobile = $request->input('mobile');
+        $clinic = $request->input('clinic');
         $appointmentType = $request->input('appointment_type');
         $assignedTo = $request->input('assigned_to');
         $createdBy = $request->input('created_by');
@@ -94,6 +96,12 @@ class AppointmentController extends Controller
             });
             $defaultFilter = false;
         }
+
+        if ($clinic) {
+            $dbQuery->where('appointments.clinic', $clinic);
+            $defaultFilter = false;
+        }
+
         if ($cstartDate && $cendDate) {
             $cstartDate = date('Y-m-d 00:00:00', strtotime($cstartDate)); // Set the time to the beginning of the day
             $cendDate = date('Y-m-d 23:59:59', strtotime($cendDate));     // Set the time to the end of the day
@@ -135,7 +143,8 @@ class AppointmentController extends Controller
                 'appointmentType',
                 'users',
                 'assignedTo',
-                'createdBy'
+                'createdBy',
+                'clinic'
             )
         );
     }
@@ -146,10 +155,10 @@ class AppointmentController extends Controller
     public function create($mobile = '')
     {
         $this->authorize('manage appointments');
-        $patients = Patient::all();
+
         $users = User::all();
         $appointments = [];
-        return view('appointments.create', compact('patients', 'users', 'appointments', 'mobile'));
+        return view('appointments.create', compact( 'users', 'mobile'));
     }
 
     /**
@@ -206,7 +215,7 @@ class AppointmentController extends Controller
             $healthPromlemData[] = $healthProblem->health_problem;
         }
         $appointment->health_problem = implode(', ', $healthPromlemData);
-        $appointments = [];
+
 
         $user = auth()->user();
         if ($user->id === $appointment->created_by || $user->id === $appointment->assigned_to) {
@@ -215,7 +224,7 @@ class AppointmentController extends Controller
             $users = User::where('id', '!=', $user->id)->get();
         }
 
-        return view('appointments.edit', compact('appointment', 'appointments', 'users'));
+        return view('appointments.edit', compact('appointment',  'users'));
     }
 
     /**
@@ -257,4 +266,41 @@ class AppointmentController extends Controller
         $appointment->delete();
         return redirect()->route('appointments.index');
     }
+
+    public function addActivityLog(Request $request)
+    {
+
+        if (auth()->check()) {
+        $this->authorize('manage appointments');
+        $user = auth()->user();
+
+        $validatedData = $request->validate([
+            'appointment_id' => 'required',
+            'activity_type' => 'required',
+        ]);
+
+        $description   = "Action: ".strtoupper($validatedData['activity_type']).", Taken By: ".$user->name;
+        // Create a new activity log
+        $activityLog = new ActivityLog([
+            'appointment_id' => $validatedData['appointment_id'],
+            'activity_type' => $validatedData['activity_type'],
+            'activity_description' => $description
+        ]);
+
+        $appointment = Appointment::find($validatedData['appointment_id']);
+        if ($appointment && $validatedData['activity_type'] == 'call') {
+            $appointment->last_called_datetime = now(); // Update with the current timestamp or other value.
+            $appointment->save();
+        }else{
+            $appointment->last_messaged_datetime = now(); // Update with the current timestamp or other value.
+            $appointment->save();
+        }
+            // Save the activity log
+        $activityLog->save();
+            return response()->json(['message' => 'Activity log added successfully']);
+        } else {
+            return response()->json(['message' => 'User is not logged in'], 401);
+        }
+    }
+
 }

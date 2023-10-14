@@ -22,7 +22,7 @@
 
                     <!-- Your form and search results here -->
 
-                    <form method="POST" action="{{ route('appointments.store') }}">
+                    <form method="POST" id="appointment_create" action="{{ route('appointments.store') }}">
                         @csrf
 
                         <!-- Two-Column Layout -->
@@ -73,18 +73,7 @@
                                     <x-select-field name="current_status" :options="config('variables.appointmentStatus')" required selected="Appointment Scheduled">
                                     </x-select-field>
                                 </div>
-                                <!--
 
-                                <div class="mt-4">
-                                    <x-label for="reference_id" value="{{__('Reference ID')}}" />
-                                    <select id="reference_id" name="reference_id" class="mt-1 block w-full border-gray-300 rounded-md">
-                                        <option value="">Select an option</option>
-                                        @foreach($appointments as $appointment)
-                                        <option value="{{ $appointment->id }}">{{ $appointment->patient_code .' '. $appointment->created_at }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                -->
                             </div>
 
                             <!-- Second Column -->
@@ -114,7 +103,7 @@
                         </div>
                         <!-- End Two-Column Layout -->
                         <div class="flex mt-4">
-                            <x-button>
+                            <x-button :id="'createAptSbtm'">
                                 {{ __('Save Appointment') }}
                             </x-button>
                         </div>
@@ -186,6 +175,7 @@
         }
         searchPatients();
     </script>
+    
 
     <style>
         #search-results li {
