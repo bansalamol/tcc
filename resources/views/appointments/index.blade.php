@@ -136,6 +136,14 @@
                                     </a>
                                 </th>
                                 <th scope="col" class="px-6 py-3">
+                                    <a href="{{ route('appointments.index', array_merge(request()->input(), [
+                                        'sortField' => 'visited_date',
+                                        'sortDirection' => $sortField === 'visited_date' && $sortDirection === 'asc' ? 'desc' : 'asc',
+                                        ])) }}">
+                                        Visited Date
+                                    </a>
+                                </th>
+                                <th scope="col" class="px-6 py-3">
                                     Clinic
                                 </th>
                                 <th scope="col" class="px-6 py-3">
@@ -216,6 +224,9 @@
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     {{ date('d-M-y H:i', strtotime($appointment->appointment_time)) }}
+                                </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                                    {{  $appointment->visited_date ? date('d-M-y H:i', strtotime($appointment->visited_date))  : '--'}}
                                 </td>
 
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
