@@ -45,17 +45,25 @@
                                             <strong class="text-gray-700">Appointment Date:</strong>
                                             <p class="text-sm italic text-gray-600">{{ date('d-M-y H:i', strtotime($appointment->appointment_time)) }} | Created by: {{$appointment->creator->name}} | Created at: {{ date('d-M-y H:i', strtotime($appointment->created_at))}}</p>
                                         </div>
+
                                         <div class="mb-4">
                                             <strong class="text-gray-700">Activity Log:</strong>
-                                            <ul class="ml-6 list-disc">
+                                            <ul class="mt-2">
 
                                                 @if(!$appointment->activity->isEmpty())
                                                     @foreach($appointment->activity as $log)
-                                                        <li class="text-sm text-gray-600">{{date('d-M-y H:i', strtotime($log->created_at))}} | {{ $log->activity_description }} </li>
+                                                        <li class="text-sm text-gray-600 inline-block mr-4">
+                                                            {{ date('d-M-y H:i', strtotime($log->created_at)) }}
+                                                        </li>
+                                                        <li class="text-sm text-gray-700 inline-block mr-4">
+                                                            {{ $log->activity_description }}
+                                                        </li>
+                                                        <br>
                                                     @endforeach
                                                 @else
                                                     <li class="text-sm text-gray-600"> No action taken on Appointment</li>
                                                 @endif
+                                                <livewire:add-activity-log :appointmentId="$appointment->id" />
                                             </ul>
                                         </div>
                                         @if(!$appointment->healthProblems->isEmpty())
@@ -68,7 +76,7 @@
                                             </ul>
                                         </div>
                                         <div>
-                                            <strong class="text-gray-700">Comments:</strong>
+                                            <strong class="text-gray-700">Health Comments:</strong>
                                             <p class="ml-6 text-sm text-gray-600">{{$hp->comments}}</p>
                                         </div>
                                         @endif
