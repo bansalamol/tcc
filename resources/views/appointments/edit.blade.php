@@ -1,7 +1,7 @@
 @props(['callTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: '{{$appointment->last_called_datetime}}', maxDate: 'today'}"])
 @props(['messageTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: '{{$appointment->last_messaged_datetime}}', maxDate: 'today'}"])
 @props(['appointmentTimeOptions' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: '{{$appointment->appointment_time}}', minDate: 'today'}"])
-@props(['visitedDate' => "{dateFormat:'Y-m-d H:i', enableTime:true, defaultDate: '{{$appointment->visited_date}}', minDate: '" . now()->subDays(7)->format('Y-m-d') . "', maxDate: 'today'}"])
+@props(['visitedDate' => "{dateFormat:'Y-m-d H:i', enableTime:true, disableMobile: true, defaultDate: '{{$appointment->visited_date}}', minDate: '" . now()->subDays(7)->format('Y-m-d') . "', maxDate: 'today'}"])
 
 <x-app-layout>
     <x-slot name="header">
