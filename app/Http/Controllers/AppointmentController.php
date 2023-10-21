@@ -86,7 +86,9 @@ class AppointmentController extends Controller
         }
 
         if ($vDate) {
-            $dbQuery->where('appointments.visited_date', $vDate);
+            $vstartDate = date('Y-m-d 00:00:00', strtotime($vDate)); // Set the time to the beginning of the day
+            $vendDate = date('Y-m-d 23:59:59', strtotime($vDate));
+            $dbQuery->whereBetween('appointments.visited_date', [$vstartDate, $vendDate]);
             $defaultFilter = false;
         }
 
