@@ -34,6 +34,7 @@ class AppointmentController extends Controller
         $appointmentType = $request->input('appointment_type');
         $assignedTo = $request->input('assigned_to');
         $createdBy = $request->input('created_by');
+        $vDate = $request->input('v_date');
         $mobile = (is_numeric($mobile) && strlen($mobile) === 10) ? $mobile : '';
         $name = $request->input('pname');
         $defaultFilter = true;
@@ -84,6 +85,11 @@ class AppointmentController extends Controller
             $defaultFilter = false;
         }
 
+        if ($vDate) {
+            $dbQuery->where('appointments.visited_date', $vDate);
+            $defaultFilter = false;
+        }
+
         if ($name) {
             $dbQuery->whereHas('patient', function ($query) use ($name) {
                 $query->where('patients.name', 'like', '%' . $name . '%');
@@ -125,7 +131,7 @@ class AppointmentController extends Controller
             ->orderBy($sortField, $sortDirection)
             ->paginate($perPageRecords);
 
-        $users = User::all();
+        $users = User::orderBy('name')->get();
 
         return view(
             'appointments.index',
@@ -144,7 +150,8 @@ class AppointmentController extends Controller
                 'users',
                 'assignedTo',
                 'createdBy',
-                'clinic'
+                'clinic',
+                'vDate'
             )
         );
     }
@@ -156,7 +163,7 @@ class AppointmentController extends Controller
     {
         $this->authorize('manage appointments');
 
-        $users = User::all();
+        $users = User::orderBy('name')->get();
         $appointments = [];
         return view('appointments.create', compact( 'users', 'mobile'));
     }
@@ -219,9 +226,9 @@ class AppointmentController extends Controller
 
         $user = auth()->user();
         if ($user->id === $appointment->created_by || $user->id === $appointment->assigned_to) {
-            $users = User::all();
+            $users = User::orderBy('name')->get();
         } else {
-            $users = User::where('id', '!=', $user->id)->get();
+            $users = User::where('id', '!=', $user->id)->orderBy('name')->get();
         }
 
         return view('appointments.edit', compact('appointment',  'users'));

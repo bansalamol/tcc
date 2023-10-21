@@ -178,14 +178,14 @@
         let buttonClicked = false;
 
         document.getElementById('createAptSbtm').addEventListener('click', function() {
-            alert("event started");
+
             if (buttonClicked) return;
 
             buttonClicked = true;
             // Your form submission logic here
 
             setTimeout(function() {
-                alert("setting enable");
+
                 buttonClicked = false;
             }, 3000); // Allow the button to be clicked again after 1 second
         });

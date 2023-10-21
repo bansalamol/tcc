@@ -81,6 +81,10 @@
                                 </select>
                             </div>
                             <div class="space-x-2 mt-4">
+                                <label for="cstart_date" class="block font-medium text-sm text-gray-700 ml-2">Visited Date</label>
+                                <input type="text" id="v_date" name="v_date" class="mt-1 datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $vDate }}" placeholder="Select visited Date">
+                            </div>
+                            <div class="space-x-2 mt-4">
                                 <label for="cstart_date" class="block font-medium text-sm text-gray-700 ml-2">Created Date</label>
                                 <input type="text" id="cstart_date" name="cstart_date" class="mt-1 datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $cstartDate }}" placeholder="Select Start Date">
                                 <input type="text" id="cend_date" name="cend_date" class="mt-1 datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $cendDate }}" placeholder="Select End Date">
@@ -280,7 +284,7 @@
                                         @endcan
 
                                         @if (auth()->user()->hasRole('Administrator') || $appointment->patient->created_by === auth()->user()->id || $appointment->assigned_to === auth()->user()->id)
-                                        <a class="inline-flex px-1 py-1 text-blue-500" href="sms:" title="SMS" target="_blank" onclick="openMessage('sms','{{ $appointment->patient->phone_number }}','{{ $appointment->id }}');">
+                                        <a class="inline-flex px-1 py-1 text-blue-500" href="sms:" title="SMS" target="_blank" onclick="openMessage('sms','{{ $appointment->patient->phone_number }}','{{ $appointment->id }}');  return false;">
                                             <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                 <path stroke="none" d="M0 0h24v24H0z" />
                                                 <path d="M4 21v-13a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v6a3 3 0 0 1 -3 3h-9l-4 4" />
@@ -288,7 +292,7 @@
                                                 <line x1="8" y1="13" x2="14" y2="13" />
                                             </svg>
                                         </a>
-                                        <a class="inline-flex px-1 py-1 text-blue-500" href="https://wa.me/" title="What's App" target="_blank" onclick="openMessage('wa','{{ $appointment->patient->phone_number }}','{{ $appointment->id }}');">
+                                        <a class="inline-flex px-1 py-1 text-blue-500" href="https://wa.me/" title="What's App" target="_blank" onclick="openMessage('wa','{{ $appointment->patient->phone_number }}','{{ $appointment->id }}');  return false;">
                                             <svg class="h-5 w-5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
                                             </svg>
@@ -334,20 +338,22 @@
 
         function openMessage(actionType, contact, apntId) {
             let linkUrl = '';
-
+            let actionTypeName = '';
             if (actionType === 'wa') {
                 linkUrl = 'https://wa.me/' + contact;
+                actionTypeName = 'sms';
             } else if (actionType === 'sms') {
                 linkUrl = 'sms:' + contact;
+                actionTypeName = 'sms';
             } else if (actionType === 'call') {
                 linkUrl = 'tel:' + contact;
+                actionTypeName = 'call';
             }
 
             if(apntId){
                 addActivityLog(apntId,actionType);
-                const element = document.getElementById(actionType + '_' + apntId);
+                const element = document.getElementById(actionTypeName + '_' + apntId);
                 const currentDateTime = getCurrentDateTime();
-
                 if (element) {
                     element.textContent = '';
                     element.textContent = element.textContent + ' ' + currentDateTime;
