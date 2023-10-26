@@ -47,7 +47,9 @@ class AppointmentController extends Controller
             // show all
         } else {
             if ($user->hasRole(['Manager']) && empty($mobile)) {
-                $subordinateIds = User::where('manager_id', $user->id)->pluck('id')->toArray();
+                $user =  User::find($user->id);
+                // Retrieve users at level 2 (direct subordinates)
+                $subordinateIds = $user->getUsersAtLevel();
                 $subordinateIds[] = $user->id; // added to see records created by manager or assigned to manager
                 $dbQuery
                     ->where(function ($query) use ($user, $subordinateIds) {
