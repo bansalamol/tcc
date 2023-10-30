@@ -63,7 +63,7 @@
 
                                 <div class="mt-4">
                                     <x-label for="comment" value="{{__('Comment')}}" />
-                                    <x-input id="comment" class="block mt-1 w-full" type="text" name="comment" :value="old('comment')" required placeholder="Enter Comments" />
+                                    <x-input id="comment" class="block mt-1 w-full" type="text" name="comment" :value="old('comment')"  placeholder="Enter Comments" />
                                 </div>
 
                             </div>

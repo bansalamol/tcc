@@ -12,18 +12,33 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $users = [];
         $authUser = auth()->user();
         $perPageRecords = 25;
-        if (!$authUser->hasRole('Administrator')) {
+        if (!$authUser->hasAnyRole(['Administrator','Manager'])) {
             return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
         }
-        $users = User::with('roles')->paginate($perPageRecords);
 
-        return view('users.index', compact('users'));
+        $users = User::with('roles');
+        if ($authUser->hasRole(['Administrator'])) {
+            // show all
+        } else {
+            $subordinateIds = $authUser->getUsersAtLevel();
+            $users->whereIn('id',$subordinateIds);
+        }
+        // Search by user name
+        $searchTerm = $request->input('q');
+        if (!empty($searchTerm)) {
+            $users->where('name', 'LIKE', '%' . $searchTerm . '%');
+        }
+
+        $users = $users->paginate($perPageRecords);
+        return view('users.index', compact('users','searchTerm'));
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -31,11 +46,17 @@ class UserController extends Controller
     public function create()
     {
         $authUser = auth()->user();
-        if (!$authUser->hasRole('Administrator')) {
+        if (!$authUser->hasAnyRole(['Administrator','Manager'])) {
             return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
         }
-        $roles = Role::all();
-        $managers = Role::where('name', 'Manager')->firstOrFail()->users;
+        if ($authUser->hasRole(['Administrator'])) {
+            $roles = Role::all();
+            $managers = Role::where('name', 'Manager')->firstOrFail()->users;
+        } else {
+            $roles = Role::where('name', '!=', 'Administrator')->get();
+            $managers = $authUser->subordinateManagers->push($authUser);
+        }
+
         return view('users.create', compact('roles', 'managers'));
     }
 
@@ -45,7 +66,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $authUser = auth()->user();
-        if (!$authUser->hasRole('Administrator')) {
+        if (!$authUser->hasAnyRole(['Administrator','Manager'])) {
             return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
         }
         //$this->authorize('manage users');
@@ -72,6 +93,10 @@ class UserController extends Controller
             'phone_number' => $request->input('phone_number'),
         ]);
 
+        if (!$authUser->hasAnyRole(['Administrator']) && $request->input('role') == 'Administrator') {
+            return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
+        }
+
         // Assign the role to the user
         $role = Role::find($request->input('role'));
         $user->assignRole($role);
@@ -93,11 +118,16 @@ class UserController extends Controller
     public function edit(Request $request, User $user)
     {
         $authUser = auth()->user();
-        if (!$authUser->hasRole('Administrator')) {
+        if (!$authUser->hasAnyRole(['Administrator','Manager'])) {
             return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
         }
-        $roles = Role::all();
-        $managers = Role::where('name', 'Manager')->firstOrFail()->users;
+        if ($authUser->hasRole(['Administrator'])) {
+            $roles = Role::all();
+            $managers = Role::where('name', 'Manager')->firstOrFail()->users;
+        } else {
+            $roles = Role::where('name', '!=', 'Administrator')->get();
+            $managers = $authUser->subordinateManagers->push($authUser);
+        }
 
         return view('users.edit', compact('user', 'roles', 'managers'));
     }
@@ -108,7 +138,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $authUser = auth()->user();
-        if (!$authUser->hasRole('Administrator')) {
+        if (!$authUser->hasAnyRole(['Administrator','Manager'])) {
             return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
         }
         // Validation rules for name and email
@@ -150,6 +180,9 @@ class UserController extends Controller
         // Update the user
         $user->update($data);
 
+        if (!$authUser->hasAnyRole(['Administrator']) && $request->input('role') == 'Administrator') {
+            return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
+        }
         // Assign the new role to the user
         $role = Role::find($request->input('role'));
         $user->syncRoles([$role]);

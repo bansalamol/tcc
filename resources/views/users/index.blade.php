@@ -15,7 +15,12 @@
                     <x-link href="{{ route('users.create') }}" class="m-4">Add new User</x-link>
                     </div>
                     @endcan
-
+                    <div class="m-4 flex">
+                        <form action="{{ route('users.index') }}" method="GET">
+                            <input type="search" id="q" name="q" value="{{$searchTerm}}" placeholder="Search by name" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
+                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600" >Search</button>
+                        </form>
+                    </div>
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
