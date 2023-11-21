@@ -182,7 +182,7 @@ class DashboardController extends Controller
         if ($visited7Days > 0 && $totalAppointments7Days > 0) {
             $visitedRatio7Days = ($visited7Days / $totalAppointments7Days) * 100;
         }
-        return view('dashboard', compact('users','maxVisitedUser','totalAppointmentsUser','userDetails','visitedRatioUser','leadsCallsToday', 'enquiryToday', 'appointmentsToday', 'visitedRatioToday','leadsCalls3Days','enquiry3Days','appointments3Days','visitedRatio3Days','leadsCalls7Days','enquiry7Days','appointments7Days','visitedRatio7Days'));
+        return view('dashboard', compact('id','users','maxVisitedUser','totalAppointmentsUser','userDetails','visitedRatioUser','leadsCallsToday', 'enquiryToday', 'appointmentsToday', 'visitedRatioToday','leadsCalls3Days','enquiry3Days','appointments3Days','visitedRatio3Days','leadsCalls7Days','enquiry7Days','appointments7Days','visitedRatio7Days'));
 
     }
 

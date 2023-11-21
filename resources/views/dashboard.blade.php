@@ -21,11 +21,11 @@
                 @if (auth()->user()->hasRole('Administrator') || auth()->user()->hasRole('Manager'))
                     <div class="m-4 flex">
                         <form method="GET">
-                            <label for="user">Select User:</label>
+                            <label for="user">Search By User:</label>
                             <select id="user" name="user" onchange="loadDashboard()">
                                 <option value="">Select User</option>
                                 @foreach($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    <option value="{{ $user->id }}" {{ $id == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
                                 @endforeach
                             </select>
 
