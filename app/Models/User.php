@@ -22,6 +22,7 @@ class User extends Authenticatable
     use TwoFactorAuthenticatable;
     use HasRoles;
 
+
     /**
      * The attributes that are mass assignable.
      *
@@ -76,6 +77,6 @@ class User extends Authenticatable
         return $this->hasMany(Appointment::class, 'created_by','assigned_to');
     }
 
-    
+
 
 }
