@@ -8,20 +8,20 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto  sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <div class="bg-white rounded-lg shadow-md p-4 ">
-                    <div class="text-lg font-semibold text-gray-800">Performer of the Week</div>
+                <div class="bg-white rounded-lg shadow-md p-4  text-center">
+                    <div class="text-2xl font-bold text-indigo-800">Performer of the Week</div>
                     <div class="mt-4">
                         <div
                             class="text-xl font-semibold text-blue-600">{{$userDetails->name ?? 'No user data found'}}</div>
-                        <div class="text-gray-600">Total Leads: {{$totalAppointmentsUser}}</div>
-                        <div class="text-gray-600">Appointments: {{$maxVisitedUser}}</div>
-                        <div class="text-gray-600">Conversion Rate: {{$visitedRatioUser}}%</div>
+                        <div class="text-gray-600">Total Leads: {{$totalAppointmentsUser ?? 0}}</div>
+                        <div class="text-gray-600">Appointments: {{$maxVisitedUser ?? 0}}</div>
+                        <div class="text-gray-600">Conversion Rate: {{$visitedRatioUser ?? 0}}%</div>
                     </div>
                 </div>
                 @if (auth()->user()->hasRole('Administrator') || auth()->user()->hasRole('Manager'))
                     <div class="m-4 flex">
                         <form method="GET">
-                            <label for="user">Search By User:</label>
+                            <label for="user" class="text-blue-600 font-semibold">Search By User:</label>
                             <select id="user" name="user" onchange="loadDashboard()">
                                 <option value="">Select User</option>
                                 @foreach($users as $user)
@@ -49,7 +49,7 @@
                         </div>
                         <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
                             <span class="text-gray-700 text-lg font-semibold mb-2">Visited Ratio</span>
-                            <p class="text-purple-600 text-3xl font-bold">{{$visitedRatioToday}}</p>
+                            <p class="text-purple-600 text-3xl font-bold">{{$visitedRatioToday}}%</p>
                         </div>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                         </div>
                         <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
                             <span class="text-gray-700 text-lg font-semibold mb-2">Visited Ratio</span>
-                            <p class="text-purple-600 text-3xl font-bold">{{$visitedRatio3Days}}</p>
+                            <p class="text-purple-600 text-3xl font-bold">{{$visitedRatio3Days}}%</p>
                         </div>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                         </div>
                         <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
                             <span class="text-gray-700 text-lg font-semibold mb-2">Visited Ratio</span>
-                            <p class="text-purple-600 text-3xl font-bold">{{$visitedRatio7Days}}</p>
+                            <p class="text-purple-600 text-3xl font-bold">{{$visitedRatio7Days}}%</p>
                         </div>
                     </div>
                 </div>
