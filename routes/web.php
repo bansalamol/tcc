@@ -27,7 +27,7 @@ Route::middleware([
     'verified'
 ])->group(function () {
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/{id?}', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('appointments', AppointmentController::class);
     Route::get('/appointments/create/{mobile}', [AppointmentController::class, 'create'])->name('appointments.create.mobile');
     Route::resource('patients', PatientController::class);

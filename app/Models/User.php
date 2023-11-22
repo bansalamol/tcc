@@ -22,6 +22,7 @@ class User extends Authenticatable
     use TwoFactorAuthenticatable;
     use HasRoles;
 
+
     /**
      * The attributes that are mass assignable.
      *
@@ -77,7 +78,6 @@ class User extends Authenticatable
     }
 
 
-
     public function manager() {
         return $this->belongsTo(User::class, 'manager_id');
     }
@@ -105,11 +105,6 @@ class User extends Authenticatable
         }
         return array_merge($result, $users->pluck('id')->toArray());
     }
-
-
-
-
-
 
 
 
