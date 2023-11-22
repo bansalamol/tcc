@@ -78,5 +78,34 @@ class User extends Authenticatable
     }
 
 
+    public function manager() {
+        return $this->belongsTo(User::class, 'manager_id');
+    }
+
+    public function subordinates() {
+        return $this->hasMany(User::class, 'manager_id');
+    }
+
+    public function subordinateManagers()
+    {
+        return $this->hasMany(User::class, 'manager_id')->role('Manager');
+    }
+
+
+    public function getUsersAtLevel() {
+        $users = $this->subordinates;
+        $result = [];
+        foreach ($users as $user) {
+            $subordinateIds = $user->subordinates;
+            foreach ($subordinateIds as $l2){
+              $sbL2 = $l2->subordinates->pluck('id')->toArray();
+                $result = array_merge($result, $sbL2);
+            }
+            $result = array_merge($result, $subordinateIds->pluck('id')->toArray());
+        }
+        return array_merge($result, $users->pluck('id')->toArray());
+    }
+
+
 
 }

@@ -22,6 +22,9 @@
                     <x-nav-link href="{{ route('patients.index') }}" :active="request()->routeIs('patients.*')">
                         {{ __('Patients') }}
                     </x-nav-link>
+                    @endrole
+
+                    @role('Administrator|Manager')
                     <x-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.*')">
                         {{ __('Users') }}
                     </x-nav-link>
