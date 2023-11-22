@@ -48,7 +48,6 @@ class DashboardController extends Controller
         }
 
         // Assuming your model is named Appointment
-        $maxVisitedUser = 0;
         $maxVisitedUser = Appointment::select('assigned_to', DB::raw('COUNT(*) as visited_count'))
             ->where('visited', 'Visited')
             ->whereBetween('appointment_time', [
@@ -61,7 +60,7 @@ class DashboardController extends Controller
         $totalAppointmentsUser = 0;
         $userDetails = '';
         $visitedRatioUser = 0;
-        if ($maxVisitedUser) {
+        if (isset($maxVisitedUser->visited_count)) {
             $userDetails = User::find($maxVisitedUser->assigned_to);
             $totalAppointmentsUser = Appointment::where('assigned_to', $userDetails->id)
                 ->whereBetween('appointment_time', [
@@ -71,8 +70,8 @@ class DashboardController extends Controller
                 ->count();
 
 
-            if ($maxVisitedUser > 0 && $totalAppointmentsUser > 0) {
-                $visitedRatioUser = ($maxVisitedUser / $totalAppointmentsUser) * 100;
+            if ($maxVisitedUser->visited_count > 0 && $totalAppointmentsUser > 0) {
+                $visitedRatioUser = ($maxVisitedUser->visited_count / $totalAppointmentsUser) * 100;
             }
         }
 
@@ -154,25 +153,25 @@ class DashboardController extends Controller
 
         $sevenDaysAgo = Carbon::today()->subDays(7);
 
-// 1. Leads/Calls for the last 7 days
+        // 1. Leads/Calls for the last 7 days
         $leadsCalls7Days = Appointment::where('appointment_type', 'Leads/Calls')
             ->whereBetween('appointment_time', [$sevenDaysAgo, $today])
             ->whereIn('assigned_to', $userList)
             ->count();
 
-// 2. Enquiry for the last 7 days
+        // 2. Enquiry for the last 7 days
         $enquiry7Days = Appointment::where('appointment_type', 'Enquiry')
             ->whereBetween('appointment_time', [$sevenDaysAgo, $today])
             ->whereIn('assigned_to', $userList)
             ->count();
 
-// 3. Appointments for the last 7 days
+        // 3. Appointments for the last 7 days
         $appointments7Days = Appointment::where('appointment_type', 'Appointments')
             ->whereBetween('appointment_time', [$sevenDaysAgo, $today])
             ->whereIn('assigned_to', $userList)
             ->count();
 
-// 4. Visited Ratio for the last 7 days
+        // 4. Visited Ratio for the last 7 days
         $totalAppointments7Days = Appointment::whereBetween('appointment_time', [$sevenDaysAgo, $today])->count();
         $visited7Days = Appointment::whereBetween('appointment_time', [$sevenDaysAgo, $today])
             ->whereIn('visited', ['Visited', 'Dubplicate Visited'])
