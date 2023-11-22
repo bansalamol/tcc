@@ -14,8 +14,8 @@
                         <div
                             class="text-xl font-semibold text-blue-600">{{$userDetails->name ?? 'No user data found'}}</div>
                         <div class="text-gray-600">Total Leads: {{$totalAppointmentsUser ?? 0}}</div>
-                        <div class="text-gray-600">Appointments: {{$maxVisitedUser ?? 0}}</div>
-                        <div class="text-gray-600">Conversion Rate: {{$visitedRatioUser ?? 0}}%</div>
+                        <div class="text-gray-600">Appointments: {{$maxVisitedUser->visited_count ?? 0}}</div>
+                        <div class="text-gray-600">Conversion Rate: {{ number_format($visitedRatioUser,2) ?? 0}}%</div>
                     </div>
                 </div>
                 @if (auth()->user()->hasRole('Administrator') || auth()->user()->hasRole('Manager'))
@@ -49,7 +49,7 @@
                         </div>
                         <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
                             <span class="text-gray-700 text-lg font-semibold mb-2">Visited Ratio</span>
-                            <p class="text-purple-600 text-3xl font-bold">{{$visitedRatioToday}}%</p>
+                            <p class="text-purple-600 text-3xl font-bold">{{number_format($visitedRatioToday,2) ?? 0}}%</p>
                         </div>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                         </div>
                         <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
                             <span class="text-gray-700 text-lg font-semibold mb-2">Visited Ratio</span>
-                            <p class="text-purple-600 text-3xl font-bold">{{$visitedRatio3Days}}%</p>
+                            <p class="text-purple-600 text-3xl font-bold">{{ number_format($visitedRatio3Days,2) ?? 0}}%</p>
                         </div>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                         </div>
                         <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
                             <span class="text-gray-700 text-lg font-semibold mb-2">Visited Ratio</span>
-                            <p class="text-purple-600 text-3xl font-bold">{{$visitedRatio7Days}}%</p>
+                            <p class="text-purple-600 text-3xl font-bold">{{ number_format($visitedRatio7Days,2) ?? 0 }}%</p>
                         </div>
                     </div>
                 </div>
