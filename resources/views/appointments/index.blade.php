@@ -8,6 +8,10 @@
     <div class="py-12">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="m-3 flex items-center space-x-4">
+                    <button id="downloadButton" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Download All Appointments</button>
+                </div>
+
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                     @if (session('success'))
                     <div class="bg-green-200 p-4 rounded-md m-4">
@@ -436,5 +440,65 @@
             width: 32% !important;
         }
     </style>
+    <!-- Include JavaScript logic to handle download -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to convert an array of objects to CSV format
+            function convertToCSV(data) {
+                let csvContent = "data:text/csv;charset=utf-8,";
 
+                // Extract header row from the first object
+                let headers = Object.keys(data[0]);
+                csvContent += headers.join(",") + "\r\n";
+
+                // Extract data rows
+                data.forEach(function(item) {
+                    let row = headers.map(header => item[header]);
+                    csvContent += row.join(",") + "\r\n";
+                });
+
+                return encodeURI(csvContent);
+            }
+
+            // Function to trigger download
+            function downloadCSV(csvContent) {
+                let link = document.createElement("a");
+                link.setAttribute("href", csvContent);
+                link.setAttribute("download", "appointments.csv");
+                document.body.appendChild(link);
+                link.click();
+            }
+
+            // Function to extract visible data from the listing page
+            function extractVisibleData() {
+                let visibleData = [];
+                let headers = [];
+                document.querySelectorAll('thead th').forEach(header => {
+                    headers.push(header.textContent.trim());
+                });
+                console.log("Extracted Headers: ", headers);
+
+                document.querySelectorAll('tbody tr').forEach(row => {
+                    let rowData = {};
+                    row.querySelectorAll('td').forEach((cell, index) => {
+                        // Modify this to extract data based on your HTML structure
+                        if(index != 0 && index !=13 ) {
+                            rowData[headers[index]] = cell.textContent.trim();
+                        }
+                    });
+                    visibleData.push(rowData);
+                });
+                console.log("Extracted visible data: ", visibleData);
+                return visibleData;
+            }
+
+            // Trigger download when the button is clicked
+            const downloadButton = document.getElementById('downloadButton');
+            downloadButton.addEventListener('click', function() {
+                let visibleData = extractVisibleData();
+                let csvContent = convertToCSV(visibleData);
+                downloadCSV(csvContent);
+            });
+        });
+    </script>
 </x-app-layout>
