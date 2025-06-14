@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -23,7 +24,7 @@ class AdminUserSeeder extends Seeder
 
         $adminUser = User::factory()->create([
             'email' => 'admin@admin.com',
-            'password' => bcrypt('151187Asb')
+            'password' => bcrypt(env('ADMIN_PASSWORD', Str::random(16)))
         ]);
         $adminUser->assignRole('Administrator');
 

@@ -64,7 +64,7 @@ class PatientController extends Controller
     public function create(string $mobile = '')
     {
         $mobile = (is_numeric($mobile) && strlen($mobile) === 10) ? $mobile : '';
-        $this->authorize('manage patients');
+        $this->authorize('manage', Patient::class);
         return view('patients.create', compact('mobile'));
     }
 
@@ -73,7 +73,7 @@ class PatientController extends Controller
      */
     public function store(StorePatientRequest $request)
     {
-        $this->authorize('manage patients');
+        $this->authorize('manage', Patient::class);
         $data = $request->validated();
         Patient::create($request->validated());
         return redirect()->route('appointments.create.mobile', ['mobile' => $data['phone_number']])->with(
@@ -95,7 +95,7 @@ class PatientController extends Controller
      */
     public function edit(Patient $patient)
     {
-        $this->authorize('manage patients');
+        $this->authorize('manage', $patient);
         return view('patients.edit', compact('patient'));
     }
 
@@ -104,7 +104,7 @@ class PatientController extends Controller
      */
     public function update(UpdatePatientRequest $request, Patient $patient)
     {
-        $this->authorize('manage patients');
+        $this->authorize('manage', $patient);
 
         $patient->update($request->validated());
         return redirect()->route('appointments.index');
@@ -115,7 +115,7 @@ class PatientController extends Controller
      */
     public function destroy(Patient $patient)
     {
-        $this->authorize('manage patients');
+        $this->authorize('manage', $patient);
 
         $patient->delete();
         return redirect()->route('patients.index');
@@ -131,7 +131,7 @@ class PatientController extends Controller
             return redirect()->route('patients.index');
         }
         $appointments = Appointment::where('patient_code', $patient->code)->orderBy('appointment_time', 'desc')->get();
-        $this->authorize('manage patients');
+        $this->authorize('manage', $patient);
         return view('patients.history', compact('patient', 'appointments'));
     }
 

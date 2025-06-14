@@ -38,9 +38,10 @@
 
     <!-- Desktop Sidebar -->
     <div class="hidden md:fixed md:inset-y-0 md:flex md:flex-col md:w-64 md:h-screen md:border-r md:border-gray-200 md:bg-white">
-        <div class="h-16 flex items-center justify-center border-b">
-            <a href="{{ route('dashboard') }}">
+        <div class="h-16 flex items-center justify-center space-x-2 border-b">
+            <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
                 <x-application-logo class="block h-10 w-auto" />
+                <span class="text-lg font-semibold">{{ config('app.name', 'TCC') }}</span>
             </a>
         </div>
         <div class="flex-1 overflow-y-auto px-4 py-6 space-y-1">

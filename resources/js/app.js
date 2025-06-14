@@ -8,3 +8,5 @@ window.Alpine = Alpine;
 Alpine.plugin(focus);
 
 Alpine.start();
+import {insertRandomCode} from "./patient-form.js";
+if (document.readyState !== "loading") { insertRandomCode(); } else { document.addEventListener("DOMContentLoaded", insertRandomCode); }

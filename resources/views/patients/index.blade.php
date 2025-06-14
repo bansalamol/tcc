@@ -15,10 +15,10 @@
                         <x-link href="{{ route('patients.create') }}" class="m-4">Add new Patient</x-link>
                     </div>
                     @endcan
-                    <div class="m-4 flex">
-                        <form action="{{ route('patient.search') }}" method="GET">
-                                <input type="search" id="q" name="q" value="{{$searchTerm}}" placeholder="Search by name, code, or phone number" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
-                                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600" >Search</button>
+                    <div class="m-4">
+                        <form action="{{ route('patient.search') }}" method="GET" class="flex space-x-2">
+                                <input type="search" id="q" name="q" value="{{$searchTerm}}" placeholder="Search by name, code, or phone number" class="w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
+                                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Search</button>
                         </form>
                     </div>
 
