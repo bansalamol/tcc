@@ -23,8 +23,9 @@
         <!-- Styles -->
         @livewireStyles
     </head>
-    <body class="font-sans antialiased bg-gray-100">
+    <body class="font-sans antialiased bg-gray-100 pt-16">
         <x-banner />
+        <x-header />
 
         <div class="min-h-screen flex">
             @livewire('navigation-menu')
@@ -41,6 +42,7 @@
                 <main class="p-4">
                     {{ $slot }}
                 </main>
+                <x-footer />
             </div>
         </div>
 

@@ -16,10 +16,7 @@
                     </div>
                     @endcan
                     <div class="m-4">
-                        <form action="{{ route('patient.search') }}" method="GET" class="flex space-x-2">
-                                <input type="search" id="q" name="q" value="{{$searchTerm}}" placeholder="Search by name, code, or phone number" class="w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
-                                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Search</button>
-                        </form>
+                        <livewire:search-form route-name="patient.search" placeholder="Search by name, code, or phone number" />
                     </div>
 
                     <table class="w-full text-sm text-left text-gray-700 bg-white shadow rounded-lg">

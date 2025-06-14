@@ -22,6 +22,7 @@
                     </div>
                     @endcan
                     <div class="m-3 flex items-center space-x-4">
+                        <livewire:search-form route-name="appointments.index" query-param="pname" placeholder="Search patient" />
                         <button id="advanceSearchBtn" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Advance Search</button>
                     </div>
                     <div id="searchContainer" class="ml-4 hidden">
