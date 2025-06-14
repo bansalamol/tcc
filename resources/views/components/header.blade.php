@@ -1,7 +1,8 @@
 <header class="bg-white border-b border-gray-200 fixed w-full z-20 top-0 left-0 md:pl-64">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <a href="{{ route('dashboard') }}" class="flex items-center">
-            <x-application-mark class="h-8 w-8 mr-3" />
+        <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
+            <x-application-mark class="h-8 w-8" />
+            <x-application-mark class="h-8 w-8" />
             <span class="self-center text-2xl font-semibold whitespace-nowrap">{{ config('app.name', 'TCC') }}</span>
         </a>
         <button data-drawer-target="sidebar" data-drawer-toggle="sidebar" aria-controls="sidebar" type="button"
