@@ -22,6 +22,12 @@ class SearchForm extends Component
         return redirect()->route($this->routeName, [$this->queryParam => $this->query]);
     }
 
+    public function resetSearch()
+    {
+        $this->query = '';
+        return redirect()->route($this->routeName);
+    }
+
     public function render()
     {
         return view('livewire.search-form');
