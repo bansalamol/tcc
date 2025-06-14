@@ -14,7 +14,7 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Poppins', 'Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Inter', 'Poppins', 'Figtree', ...defaultTheme.fontFamily.sans],
             },
         },
     },

@@ -11,6 +11,7 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <link href="https://fonts.bunny.net/css?family=poppins:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- DatePicker DateTimePicker -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -22,7 +23,7 @@
         <!-- Styles -->
         @livewireStyles
     </head>
-    <body class="font-sans antialiased bg-gradient-to-r from-indigo-50 via-purple-50 to-white min-h-screen">
+    <body class="font-sans antialiased bg-gray-100 min-h-screen">
         <x-banner />
 
         <div class="min-h-screen">
@@ -30,7 +31,7 @@
 
             <!-- Page Heading -->
             @if (isset($header))
-                <header class="bg-white/80 shadow-md backdrop-blur-sm">
+                <header class="bg-white shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
