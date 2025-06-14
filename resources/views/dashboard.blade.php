@@ -7,8 +7,8 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto  sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <div class="bg-white rounded-lg shadow-md p-4  text-center">
+            <div class="bg-white/70 backdrop-blur overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="bg-white/80 rounded-lg shadow-md p-4  text-center">
                     <div class="text-2xl font-bold text-indigo-800">Performer of the Week</div>
                     <div class="mt-4">
                         <div
@@ -32,66 +32,66 @@
                         </form>
                     </div>
                 @endif
-                <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div class="bg-white/80 backdrop-blur p-6 rounded-lg shadow-lg">
                     <div class="text-lg font-semibold text-blue-600">Today</div>
                     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
+                        <div class="bg-indigo-50 p-4 rounded-lg shadow text-center">
                             <span class="text-gray-700 text-lg font-semibold mb-2">Leads/Calls</span>
                             <p class="text-blue-600 text-3xl font-bold">{{$leadsCallsToday}}</p>
                         </div>
-                        <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
+                        <div class="bg-indigo-50 p-4 rounded-lg shadow text-center">
                             <span class="text-gray-700 text-lg font-semibold mb-2">Enquiry</span>
                             <p class="text-green-600 text-3xl font-bold">{{$enquiryToday}}</p>
                         </div>
-                        <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
+                        <div class="bg-indigo-50 p-4 rounded-lg shadow text-center">
                             <span class="text-gray-700 text-lg font-semibold mb-2">Appointments</span>
                             <p class="text-red-600 text-3xl font-bold">{{$appointmentsToday}}</p>
                         </div>
-                        <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
+                        <div class="bg-indigo-50 p-4 rounded-lg shadow text-center">
                             <span class="text-gray-700 text-lg font-semibold mb-2">Visited Ratio</span>
                             <p class="text-purple-600 text-3xl font-bold">{{number_format($visitedRatioToday,2) ?? 0}}%</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div class="bg-white/80 backdrop-blur p-6 rounded-lg shadow-lg">
                     <div class="text-lg font-semibold text-blue-600">3 days</div>
                     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
+                        <div class="bg-indigo-50 p-4 rounded-lg shadow text-center">
                             <span class="text-gray-700 text-lg font-semibold mb-2">Leads/Calls</span>
                             <p class="text-blue-600 text-3xl font-bold">{{$leadsCalls3Days}}</p>
                         </div>
-                        <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
+                        <div class="bg-indigo-50 p-4 rounded-lg shadow text-center">
                             <span class="text-gray-700 text-lg font-semibold mb-2">Enquiry</span>
                             <p class="text-green-600 text-3xl font-bold">{{$enquiry3Days}}</p>
                         </div>
-                        <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
+                        <div class="bg-indigo-50 p-4 rounded-lg shadow text-center">
                             <span class="text-gray-700 text-lg font-semibold mb-2">Appointments</span>
                             <p class="text-red-600 text-3xl font-bold">{{$appointments3Days}}</p>
                         </div>
-                        <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
+                        <div class="bg-indigo-50 p-4 rounded-lg shadow text-center">
                             <span class="text-gray-700 text-lg font-semibold mb-2">Visited Ratio</span>
                             <p class="text-purple-600 text-3xl font-bold">{{ number_format($visitedRatio3Days,2) ?? 0}}%</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div class="bg-white/80 backdrop-blur p-6 rounded-lg shadow-lg">
                     <div class="text-lg font-semibold text-blue-600">7 days</div>
                     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
+                        <div class="bg-indigo-50 p-4 rounded-lg shadow text-center">
                             <span class="text-gray-700 text-lg font-semibold mb-2">Leads/Calls</span>
                             <p class="text-blue-600 text-3xl font-bold">{{$leadsCalls7Days}}</p>
                         </div>
-                        <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
+                        <div class="bg-indigo-50 p-4 rounded-lg shadow text-center">
                             <span class="text-gray-700 text-lg font-semibold mb-2">Enquiry</span>
                             <p class="text-green-600 text-3xl font-bold">{{$enquiry7Days}}</p>
                         </div>
-                        <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
+                        <div class="bg-indigo-50 p-4 rounded-lg shadow text-center">
                             <span class="text-gray-700 text-lg font-semibold mb-2">Appointments</span>
                             <p class="text-red-600 text-3xl font-bold">{{$appointments7Days}}</p>
                         </div>
-                        <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
+                        <div class="bg-indigo-50 p-4 rounded-lg shadow text-center">
                             <span class="text-gray-700 text-lg font-semibold mb-2">Visited Ratio</span>
                             <p class="text-purple-600 text-3xl font-bold">{{ number_format($visitedRatio7Days,2) ?? 0 }}%</p>
                         </div>
