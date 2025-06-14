@@ -25,27 +25,27 @@
                         <button id="advanceSearchBtn" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Advance Search</button>
                     </div>
                     <div id="searchContainer" class="ml-4 hidden">
-                        <form action="{{ route('appointments.index') }}" method="GET">
-                            <div class="space-x-2 mt-4">
+                        <form action="{{ route('appointments.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
                                 <label for="name" class="block font-medium text-sm text-gray-700 ml-2">Patient Name</label>
-                                <input type="text" id="pname" name="pname" value="{{ $name }}" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Enter Patient Name">
+                                <input type="text" id="pname" name="pname" value="{{ $name }}" class="mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Enter Patient Name">
                             </div>
-                            <div class="space-x-2 mt-4">
+                            <div>
                                 <label for="mobile" class="block font-medium text-sm text-gray-700 ml-2">Mobile</label>
-                                <input type="text" id="mobile" name="mobile" value="{{ $mobile }}" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Enter Mobile">
+                                <input type="text" id="mobile" name="mobile" value="{{ $mobile }}" class="mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Enter Mobile">
                             </div>
-                            <div class="space-x-2 mt-4">
+                            <div>
                                 <label for="clinic" class="block font-medium text-sm text-gray-700 ml-2">Clinic</label>
-                                <select name="clinic" id="clinic" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                                <select name="clinic" id="clinic" class="mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="">Select an option</option>
                                     @foreach(config('variables.clinicList') as $value => $label)
                                         <option value="{{ $value }}" {{ $value == $clinic ? 'selected' : '' }}>{{ $label }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="space-x-2 mt-4">
+                            <div>
                                 <label for="appointment_type" class="block font-medium text-sm text-gray-700 ml-2">Appointment Type</label>
-                                <select name="appointment_type" id="appointment_type" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                                <select name="appointment_type" id="appointment_type" class="mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="">Select an option</option>
                                     @foreach(config('variables.appointmentTypes') as $value => $label)
                                     <option value="{{ $value }}" {{ $value == $appointmentType ? 'selected' : '' }}>{{ $label }}</option>
@@ -53,50 +53,50 @@
                                 </select>
 
                             </div>
-                            <div class="space-x-2 mt-4">
+                            <div>
                                 <label for="status"  class="block font-medium text-sm text-gray-700 ml-2">Current Status</label>
-                                <select name="status" id="status" class="mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                                <select name="status" id="status" class="mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="">Select an option</option>
                                     @foreach(config('variables.appointmentStatus') as $value => $label)
                                     <option value="{{ $value }}" {{ $value == $currentStatus ? 'selected' : '' }}>{{ $label }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="space-x-2 mt-4">
+                            <div>
                                 <label for="status"  class="block font-medium text-sm text-gray-700 ml-2">Assigned To</label>
-                                <select id="assigned_to" name="assigned_to" class="mt-1 block w-full border-gray-300 rounded-md">
+                                <select id="assigned_to" name="assigned_to" class="mt-1 w-full border-gray-300 rounded-md">
                                         <option value="">Select an option</option>
                                         @foreach($users as $user)
                                         <option value="{{ $user->id }}"  @if($user->id == $assignedTo) selected @endif >{{ $user->name  }}</option>
                                         @endforeach
                                 </select>
                             </div>
-                            <div class="space-x-2 mt-4">
+                            <div>
                                 <label for="status"  class="block font-medium text-sm text-gray-700 ml-2">Created By</label>
-                                <select id="created_by" name="created_by" class="mt-1 block w-full border-gray-300 rounded-md">
+                                <select id="created_by" name="created_by" class="mt-1 w-full border-gray-300 rounded-md">
                                         <option value="">Select an option</option>
                                         @foreach($users as $user)
                                         <option value="{{ $user->id }}"  @if($user->id == $createdBy) selected @endif >{{ $user->name }}</option>
                                         @endforeach
                                 </select>
                             </div>
-                            <div class="space-x-2 mt-4">
+                            <div>
                                 <label for="cstart_date" class="block font-medium text-sm text-gray-700 ml-2">Visited Date</label>
-                                <input type="text" id="v_date" name="v_date" class="mt-1 datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $vDate }}" placeholder="Select visited Date">
+                                <input type="text" id="v_date" name="v_date" class="mt-1 w-full datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $vDate }}" placeholder="Select visited Date">
                             </div>
-                            <div class="space-x-2 mt-4">
+                            <div>
                                 <label for="cstart_date" class="block font-medium text-sm text-gray-700 ml-2">Created Date</label>
-                                <input type="text" id="cstart_date" name="cstart_date" class="mt-1 datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $cstartDate }}" placeholder="Select Start Date">
-                                <input type="text" id="cend_date" name="cend_date" class="mt-1 datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $cendDate }}" placeholder="Select End Date">
+                                <input type="text" id="cstart_date" name="cstart_date" class="mt-1 w-full datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $cstartDate }}" placeholder="Select Start Date">
+                                <input type="text" id="cend_date" name="cend_date" class="mt-1 w-full datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $cendDate }}" placeholder="Select End Date">
                             </div>
-                            <div class="space-x-2 mt-4">
+                            <div>
                                 <label for="astart_date" class="block font-medium text-sm text-gray-700 ml-2">Appointment Date</label>
-                                <input type="text" id="astart_date" name="astart_date" class="mt-1 datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $astartDate }}" placeholder="Select Start Date">
-                                <input type="text" id="aend_date" name="aend_date" class="mt-1 datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $aendDate }}" placeholder="Select End Date">
+                                <input type="text" id="astart_date" name="astart_date" class="mt-1 w-full datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $astartDate }}" placeholder="Select Start Date">
+                                <input type="text" id="aend_date" name="aend_date" class="mt-1 w-full datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $aendDate }}" placeholder="Select End Date">
                             </div>
-                            <div class="space-x-2 mt-4">
-                                <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Search</button>
-                                <a href="{{ route('appointments.index') }}" class="mt-4 px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:bg-gray-400">Reset</a>
+                            <div class="md:col-span-3 flex items-center space-x-2 mt-4">
+                                <button type="submit" class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md">Search</button>
+                                <a href="{{ route('appointments.index') }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">Reset</a>
                             </div>
                         </form>
                     </div>
@@ -429,10 +429,6 @@
         const searchFilter = document.getElementById('advanceSearchBtn');
         searchFilter.addEventListener('click', updateSearchFields);
     </script>
-    <style>
-        .w-custom {
-            width: 32% !important;
-        }
-    </style>
+
 
 </x-app-layout>
