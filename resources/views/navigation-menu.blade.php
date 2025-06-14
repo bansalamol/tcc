@@ -37,13 +37,13 @@
     </div>
 
     <!-- Desktop Sidebar -->
-    <div class="hidden md:flex md:flex-col md:w-64 md:border-r md:border-gray-200 md:bg-white md:min-h-screen">
+    <div class="hidden md:fixed md:inset-y-0 md:flex md:flex-col md:w-64 md:h-screen md:border-r md:border-gray-200 md:bg-white">
         <div class="h-16 flex items-center justify-center border-b">
             <a href="{{ route('dashboard') }}">
                 <x-application-logo class="block h-10 w-auto" />
             </a>
         </div>
-        <div class="flex-1 px-4 py-6 space-y-1">
+        <div class="flex-1 overflow-y-auto px-4 py-6 space-y-1">
             <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2.25L3 9.75V21a.75.75 0 00.75.75H9v-6h6v6h5.25A.75.75 0 0021 21V9.75L12 2.25z" fill="currentColor"/>
@@ -71,8 +71,17 @@
             </x-nav-link>
             @endrole
         </div>
-        <div class="border-t px-4 py-4">
-            <form method="POST" action="{{ route('logout') }}" x-data>
+        <div class="mt-auto border-t">
+            <div class="px-4 py-4 flex items-center">
+                @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
+                    <img class="h-8 w-8 rounded-full object-cover mr-3" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
+                @endif
+                <div>
+                    <div class="text-sm font-medium text-gray-800">{{ Auth::user()->name }}</div>
+                    <a href="{{ route('profile.show') }}" class="text-xs text-blue-600 hover:underline">Profile</a>
+                </div>
+            </div>
+            <form method="POST" action="{{ route('logout') }}" class="px-4 pb-4" x-data>
                 @csrf
                 <x-nav-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
                     <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

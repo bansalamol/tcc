@@ -1,8 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
+        <div class="flex items-center justify-between">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Dashboard') }}
+            </h2>
+            <div class="space-x-2">
+                <x-button type="button" onclick="window.location='{{ route('patients.create') }}'">{{ __('Add Patient') }}</x-button>
+                <x-button type="button" onclick="window.location='{{ route('appointments.create') }}'">{{ __('Book Appointment') }}</x-button>
+            </div>
+        </div>
     </x-slot>
 
     <div class="py-12">
@@ -30,7 +36,7 @@
                         </form>
                     </div>
                 @endif
-                <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div class="bg-white p-6 rounded-lg shadow-lg mt-6">
                     <div class="text-lg font-semibold text-blue-600">Today</div>
                     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         <div class="p-4 bg-white border border-gray-200 rounded-lg shadow text-center">
@@ -75,7 +81,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div class="bg-white p-6 rounded-lg shadow-lg mt-6">
                     <div class="text-lg font-semibold text-blue-600">3 days</div>
                     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         <div class="p-4 bg-white border border-gray-200 rounded-lg shadow text-center">
