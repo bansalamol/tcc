@@ -1,10 +1,8 @@
 <header class="bg-white border-b border-gray-200 fixed w-full z-20 top-0 left-0 md:pl-64">
-    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
-            <x-application-mark class="h-8 w-8" />
-            <x-application-mark class="h-8 w-8" />
-            <span class="self-center text-2xl font-semibold whitespace-nowrap">{{ config('app.name', 'TCC') }}</span>
-        </a>
+    <div class="max-w-screen-xl mx-auto flex items-center justify-between p-4">
+        <div class="flex items-center space-x-2">
+            {{ $slot }}
+        </div>
         <button data-drawer-target="sidebar" data-drawer-toggle="sidebar" aria-controls="sidebar" type="button"
             class="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
             <span class="sr-only">Open sidebar</span>
