@@ -1,26 +1,28 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Dashboard') }}
-            </h2>
-            <div class="space-x-2">
-                <x-button type="button" onclick="window.location='{{ route('patients.create') }}'">{{ __('Add Patient') }}</x-button>
-                <x-button type="button" onclick="window.location='{{ route('appointments.create') }}'">{{ __('Book Appointment') }}</x-button>
-            </div>
-        </div>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
     </x-slot>
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <div class="p-6 bg-blue-600 text-white rounded-t-lg text-center">
-                    <div class="text-2xl font-bold">Performer of the Week</div>
-                    <div class="mt-4">
-                        <div class="text-xl font-semibold">{{$userDetails->name ?? 'No user data found'}}</div>
-                        <div>Total Leads: {{$totalAppointmentsUser ?? 0}}</div>
-                        <div>Appointments: {{$maxVisitedUser->visited_count ?? 0}}</div>
-                        <div>Conversion Rate: {{ number_format($visitedRatioUser,2) ?? 0}}%</div>
+                <div class="p-6 bg-blue-600 text-white rounded-t-lg">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between">
+                        <div class="text-center lg:text-left">
+                            <div class="text-2xl font-bold">Performer of the Week</div>
+                            <div class="mt-2">
+                                <div class="text-xl font-semibold">{{$userDetails->name ?? 'No user data found'}}</div>
+                                <div>Total Leads: {{$totalAppointmentsUser ?? 0}}</div>
+                                <div>Appointments: {{$maxVisitedUser->visited_count ?? 0}}</div>
+                                <div>Conversion Rate: {{ number_format($visitedRatioUser,2) ?? 0}}%</div>
+                            </div>
+                        </div>
+                        <div class="mt-4 lg:mt-0 flex items-center justify-center space-x-2">
+                            <x-button type="button" onclick="window.location='{{ route('patients.create') }}'">{{ __('Add Patient') }}</x-button>
+                            <x-button type="button" onclick="window.location='{{ route('appointments.create') }}'">{{ __('Book Appointment') }}</x-button>
+                        </div>
                     </div>
                 </div>
                 @if (auth()->user()->hasRole('Administrator') || auth()->user()->hasRole('Manager'))
