@@ -1,6 +1,6 @@
 <header class="bg-white border-b border-gray-200 fixed w-full z-20 top-0 left-0 md:pl-64">
-    <div class="max-w-screen-xl mx-auto flex items-center justify-between p-4">
-        <div class="flex items-center space-x-2">
+    <div class="max-w-screen-xl mx-auto flex items-center justify-between p-4 min-h-16">
+        <div class="space-y-1">
             {{ $slot }}
         </div>
         <button data-drawer-target="sidebar" data-drawer-toggle="sidebar" aria-controls="sidebar" type="button"

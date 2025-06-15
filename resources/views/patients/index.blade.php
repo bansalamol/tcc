@@ -15,8 +15,8 @@
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
 
                     @can('manage patients')
-                    <div class="float-right">
-                        <x-link href="{{ route('patients.create') }}" class="m-4">Add new Patient</x-link>
+                    <div class="float-right m-4 space-x-2">
+                        <x-button type="button" onclick="window.location='{{ route('patients.create') }}'">Add new Patient</x-button>
                     </div>
                     @endcan
                     <div class="m-4">

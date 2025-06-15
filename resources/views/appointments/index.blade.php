@@ -20,9 +20,9 @@
                     @endif
 
                     @can('manage patients')
-                    <div class="float-right m-3">
-                        <x-link href="{{ route('appointments.create') }}" class="m-4">Book Appointment</x-link>
-                        <x-link href="{{ route('patients.create') }}" class="m-4">Add new Patient</x-link>
+                    <div class="float-right m-3 space-x-2">
+                        <x-button type="button" onclick="window.location='{{ route('appointments.create') }}'">Book Appointment</x-button>
+                        <x-button type="button" onclick="window.location='{{ route('patients.create') }}'">Add new Patient</x-button>
                     </div>
                     @endcan
                     <div class="m-3 flex items-center space-x-4">

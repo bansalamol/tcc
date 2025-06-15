@@ -34,9 +34,9 @@
         <div class="min-h-screen flex">
             @livewire('navigation-menu')
 
-            <div class="flex-1 md:ml-64">
+            <div class="flex-1 md:ml-64 flex flex-col min-h-screen">
 
-                <main class="p-4">
+                <main class="p-4 flex-grow">
                     {{ $slot }}
                 </main>
                 <x-footer />
