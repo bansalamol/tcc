@@ -26,7 +26,7 @@
                                 <div class="text-sm">Conversion Rate: {{ number_format($visitedRatioUser,2) ?? 0}}%</div>
                             </div>
                         </div>
-                        <div class="flex items-center justify-center p-4 bg-gray-50 rounded-lg space-x-2">
+                        <div class="flex items-center justify-center p-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg space-x-2">
                             <x-button type="button" onclick="window.location='{{ route('patients.create') }}'">{{ __('Add Patient') }}</x-button>
                             <x-button type="button" onclick="window.location='{{ route('appointments.create') }}'">{{ __('Book Appointment') }}</x-button>
                         </div>
