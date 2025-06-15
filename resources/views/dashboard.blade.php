@@ -1,25 +1,32 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
+        <div class="flex items-center space-x-2">
+            <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2.25L3 9.75V21a.75.75 0 00.75.75H9v-6h6v6h5.25A.75.75 0 0021 21V9.75L12 2.25z" fill="currentColor" />
+            </svg>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Dashboard') }}</h2>
+        </div>
+        <x-breadcrumb current="Dashboard" />
     </x-slot>
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <div class="p-6 bg-blue-600 text-white rounded-t-lg">
-                    <div class="flex flex-col lg:flex-row lg:items-center justify-between">
-                        <div class="text-center lg:text-left">
-                            <div class="text-2xl font-bold">Performer of the Week</div>
-                            <div class="mt-2">
-                                <div class="text-xl font-semibold">{{$userDetails->name ?? 'No user data found'}}</div>
-                                <div>Total Leads: {{$totalAppointmentsUser ?? 0}}</div>
-                                <div>Appointments: {{$maxVisitedUser->visited_count ?? 0}}</div>
-                                <div>Conversion Rate: {{ number_format($visitedRatioUser,2) ?? 0}}%</div>
+                <div class="p-6">
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <div class="flex items-center p-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg space-x-4">
+                            <svg class="w-10 h-10 text-yellow-300" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11.049 2.927a1 1 0 011.902 0l2.11 6.49h6.823a1 1 0 01.588 1.81l-5.52 4.013 2.11 6.49a1 1 0 01-1.538 1.118L12 17.77l-5.524 4.078a1 1 0 01-1.538-1.118l2.11-6.49-5.522-4.013a1 1 0 01.588-1.81h6.824l2.11-6.49z" />
+                            </svg>
+                            <div>
+                                <div class="text-sm uppercase font-semibold tracking-wider">Performer of the Week</div>
+                                <div class="text-xl font-bold">{{$userDetails->name ?? 'No user data found'}}</div>
+                                <div class="text-sm mt-1">Total Leads: {{$totalAppointmentsUser ?? 0}}</div>
+                                <div class="text-sm">Appointments: {{$maxVisitedUser->visited_count ?? 0}}</div>
+                                <div class="text-sm">Conversion Rate: {{ number_format($visitedRatioUser,2) ?? 0}}%</div>
                             </div>
                         </div>
-                        <div class="mt-4 lg:mt-0 flex items-center justify-center space-x-2">
+                        <div class="flex items-center justify-center p-4 bg-gray-50 rounded-lg space-x-2">
                             <x-button type="button" onclick="window.location='{{ route('patients.create') }}'">{{ __('Add Patient') }}</x-button>
                             <x-button type="button" onclick="window.location='{{ route('appointments.create') }}'">{{ __('Book Appointment') }}</x-button>
                         </div>
