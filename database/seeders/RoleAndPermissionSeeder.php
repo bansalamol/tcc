@@ -14,19 +14,18 @@ class RoleAndPermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        Permission::firstOrCreate([
-            'name' => 'show_all_patients', // Permission to show all patients
-        ]);
-        Permission::firstOrCreate([
-            'name' => 'show_all_appointments', // Permission to show all appointments
-        ]);
-        Permission::firstOrCreate([
-            'name' => 'show_own_patient_contact', // Permission to show own patient contact details
-        ]);
-        Permission::firstOrCreate([
-            'name' => 'show_assigned_patient_contact', // Permission to show assigned patient contact details
-        ]);
+        $permissions = [
+            'manage patients',
+            'manage appointments',
+            'show_all_patients',
+            'show_all_appointments',
+            'show_own_patient_contact',
+            'show_assigned_patient_contact',
+        ];
 
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
+        }
         // Create roles and assign permissions
         $adminRole = Role::firstOrCreate(['name' => 'Administrator']);
         $adminRole->syncPermissions(Permission::all());
@@ -49,5 +48,4 @@ class RoleAndPermissionSeeder extends Seeder
             'show_assigned_patient_contact',
         ]);
     }
-
 }
