@@ -1,11 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Users') }}
-        </h2>
+        <div class="flex items-center space-x-2">
+            <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 12a3 3 0 10-6 0 3 3 0 006 0zM6 21v-2.25A2.25 2.25 0 018.25 16.5h7.5A2.25 2.25 0 0118 18.75V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Users') }}</h2>
+        </div>
+        <x-breadcrumb current="Users" />
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-6">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -16,10 +20,7 @@
                     </div>
                     @endcan
                     <div class="m-4 flex">
-                        <form action="{{ route('users.index') }}" method="GET">
-                            <input type="search" id="q" name="q" value="{{$searchTerm}}" placeholder="Search by name" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
-                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600" >Search</button>
-                        </form>
+                        <livewire:search-form route-name="users.index" placeholder="Search by name" />
                     </div>
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
