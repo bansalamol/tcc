@@ -23,24 +23,23 @@
         <!-- Styles -->
         @livewireStyles
     </head>
-    <body class="font-sans antialiased bg-gray-100">
+    <body class="font-sans antialiased bg-gray-100 pt-16">
         <x-banner />
+        <x-header>
+            @isset($header)
+                {{ $header }}
+            @endisset
+        </x-header>
 
         <div class="min-h-screen flex">
             @livewire('navigation-menu')
 
-            <div class="flex-1 md:ml-64">
-                @if (isset($header))
-                    <header class="bg-white shadow">
-                        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                            {{ $header }}
-                        </div>
-                    </header>
-                @endif
+            <div class="flex-1 md:ml-64 flex flex-col min-h-screen">
 
-                <main class="p-4">
+                <main class="p-4 flex-grow">
                     {{ $slot }}
                 </main>
+                <x-footer />
             </div>
         </div>
 

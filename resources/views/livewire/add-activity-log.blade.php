@@ -1,7 +1,5 @@
 <div class="mb-4">
-    <button wire:click="openModal" class="bg-black text-white px-2 py-1 rounded hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300">
-        Add Comment
-    </button>
+    <x-button type="button" wire:click="openModal">Add Comment</x-button>
 
      @if ($isOpen)
         <div class="fixed inset-0 z-10 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true" style="display: block;">
@@ -25,9 +23,7 @@
                                     <textarea wire:model="activityDescription" class="form-input mt-1 block w-full" id="activityDescription" name="activityDescription" rows="4"></textarea>
                                 </div>
                                 <div class="mt-4 flex justify-between items-center">
-                                    <button type="submit" class="bg-black text-white px-2 py-1 rounded hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300">
-                                        Save
-                                    </button>
+                                    <x-button type="submit">Save</x-button>
                                 </div>
                             </form>
                         </div>

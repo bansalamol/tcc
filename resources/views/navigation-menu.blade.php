@@ -1,50 +1,15 @@
-<nav x-data="{ open: false }">
-    <!-- Mobile Navigation -->
-    <div class="bg-white border-b border-gray-200 shadow md:hidden">
-        <div class="flex justify-between h-16 px-4">
-            <a href="{{ route('dashboard') }}" class="flex items-center">
-                <x-application-mark class="block h-9 w-auto" />
-            </a>
-            <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none transition">
-                <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                    <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-        </div>
-        <div x-show="open" class="pb-3 space-y-1">
-            <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('appointments.index') }}" :active="request()->routeIs('appointments.*')">
-                {{ __('Appointments') }}
-            </x-responsive-nav-link>
-            @role('Administrator')
-            <x-responsive-nav-link href="{{ route('patients.index') }}" :active="request()->routeIs('patients.*')">
-                {{ __('Patients') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.*')">
-                {{ __('Users') }}
-            </x-responsive-nav-link>
-            @endrole
-            <form method="POST" action="{{ route('logout') }}" x-data>
-                @csrf
-                <x-responsive-nav-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
-                    {{ __('Log Out') }}
-                </x-responsive-nav-link>
-            </form>
-        </div>
-    </div>
+<nav>
 
     <!-- Desktop Sidebar -->
-    <div class="hidden md:fixed md:inset-y-0 md:flex md:flex-col md:w-64 md:h-screen md:border-r md:border-gray-200 md:bg-white">
+    <aside id="sidebar" class="fixed top-16 left-0 z-40 w-64 h-screen transition-transform -translate-x-full md:translate-x-0 md:fixed md:inset-y-0 md:flex md:flex-col" aria-label="Sidebar">
+    <div class="h-full px-3 py-4 overflow-y-auto bg-white border-r border-gray-200">
         <div class="h-16 flex items-center justify-center space-x-2 border-b">
             <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
                 <x-application-logo class="block h-10 w-auto" />
                 <span class="text-lg font-semibold">{{ config('app.name', 'TCC') }}</span>
             </a>
         </div>
-        <div class="flex-1 overflow-y-auto px-4 py-6 space-y-1">
+        <div class="flex-1 overflow-y-auto px-4 py-6 space-y-2">
             <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2.25L3 9.75V21a.75.75 0 00.75.75H9v-6h6v6h5.25A.75.75 0 0021 21V9.75L12 2.25z" fill="currentColor"/>
@@ -94,4 +59,5 @@
             </form>
         </div>
     </div>
+    </aside>
 </nav>

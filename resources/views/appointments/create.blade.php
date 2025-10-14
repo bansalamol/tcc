@@ -4,12 +4,16 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Add New Appointment') }}
-        </h2>
+        <div class="flex items-center space-x-2">
+            <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6.75 2.25A.75.75 0 017.5 3v1.5h9V3a.75.75 0 011.5 0V4.5h.75A2.25 2.25 0 0121 6.75v11.25A2.25 2.25 0 0118.75 20.25H5.25A2.25 2.25 0 013 18V6.75A2.25 2.25 0 015.25 4.5H6V3a.75.75 0 01.75-.75zM20.25 9.75H3.75v8.25c0 .621.504 1.125 1.125 1.125h15.75c.621 0 1.125-.504 1.125-1.125V9.75z" fill="currentColor"/>
+            </svg>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Add New Appointment') }}</h2>
+        </div>
+        <x-breadcrumb current="Add Appointment" />
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg px-4 py-4">

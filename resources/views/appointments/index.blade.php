@@ -1,11 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Appointments') }}
-        </h2>
+        <div class="flex items-center space-x-2">
+            <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6.75 2.25A.75.75 0 017.5 3v1.5h9V3a.75.75 0 011.5 0V4.5h.75A2.25 2.25 0 0121 6.75v11.25A2.25 2.25 0 0118.75 20.25H5.25A2.25 2.25 0 013 18V6.75A2.25 2.25 0 015.25 4.5H6V3a.75.75 0 01.75-.75zM20.25 9.75H3.75v8.25c0 .621.504 1.125 1.125 1.125h15.75c.621 0 1.125-.504 1.125-1.125V9.75z" fill="currentColor"/>
+            </svg>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Appointments') }}</h2>
+        </div>
+        <x-breadcrumb current="Appointments" />
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-6">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -16,13 +20,14 @@
                     @endif
 
                     @can('manage patients')
-                    <div class="float-right m-3">
-                        <x-link href="{{ route('appointments.create') }}" class="m-4">Book Appointment</x-link>
-                        <x-link href="{{ route('patients.create') }}" class="m-4">Add new Patient</x-link>
+                    <div class="float-right m-3 space-x-2">
+                        <x-button type="button" onclick="window.location='{{ route('appointments.create') }}'">Book Appointment</x-button>
+                        <x-button type="button" onclick="window.location='{{ route('patients.create') }}'">Add new Patient</x-button>
                     </div>
                     @endcan
                     <div class="m-3 flex items-center space-x-4">
-                        <button id="advanceSearchBtn" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Advance Search</button>
+                        <livewire:search-form route-name="appointments.index" query-param="pname" placeholder="Search patient" />
+                        <x-button type="button" id="advanceSearchBtn">Advance Search</x-button>
                     </div>
                     <div id="searchContainer" class="ml-4 hidden">
                         <form action="{{ route('appointments.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -95,8 +100,8 @@
                                 <input type="text" id="aend_date" name="aend_date" class="mt-1 w-full datepicker rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" value="{{ $aendDate }}" placeholder="Select End Date">
                             </div>
                             <div class="md:col-span-3 flex items-center space-x-2 mt-4">
-                                <button type="submit" class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md">Search</button>
-                                <a href="{{ route('appointments.index') }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">Reset</a>
+                                <x-button type="submit">Search</x-button>
+                                <x-secondary-button type="button" onclick="window.location='{{ route('appointments.index') }}'">Reset</x-secondary-button>
                             </div>
                         </form>
                     </div>
