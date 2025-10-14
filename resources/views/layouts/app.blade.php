@@ -10,6 +10,8 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=poppins:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- DatePicker DateTimePicker -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -21,25 +23,24 @@
         <!-- Styles -->
         @livewireStyles
     </head>
-    <body class="font-sans antialiased">
+    <body class="font-sans antialiased bg-gray-100 pt-16">
         <x-banner />
+        <x-header>
+            @isset($header)
+                {{ $header }}
+            @endisset
+        </x-header>
 
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen flex">
             @livewire('navigation-menu')
 
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif
+            <div class="flex-1 md:ml-64 flex flex-col min-h-screen">
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+                <main class="p-4 flex-grow">
+                    {{ $slot }}
+                </main>
+                <x-footer />
+            </div>
         </div>
 
         @stack('modals')

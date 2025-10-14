@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Patient;
 
 class StorePatientRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class StorePatientRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('create', Patient::class);
     }
 
     /**

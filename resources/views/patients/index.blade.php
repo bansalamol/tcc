@@ -1,28 +1,29 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Patients') }}
-        </h2>
+        <div class="flex items-center space-x-2">
+            <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 12c2.485 0 4.5-2.015 4.5-4.5S14.485 3 12 3 7.5 5.015 7.5 7.5 9.515 12 12 12zM3 21a9 9 0 0118 0H3z" fill="currentColor"/>
+            </svg>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Patients') }}</h2>
+        </div>
+        <x-breadcrumb current="Patients" />
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-6">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
 
                     @can('manage patients')
-                    <div class="float-right">
-                        <x-link href="{{ route('patients.create') }}" class="m-4">Add new Patient</x-link>
+                    <div class="float-right m-4 space-x-2">
+                        <x-button type="button" onclick="window.location='{{ route('patients.create') }}'">Add new Patient</x-button>
                     </div>
                     @endcan
-                    <div class="m-4 flex">
-                        <form action="{{ route('patient.search') }}" method="GET">
-                                <input type="search" id="q" name="q" value="{{$searchTerm}}" placeholder="Search by name, code, or phone number" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
-                                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600" >Search</button>
-                        </form>
+                    <div class="m-4">
+                        <livewire:search-form route-name="patient.search" placeholder="Search by name, code, or phone number" />
                     </div>
 
-                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <table class="w-full text-sm text-left text-gray-700 bg-white shadow rounded-lg">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-6 py-3">
@@ -48,9 +49,9 @@
                                 @endcan
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-gray-200">
                             @forelse ($patients as $index => $patient)
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <tr class="bg-white hover:bg-gray-50">
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     {{ $index + 1 }}
                                 </td>
@@ -94,7 +95,7 @@
                                 @endcan
                             </tr>
                             @empty
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <tr class="bg-white hover:bg-gray-50">
                                 <td colspan="2" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     {{ __('No patients found') }}
                                 </td>

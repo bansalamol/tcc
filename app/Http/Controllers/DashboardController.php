@@ -42,9 +42,13 @@ class DashboardController extends Controller
     public function index($id = null)
     {
         if (auth()->user()->hasRole(['Administrator'])) {
-            $users =  User::where('id', '!=', '1')->get();
+            $users = User::whereDoesntHave('roles', function ($q) {
+                $q->where('name', 'Administrator');
+            })->get();
         } else {
-            $users =  User::where('id', '!=', '1')->where('manager_id', auth()->id())->get();
+            $users = User::whereDoesntHave('roles', function ($q) {
+                $q->where('name', 'Administrator');
+            })->where('manager_id', auth()->id())->get();
         }
 
         // Assuming your model is named Appointment

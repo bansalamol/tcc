@@ -165,7 +165,7 @@ class AppointmentController extends Controller
      */
     public function create($mobile = '')
     {
-        $this->authorize('manage appointments');
+        $this->authorize('create', Appointment::class);
 
         $users = User::orderBy('name')->get();
         $appointments = [];
@@ -177,7 +177,7 @@ class AppointmentController extends Controller
      */
     public function store(StoreAppointmentRequest $request)
     {
-        $this->authorize('manage appointments');
+        $this->authorize('create', Appointment::class);
         $data = $request->validated();
         $data['assigned_to'] = auth()->id();
 
@@ -218,7 +218,7 @@ class AppointmentController extends Controller
      */
     public function edit(Appointment $appointment)
     {
-        $this->authorize('manage appointments');
+        $this->authorize('update', $appointment);
         $appointment->load('healthProblems');
         $healthPromlemData = [];
         foreach ($appointment->healthProblems as $healthProblem) {
@@ -243,7 +243,7 @@ class AppointmentController extends Controller
      */
     public function update(UpdateAppointmentRequest $request, Appointment $appointment)
     {
-        $this->authorize('manage appointments');
+        $this->authorize('update', $appointment);
         $data = $request->validated();
         $healthProblem = $data['health_problem'];
         $healthProblem = ((isset($data['health_problem']) && is_array(
@@ -282,7 +282,7 @@ class AppointmentController extends Controller
     {
 
         if (auth()->check()) {
-        $this->authorize('manage appointments');
+        $this->authorize('update', Appointment::class);
         $user = auth()->user();
 
         $validatedData = $request->validate([

@@ -14,6 +14,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('manage', User::class);
         $users = [];
         $authUser = auth()->user();
         $perPageRecords = 25;
@@ -46,9 +47,7 @@ class UserController extends Controller
     public function create()
     {
         $authUser = auth()->user();
-        if (!$authUser->hasAnyRole(['Administrator','Manager'])) {
-            return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
-        }
+        $this->authorize('manage', User::class);
         if ($authUser->hasRole(['Administrator'])) {
             $roles = Role::all();
             $managers = Role::where('name', 'Manager')->firstOrFail()->users;
@@ -66,9 +65,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $authUser = auth()->user();
-        if (!$authUser->hasAnyRole(['Administrator','Manager'])) {
-            return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
-        }
+        $this->authorize('manage', User::class);
         //$this->authorize('manage users');
         $request->validate([
             'name' => 'required',
@@ -118,9 +115,7 @@ class UserController extends Controller
     public function edit(Request $request, User $user)
     {
         $authUser = auth()->user();
-        if (!$authUser->hasAnyRole(['Administrator','Manager'])) {
-            return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
-        }
+        $this->authorize('manage', User::class);
         if ($authUser->hasRole(['Administrator'])) {
             $roles = Role::all();
             $managers = Role::where('name', 'Manager')->firstOrFail()->users;
@@ -138,9 +133,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $authUser = auth()->user();
-        if (!$authUser->hasAnyRole(['Administrator','Manager'])) {
-            return response()->view('errors.403', [], Response::HTTP_FORBIDDEN);
-        }
+        $this->authorize('manage', User::class);
         // Validation rules for name and email
         $rules = [
             'name' => 'required',

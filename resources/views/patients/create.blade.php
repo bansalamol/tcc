@@ -1,12 +1,16 @@
 @props(['birtDateOptions' => "{dateFormat:'Y-m-d', enableTime:false, defaultDate: 'today', maxDate: 'today'}"])
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Add New Patient') }}
-        </h2>
+        <div class="flex items-center space-x-2">
+            <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 12c2.485 0 4.5-2.015 4.5-4.5S14.485 3 12 3 7.5 5.015 7.5 7.5 9.515 12 12 12zM3 21a9 9 0 0118 0H3z" fill="currentColor"/>
+            </svg>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Add New Patient') }}</h2>
+        </div>
+        <x-breadcrumb current="Add Patient" />
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg px-4 py-4">
@@ -90,57 +94,7 @@
             </div>
         </div>
     </div>
-    <script>
-    //TODO: Move this to custom js file.
-  function calculateBirthdateOrAge() {
-    const age = document.getElementById('age').value;
-    const birthdateInput = document.getElementById('birth_date');
-    if (age) {
-      const now = new Date();
-      const birthdate = new Date(now.getFullYear() - age, now.getMonth(), now.getDate());
-      const formattedBirthdate = formatDate(birthdate);
-      birthdateInput.value = formattedBirthdate;
-    } else {
-      birthdateInput.value = '';
-    }
-  }
-
-  function calculateAgeOrBirthdate() {
-    const birthdate = document.getElementById('birth_date').value;
-    const ageInput = document.getElementById('age');
-    if (birthdate) {
-      const now = new Date();
-      const birthdateDate = new Date(birthdate);
-      const age = now.getFullYear() - birthdateDate.getFullYear();
-      ageInput.value = age;
-    } else {
-      ageInput.value = '';
-    }
-  }
-
-  function formatDate(date) {
-    const year = date.getFullYear();
-    let month = 6; //date.getMonth() + 1;
-    let day = 1; //date.getDate();
-    // Add leading zeros if needed
-    month =  month < 10 ? `0${month}` : month;
-    day = day < 10 ? `0${day}` : day;
-    return `${year}-${month}-${day}`;
-  }
-  function generateRandomCode(length) {
-        const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        let code = '';
-        const now = new Date();
-        for (let i = 0; i < length; i++) {
-            code += characters.charAt(Math.floor(Math.random() * characters.length));
-        }
-        return "P"+now.getFullYear()+"-"+code;
-    }
-    // Call the function to generate a random code with a length of 6 characters
-    const randomCode = generateRandomCode(6);
-    // Insert the generated code into the HTML
-    document.getElementById('code').value = randomCode;
-</script>
+    
 
 
 </x-app-layout>

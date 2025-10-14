@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Appointment;
 
 class UpdateAppointmentRequest extends FormRequest
 {
@@ -11,7 +12,8 @@ class UpdateAppointmentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $appointment = $this->route('appointment');
+        return $this->user()->can('update', $appointment ?: Appointment::class);
     }
 
     /**

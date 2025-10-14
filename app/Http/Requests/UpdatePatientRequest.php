@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Patient;
 
 class UpdatePatientRequest extends FormRequest
 {
@@ -11,7 +12,8 @@ class UpdatePatientRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $patient = $this->route('patient');
+        return $this->user()->can('update', $patient ?: Patient::class);
     }
 
     /**
